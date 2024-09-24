@@ -57,6 +57,7 @@
     <ClCompile Include="PixelShader.cpp">
       <Filter>GameEngine\GraphicsEngine\PixelShader</Filter>
     </ClCompile>
+    <ClCompile Include="Object.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="AppWindow.h">
@@ -83,6 +84,7 @@
     <ClInclude Include="PixelShader.h">
       <Filter>GameEngine\GraphicsEngine\PixelShader</Filter>
     </ClInclude>
+    <ClInclude Include="Object.h" />
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="shader.fx" />

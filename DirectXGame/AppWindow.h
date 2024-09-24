@@ -18,6 +18,8 @@ public:
 private:
 	SwapChain* m_swap_chain;
 	VertexBuffer* m_vb;
+	VertexBuffer* m_vb2;
+	VertexBuffer* m_vb3;
 	VertexShader* m_vs;
 	PixelShader* m_ps;
 };
