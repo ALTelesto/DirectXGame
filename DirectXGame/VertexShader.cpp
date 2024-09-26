@@ -7,7 +7,7 @@ VertexShader::VertexShader()
 
 bool VertexShader::release()
 {
-	m_vs->Release();
+	if(m_vs)m_vs->Release();
 	delete this;
 	return true;
 }
