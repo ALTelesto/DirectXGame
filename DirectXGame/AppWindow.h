@@ -1,4 +1,6 @@
 #pragma once
+#include <list>
+
 #include "Window.h"
 #include "GraphicsEngine.h"
 #include "SwapChain.h"
@@ -6,7 +8,9 @@
 #include "VertexBuffer.h"
 #include "VertexShader.h"
 #include "PixelShader.h"
+#include "Quad.h"
 
+using namespace std;
 class AppWindow: public Window
 {
 public:
@@ -22,5 +26,6 @@ private:
 	VertexBuffer* m_vb3;
 	VertexShader* m_vs;
 	PixelShader* m_ps;
+	list<Quad*> quads;
 };
 

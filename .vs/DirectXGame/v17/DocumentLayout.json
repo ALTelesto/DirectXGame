@@ -3,16 +3,16 @@
   "WorkspaceRootPath": "D:\\Game Dev\\GDENG03\\DirectXGame\\",
   "Documents": [
     {
+      "AbsoluteMoniker": "D:0:0:{A2FEF6F2-B93D-4364-BED9-32BDEA4A4A71}|DirectXGame\\DirectXGame.vcxproj|D:\\Game Dev\\GDENG03\\DirectXGame\\DirectXGame\\main.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
+      "RelativeMoniker": "D:0:0:{A2FEF6F2-B93D-4364-BED9-32BDEA4A4A71}|DirectXGame\\DirectXGame.vcxproj|solutionrelative:DirectXGame\\main.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
+    },
+    {
       "AbsoluteMoniker": "D:0:0:{A2FEF6F2-B93D-4364-BED9-32BDEA4A4A71}|DirectXGame\\DirectXGame.vcxproj|D:\\Game Dev\\GDENG03\\DirectXGame\\DirectXGame\\AppWindow.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
       "RelativeMoniker": "D:0:0:{A2FEF6F2-B93D-4364-BED9-32BDEA4A4A71}|DirectXGame\\DirectXGame.vcxproj|solutionrelative:DirectXGame\\AppWindow.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{A2FEF6F2-B93D-4364-BED9-32BDEA4A4A71}|DirectXGame\\DirectXGame.vcxproj|D:\\Game Dev\\GDENG03\\DirectXGame\\DirectXGame\\GraphicsEngine.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
       "RelativeMoniker": "D:0:0:{A2FEF6F2-B93D-4364-BED9-32BDEA4A4A71}|DirectXGame\\DirectXGame.vcxproj|solutionrelative:DirectXGame\\GraphicsEngine.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{A2FEF6F2-B93D-4364-BED9-32BDEA4A4A71}|DirectXGame\\DirectXGame.vcxproj|D:\\Game Dev\\GDENG03\\DirectXGame\\DirectXGame\\main.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
-      "RelativeMoniker": "D:0:0:{A2FEF6F2-B93D-4364-BED9-32BDEA4A4A71}|DirectXGame\\DirectXGame.vcxproj|solutionrelative:DirectXGame\\main.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{A2FEF6F2-B93D-4364-BED9-32BDEA4A4A71}|DirectXGame\\DirectXGame.vcxproj|D:\\Game Dev\\GDENG03\\DirectXGame\\DirectXGame\\Window.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
@@ -98,7 +98,7 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": 19,
+          "SelectedChildIndex": 15,
           "Children": [
             {
               "$type": "Document",
@@ -110,8 +110,7 @@
               "RelativeToolTip": "DirectXGame\\Object.cpp",
               "ViewState": "AQIAAAAAAAAAAAAAAAAAABEAAAAMAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000677|",
-              "WhenOpened": "2024-09-19T08:49:45.531Z",
-              "EditorCaption": ""
+              "WhenOpened": "2024-09-19T08:49:45.531Z"
             },
             {
               "$type": "Document",
@@ -283,7 +282,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 2,
+              "DocumentIndex": 0,
               "Title": "main.cpp",
               "DocumentMoniker": "D:\\Game Dev\\GDENG03\\DirectXGame\\DirectXGame\\main.cpp",
               "RelativeDocumentMoniker": "DirectXGame\\main.cpp",
@@ -296,7 +295,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 1,
+              "DocumentIndex": 2,
               "Title": "GraphicsEngine.cpp",
               "DocumentMoniker": "D:\\Game Dev\\GDENG03\\DirectXGame\\DirectXGame\\GraphicsEngine.cpp",
               "RelativeDocumentMoniker": "DirectXGame\\GraphicsEngine.cpp",
@@ -304,8 +303,7 @@
               "RelativeToolTip": "DirectXGame\\GraphicsEngine.cpp",
               "ViewState": "AQIAAEAAAAAAAAAAAAAlwFEAAAAVAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000677|",
-              "WhenOpened": "2024-09-09T12:51:46.79Z",
-              "EditorCaption": ""
+              "WhenOpened": "2024-09-09T12:51:46.79Z"
             },
             {
               "$type": "Document",
@@ -317,8 +315,7 @@
               "RelativeToolTip": "DirectXGame\\GraphicsEngine.h",
               "ViewState": "AQIAAA0AAAAAAAAAAAAlwB4AAAAIAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000680|",
-              "WhenOpened": "2024-09-09T12:51:18.327Z",
-              "EditorCaption": ""
+              "WhenOpened": "2024-09-09T12:51:18.327Z"
             },
             {
               "$type": "Document",
@@ -330,12 +327,11 @@
               "RelativeToolTip": "DirectXGame\\AppWindow.h",
               "ViewState": "AQIAAAAAAAAAAAAAAAAAABUAAAAPAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000680|",
-              "WhenOpened": "2024-09-09T07:17:02.691Z",
-              "EditorCaption": ""
+              "WhenOpened": "2024-09-09T07:17:02.691Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 0,
+              "DocumentIndex": 1,
               "Title": "AppWindow.cpp",
               "DocumentMoniker": "D:\\Game Dev\\GDENG03\\DirectXGame\\DirectXGame\\AppWindow.cpp",
               "RelativeDocumentMoniker": "DirectXGame\\AppWindow.cpp",
@@ -356,8 +352,7 @@
               "RelativeToolTip": "DirectXGame\\Window.cpp",
               "ViewState": "AQIAADwAAAAAAAAAAAAAAEIAAAARAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000677|",
-              "WhenOpened": "2024-09-09T06:57:14.078Z",
-              "EditorCaption": ""
+              "WhenOpened": "2024-09-09T06:57:14.078Z"
             },
             {
               "$type": "Document",
