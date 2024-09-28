@@ -1,16 +1,2 @@
 ﻿  AppWindow.cpp
-D:\Game Dev\GDENG03\DirectXGame\DirectXGame\AppWindow.cpp(74,64): warning C4267: 'argument': conversion from 'size_t' to 'UINT', possible loss of data
-D:\Game Dev\GDENG03\DirectXGame\DirectXGame\AppWindow.cpp(75,66): warning C4267: 'argument': conversion from 'size_t' to 'UINT', possible loss of data
-D:\Game Dev\GDENG03\DirectXGame\DirectXGame\AppWindow.cpp(76,66): warning C4267: 'argument': conversion from 'size_t' to 'UINT', possible loss of data
-  DeviceContext.cpp
-D:\Game Dev\GDENG03\DirectXGame\DirectXGame\DeviceContext.cpp(44,13): warning C4244: '=': conversion from 'UINT' to 'FLOAT', possible loss of data
-D:\Game Dev\GDENG03\DirectXGame\DirectXGame\DeviceContext.cpp(45,14): warning C4244: '=': conversion from 'UINT' to 'FLOAT', possible loss of data
-  GraphicsEngine.cpp
-  PixelShader.cpp
-  SwapChain.cpp
-  VertexBuffer.cpp
-  VertexShader.cpp
-  main.cpp
-  Generating Code...
-  LINK : D:\Game Dev\GDENG03\DirectXGame\x64\Debug\DirectXGame.exe not found or not built by the last incremental link; performing full link
   DirectXGame.vcxproj -> D:\Game Dev\GDENG03\DirectXGame\x64\Debug\DirectXGame.exe
