@@ -19,27 +19,27 @@ void AppWindow::onCreate()
 	RECT rc = this->getClientWindowRect();
 	m_swap_chain->init(this->m_hwnd, rc.right - rc.left, rc.bottom - rc.top);
 
-	// Create some quads with position, size, and color
-	quads.push_back(new Quad(-0.5f, -0.5f, 0.2f, 0.3f, { 1.0f, 0.0f, 0.0f })); // Red quad
-	quads.push_back(new Quad(0.0f, 0.0f, 0.2f, 0.3f, { 0.0f, 1.0f, 0.0f }));  // Green quad
-	quads.push_back(new Quad(0.5f, 0.5f, 0.2f, 0.3f, { 0.0f, 0.0f, 1.0f }));  // Blue quad
+	/*void* shader_byte_code = nullptr;
+	size_t size_shader = 0;*/
 
-	std::cout << quads.size();
-
-	void* shader_byte_code = nullptr;
-	size_t size_shader = 0;
-
-	GraphicsEngine::get()->compileVertexShader(L"VertexShader.hlsl", "vsmain",&shader_byte_code,&size_shader);
-
+	
+	GraphicsEngine::get()->compileVertexShader(L"VertexShader.hlsl", "vsmain", &shader_byte_code, &size_shader);
 	m_vs = GraphicsEngine::get()->createVertexShader(shader_byte_code, size_shader);
-
 	GraphicsEngine::get()->releaseCompiledShader();
+
+	
+	quads.push_back(new Quad(-0.6f, -0.6f, 0.5f, 0.4f, { 1.0f, 0.0f, 0.0f }, shader_byte_code, size_shader)); // Red quad
+	quads.push_back(new Quad(0.0f, 0.0f, 0.5f, 0.4f, { 0.0f, 1.0f, 0.0f }, shader_byte_code, size_shader));  // Green quad
+	quads.push_back(new Quad(0.6f, 0.6f, 0.5f, 0.4f, { 0.0f, 0.0f, 1.0f }, shader_byte_code, size_shader));
 
 	GraphicsEngine::get()->compilePixelShader(L"PixelShader.hlsl", "psmain", &shader_byte_code, &size_shader);
-
 	m_ps = GraphicsEngine::get()->createPixelShader(shader_byte_code, size_shader);
-
 	GraphicsEngine::get()->releaseCompiledShader();
+
+	for (Quad* quad : quads)
+	{
+		quad->init();
+	}
 }
 
 void AppWindow::onUpdate()
@@ -50,8 +50,11 @@ void AppWindow::onUpdate()
 	RECT rc = this->getClientWindowRect();
 	GraphicsEngine::get()->getImmediateDeviceContext()->setViewportSize(rc.right - rc.left, rc.bottom - rc.top);
 
-	//GraphicsEngine::get()->getImmediateDeviceContext()->setVertexShader(m_vs);
-	//GraphicsEngine::get()->getImmediateDeviceContext()->setPixelShader(m_ps);
+	GraphicsEngine::get()->getImmediateDeviceContext()->setVertexShader(m_vs);
+	GraphicsEngine::get()->getImmediateDeviceContext()->setPixelShader(m_ps);
+
+	/*Quad* test = new Quad(-0.5f, -0.5f, 0.2f, 0.3f, { 1.0f, 0.0f, 0.0f }, shader_byte_code, size_shader);
+	test->draw(m_vs, m_ps);*/
 
 	for (Quad* quad : quads)
 	{
@@ -71,7 +74,7 @@ void AppWindow::onDestroy()
 	}
 	quads.clear();
 
-	m_vb->release();
+	//m_vb->release();
 	m_swap_chain->release();
 	m_vs->release();
 	m_ps->release();

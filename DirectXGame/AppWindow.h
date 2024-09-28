@@ -27,5 +27,8 @@ private:
 	VertexShader* m_vs;
 	PixelShader* m_ps;
 	list<Quad*> quads;
+
+	void* shader_byte_code = nullptr;
+	size_t size_shader = 0;
 };
 
