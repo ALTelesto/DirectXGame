@@ -9,6 +9,7 @@
 #include "VertexShader.h"
 #include "PixelShader.h"
 #include "Quad.h"
+#include "RasterizerState.h"
 
 using namespace std;
 class AppWindow: public Window
@@ -27,6 +28,9 @@ private:
 	VertexShader* m_vs;
 	PixelShader* m_ps;
 	list<Quad*> quads;
+private:
+	RasterizerState* m_solidState = nullptr;
+	RasterizerState* m_wireframeState = nullptr;
 
 	void* shader_byte_code = nullptr;
 	size_t size_shader = 0;

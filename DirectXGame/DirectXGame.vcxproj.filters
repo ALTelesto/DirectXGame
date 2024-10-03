@@ -59,6 +59,7 @@
     </ClCompile>
     <ClCompile Include="Object.cpp" />
     <ClCompile Include="Quad.cpp" />
+    <ClCompile Include="RasterizerState.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="AppWindow.h">
@@ -87,6 +88,7 @@
     </ClInclude>
     <ClInclude Include="Object.h" />
     <ClInclude Include="Quad.h" />
+    <ClInclude Include="RasterizerState.h" />
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="shader.fx" />

@@ -4,6 +4,7 @@
 #include "VertexBuffer.h"
 #include "VertexShader.h"
 #include "PixelShader.h"
+#include "RasterizerState.h"
 
 #include <d3dcompiler.h>
 
@@ -51,7 +52,27 @@ bool GraphicsEngine::init()
 	m_dxgi_device->GetParent(_uuidof(IDXGIAdapter), (void**)&m_dxgi_adapter);
 	m_dxgi_adapter->GetParent(_uuidof(IDXGIFactory),(void**)&m_dxgi_factory);
 
+	// solid rasterizer state
+	m_solidState = new RasterizerState();
+	if(!m_solidState->init(m_d3d_device, D3D11_FILL_SOLID, D3D11_CULL_BACK)) return false;
+
+	// wireframe rasterizer state
+	m_wireframeState = new RasterizerState();
+	if(!m_wireframeState->init(m_d3d_device, D3D11_FILL_WIREFRAME, D3D11_CULL_BACK)) return false;
+
 	return true;
+}
+
+void GraphicsEngine::setWireframeMode(bool enabled)
+{
+	if(enabled)
+	{
+		m_wireframeState->setRasterizerState(m_imm_context);
+	}
+	else
+	{
+		m_solidState->setRasterizerState(m_imm_context);
+	}
 }
 
 bool GraphicsEngine::release()

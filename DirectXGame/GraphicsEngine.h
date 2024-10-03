@@ -7,12 +7,14 @@ class DeviceContext;
 class VertexBuffer;
 class VertexShader;
 class PixelShader;
+class RasterizerState;
 
 class GraphicsEngine
 {
 public:
 	GraphicsEngine();
 	bool init();
+	void setWireframeMode(bool enabled);
 	bool release();
 	~GraphicsEngine();
 public:
@@ -43,6 +45,9 @@ private:
 	ID3DBlob* m_psblob = nullptr;
 	ID3D11VertexShader* m_vs = nullptr;
 	ID3D11PixelShader* m_ps = nullptr;
+private:
+	RasterizerState* m_solidState = nullptr;
+	RasterizerState* m_wireframeState = nullptr;
 private:
 	friend class SwapChain;
 	friend class VertexBuffer;

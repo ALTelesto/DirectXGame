@@ -1,4 +1,4 @@
-﻿  Quad.cpp
-D:\Game Dev\GDENG03\DirectXGame\DirectXGame\Quad.cpp(55,64): warning C4267: 'argument': conversion from 'size_t' to 'UINT', possible loss of data
-D:\Game Dev\GDENG03\DirectXGame\DirectXGame\Quad.cpp(61,67): warning C4267: 'argument': conversion from 'size_t' to 'UINT', possible loss of data
+﻿  AppWindow.cpp
+  main.cpp
+  Generating Code...
   DirectXGame.vcxproj -> D:\Game Dev\GDENG03\DirectXGame\x64\Debug\DirectXGame.exe

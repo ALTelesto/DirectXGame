@@ -28,9 +28,9 @@ void AppWindow::onCreate()
 	GraphicsEngine::get()->releaseCompiledShader();
 
 	
-	quads.push_back(new Quad(-0.6f, -0.6f, 0.5f, 0.4f, { 1.0f, 0.0f, 0.0f }, shader_byte_code, size_shader)); // Red quad
+	quads.push_back(new Quad(-0.2f, -0.2f, 0.5f, 0.4f, { 1.0f, 0.0f, 0.0f }, shader_byte_code, size_shader)); // Red quad
 	quads.push_back(new Quad(0.0f, 0.0f, 0.5f, 0.4f, { 0.0f, 1.0f, 0.0f }, shader_byte_code, size_shader));  // Green quad
-	quads.push_back(new Quad(0.6f, 0.6f, 0.5f, 0.4f, { 0.0f, 0.0f, 1.0f }, shader_byte_code, size_shader));
+	quads.push_back(new Quad(0.2f, 0.2f, 0.5f, 0.4f, { 0.0f, 0.0f, 1.0f }, shader_byte_code, size_shader));
 
 	GraphicsEngine::get()->compilePixelShader(L"PixelShader.hlsl", "psmain", &shader_byte_code, &size_shader);
 	m_ps = GraphicsEngine::get()->createPixelShader(shader_byte_code, size_shader);
@@ -53,8 +53,7 @@ void AppWindow::onUpdate()
 	GraphicsEngine::get()->getImmediateDeviceContext()->setVertexShader(m_vs);
 	GraphicsEngine::get()->getImmediateDeviceContext()->setPixelShader(m_ps);
 
-	/*Quad* test = new Quad(-0.5f, -0.5f, 0.2f, 0.3f, { 1.0f, 0.0f, 0.0f }, shader_byte_code, size_shader);
-	test->draw(m_vs, m_ps);*/
+	GraphicsEngine::get()->setWireframeMode(false);
 
 	for (Quad* quad : quads)
 	{

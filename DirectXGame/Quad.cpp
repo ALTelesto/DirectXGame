@@ -64,7 +64,7 @@ bool Quad::init()
     }
     return true;
 }
-
+//not done yet since its not yet needed
 void Quad::setPosition(float x, float y)
 {
 }
