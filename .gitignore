@@ -56,6 +56,9 @@ bld/
 [Bb]in/
 [Oo]bj/
 [Ll]og/
+DirectXGame/x86/
+DirectXGame/x64/
+DirectXGame/[Dd]ebug/
 
 # Visual Studio 2015 cache/options directory
 .vs/
