@@ -8,8 +8,37 @@
 
 #include <d3dcompiler.h>
 
+#include "EngineTime.h"
+
+GraphicsEngine* GraphicsEngine::sharedInstance = nullptr;
+
+GraphicsEngine* GraphicsEngine::getInstance()
+{
+	return sharedInstance;
+}
+
 GraphicsEngine::GraphicsEngine()
 {
+}
+
+GraphicsEngine::~GraphicsEngine()
+{
+}
+
+void GraphicsEngine::initialize()
+{
+	sharedInstance = new GraphicsEngine();
+	sharedInstance->init();
+	EngineTime::initialize();
+}
+
+void GraphicsEngine::destroy()
+{
+	if(sharedInstance != NULL)
+	{
+		sharedInstance->release();
+		delete sharedInstance;
+	}
 }
 
 bool GraphicsEngine::init()
@@ -67,10 +96,6 @@ bool GraphicsEngine::release()
 	m_imm_device_context->release();
 	m_d3d_device->Release();
 	return true;
-}
-
-GraphicsEngine::~GraphicsEngine()
-{
 }
 
 SwapChain* GraphicsEngine::createSwapChain()
@@ -151,12 +176,6 @@ bool GraphicsEngine::compilePixelShader(const wchar_t* file_name, const char* en
 void GraphicsEngine::releaseCompiledShader()
 {
 	if (m_blob) m_blob->Release();
-}
-
-GraphicsEngine* GraphicsEngine::get()
-{
-	static GraphicsEngine engine;
-	return &engine;
 }
 
 

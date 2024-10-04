@@ -12,10 +12,17 @@ class ConstantBuffer;
 class GraphicsEngine
 {
 public:
+	static GraphicsEngine* getInstance();
+	static void initialize();
+	static void destroy();
+private:
 	GraphicsEngine();
 	bool init();
 	bool release();
 	~GraphicsEngine();
+	GraphicsEngine(GraphicsEngine const&) {};
+	GraphicsEngine& operator = (GraphicsEngine const&) {};
+	static GraphicsEngine* sharedInstance;
 public:
 	SwapChain* createSwapChain();
 	DeviceContext* getImmediateDeviceContext();
@@ -28,7 +35,7 @@ public:
 	bool compilePixelShader(const wchar_t* file_name, const char* entry_point_name, void** shader_byte_code, size_t* byte_code_size);
 	void releaseCompiledShader();
 public:
-	static GraphicsEngine* get();
+	
 private:
 	DeviceContext* m_imm_device_context;
 private:

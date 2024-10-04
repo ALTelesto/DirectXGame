@@ -1,14 +1,16 @@
 #include "AppWindow.h"
+#include "EngineTime.h"
 
 int main()
 {
-	AppWindow app;
-	if(app.init())
+	AppWindow::initialize();
+	AppWindow* runningApp = (AppWindow*)AppWindow::getInstance();
+	runningApp->init();
+	runningApp->createGraphicsWindow();
+
+	while(runningApp->isRun())
 	{
-		while(app.isRun())
-		{
-			app.broadcast();
-		}
+		runningApp->broadcast();
 	}
 
 	return 0;

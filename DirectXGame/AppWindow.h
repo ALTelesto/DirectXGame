@@ -11,8 +11,18 @@
 class AppWindow: public Window
 {
 public:
+	static AppWindow* getInstance();
+	static void initialize();
+	static void destroy();
+private:
 	AppWindow();
 	~AppWindow();
+	AppWindow(AppWindow const&) {};
+	AppWindow& operator = (AppWindow const&) {};
+	static AppWindow* sharedInstance;
+public:
+	void createGraphicsWindow();
+
 	virtual void onCreate() override;
 	virtual void onUpdate() override;
 	virtual void onDestroy() override;
@@ -20,6 +30,7 @@ private:
 	unsigned long m_old_time = 0;
 	float m_delta_time = 0;
 	float m_angle = 0;
+	double total_time = 0;
 private:
 	SwapChain* m_swap_chain;
 	VertexBuffer* m_vb;
