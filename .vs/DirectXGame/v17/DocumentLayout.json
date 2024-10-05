@@ -118,8 +118,7 @@
               "RelativeToolTip": "DirectXGame\\EngineTime.cpp",
               "ViewState": "AQIAAAwAAAAAAAAAAAAAABcAAAABAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000677|",
-              "WhenOpened": "2024-10-04T14:30:23.08Z",
-              "EditorCaption": ""
+              "WhenOpened": "2024-10-04T14:30:23.08Z"
             },
             {
               "$type": "Document",
@@ -131,8 +130,7 @@
               "RelativeToolTip": "DirectXGame\\EngineTime.h",
               "ViewState": "AQIAAAMAAAAAAAAAAAAAAAcAAAAGAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000680|",
-              "WhenOpened": "2024-10-04T14:27:29.856Z",
-              "EditorCaption": ""
+              "WhenOpened": "2024-10-04T14:27:29.856Z"
             },
             {
               "$type": "Document",
@@ -168,8 +166,7 @@
               "RelativeToolTip": "DirectXGame\\PixelShader.hlsl",
               "ViewState": "AQIAAAAAAAAAAAAAAAAAAAkAAAAGAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001001|",
-              "WhenOpened": "2024-09-18T15:01:19.67Z",
-              "EditorCaption": ""
+              "WhenOpened": "2024-09-18T15:01:19.67Z"
             },
             {
               "$type": "Document",
@@ -205,8 +202,7 @@
               "RelativeToolTip": "DirectXGame\\VertexShader.hlsl",
               "ViewState": "AQIAAAAAAAAAAAAAAAAAABgAAAA3AAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001001|",
-              "WhenOpened": "2024-09-18T14:31:11.399Z",
-              "EditorCaption": ""
+              "WhenOpened": "2024-09-18T14:31:11.399Z"
             },
             {
               "$type": "Document",
@@ -254,8 +250,7 @@
               "RelativeToolTip": "DirectXGame\\VertexBuffer.cpp",
               "ViewState": "AQIAABIAAAAAAAAAAAAAACMAAAAyAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000677|",
-              "WhenOpened": "2024-09-12T08:36:17.259Z",
-              "EditorCaption": ""
+              "WhenOpened": "2024-09-12T08:36:17.259Z"
             },
             {
               "$type": "Document",
@@ -303,8 +298,7 @@
               "RelativeToolTip": "DirectXGame\\SwapChain.cpp",
               "ViewState": "AQIAAAAAAAAAAAAAAAAAAAkAAAAAAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000677|",
-              "WhenOpened": "2024-09-12T08:06:02.423Z",
-              "EditorCaption": ""
+              "WhenOpened": "2024-09-12T08:06:02.423Z"
             },
             {
               "$type": "Document",
@@ -328,8 +322,7 @@
               "RelativeToolTip": "DirectXGame\\main.cpp",
               "ViewState": "AQIAAAAAAAAAAAAAAAAAAAkAAAAAAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000677|",
-              "WhenOpened": "2024-09-09T06:56:16.281Z",
-              "EditorCaption": ""
+              "WhenOpened": "2024-09-09T06:56:16.281Z"
             },
             {
               "$type": "Document",
@@ -341,8 +334,7 @@
               "RelativeToolTip": "DirectXGame\\GraphicsEngine.cpp",
               "ViewState": "AQIAABIAAAAAAAAAAAAcwB0AAAAnAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000677|",
-              "WhenOpened": "2024-09-09T12:51:46.79Z",
-              "EditorCaption": ""
+              "WhenOpened": "2024-09-09T12:51:46.79Z"
             },
             {
               "$type": "Document",
@@ -354,8 +346,7 @@
               "RelativeToolTip": "DirectXGame\\GraphicsEngine.h",
               "ViewState": "AQIAAAkAAAAAAAAAAAAAABMAAAAKAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000680|",
-              "WhenOpened": "2024-09-09T12:51:18.327Z",
-              "EditorCaption": ""
+              "WhenOpened": "2024-09-09T12:51:18.327Z"
             },
             {
               "$type": "Document",
@@ -365,7 +356,7 @@
               "RelativeDocumentMoniker": "DirectXGame\\AppWindow.h",
               "ToolTip": "D:\\Game Dev\\GDENG03\\DirectXGame\\DirectXGame\\AppWindow.h",
               "RelativeToolTip": "DirectXGame\\AppWindow.h",
-              "ViewState": "AQIAAA4AAAAAAAAAAAAcwCAAAAAXAAAA",
+              "ViewState": "AQIAAAgAAAAAAAAAAAAcwBkAAAABAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000680|",
               "WhenOpened": "2024-09-09T07:17:02.691Z",
               "EditorCaption": ""
@@ -378,7 +369,7 @@
               "RelativeDocumentMoniker": "DirectXGame\\AppWindow.cpp",
               "ToolTip": "D:\\Game Dev\\GDENG03\\DirectXGame\\DirectXGame\\AppWindow.cpp",
               "RelativeToolTip": "DirectXGame\\AppWindow.cpp",
-              "ViewState": "AQIAAI8AAAAAAAAAAAAAAJ0AAABDAAAA",
+              "ViewState": "AQIAAG8AAAAAAAAAAAAswIIAAAAXAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000677|",
               "WhenOpened": "2024-09-09T07:19:08.174Z",
               "EditorCaption": ""
@@ -393,8 +384,7 @@
               "RelativeToolTip": "DirectXGame\\Window.cpp",
               "ViewState": "AQIAAB4AAAAAAAAAAAAcwEkAAAAYAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000677|",
-              "WhenOpened": "2024-09-09T06:57:14.078Z",
-              "EditorCaption": ""
+              "WhenOpened": "2024-09-09T06:57:14.078Z"
             },
             {
               "$type": "Document",
@@ -406,8 +396,7 @@
               "RelativeToolTip": "DirectXGame\\Window.h",
               "ViewState": "AQIAAAAAAAAAAAAAAAAAAAcAAAAKAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000680|",
-              "WhenOpened": "2024-09-09T06:56:48.488Z",
-              "EditorCaption": ""
+              "WhenOpened": "2024-09-09T06:56:48.488Z"
             }
           ]
         }

@@ -72,57 +72,27 @@ void AppWindow::createGraphicsWindow()
 	GraphicsEngine::getInstance()->compileVertexShader(L"VertexShader.hlsl", "vsmain", &shader_byte_code, &size_shader);
 	m_vs = GraphicsEngine::getInstance()->createVertexShader(shader_byte_code, size_shader);
 
+	//challenge 1
+	/*vertex list[] =
+	{
+		{-0.8f,-0.9f,0.0f,    -0.32f,-0.11f,0.0f,   0,0,0,  0,1,0 },
+		{-0.9f,0.2f,0.0f,     -0.11f,0.78f,0.0f,    1,1,0,  0,1,1 },
+		{ 0.2f,-0.3f,0.0f,     0.75f,-0.73f,0.0f,   0,0,1,  1,0,0 },
+		{ 0.1f,0.25f,0.0f,      0.88f,0.77f,0.0f,    1,1,1,  0,0,1 }
+	};*/
+
+	//challenge 2
 	vertex list[] =
 	{
-		{-0.5f,-0.5f,0.0f,    -0.32f,-0.11f,0.0f,   0,0,0,  0,1,0 },
-		{-0.5f,0.5f,0.0f,     -0.11f,0.78f,0.0f,    1,1,0,  0,1,1 },
-		{ 0.5f,-0.5f,0.0f,     0.75f,-0.73f,0.0f,   0,0,1,  1,0,0 },
-		{ 0.5f,0.5f,0.0f,      0.88f,0.77f,0.0f,    1,1,1,  0,0,1 }
+		{-0.8f,-0.9f,0.0f,    -0.3f,-0.2f,0.0f,   0,0,0,  0,1,0 },
+		{-0.9f,0.2f,0.0f,     -0.2f,0.83f,0.0f,    1,1,0,  0,1,1 },
+		{ 0.95f,-0.3f,0.0f,     0.05f,-0.73f,0.0f,   0,0,1,  1,0,0 },
+		{ -0.8f,-0.9f,0.0f,      0.85f,0.83f,0.0f,    1,1,1,  0,0,1 }
 	};
 
 	m_vb = GraphicsEngine::getInstance()->createVertexBuffer();
 	UINT size_list = ARRAYSIZE(list);
 
-	m_vb->load(list, sizeof(vertex), size_list, shader_byte_code, size_shader);
-
-	GraphicsEngine::getInstance()->releaseCompiledShader();
-
-	GraphicsEngine::getInstance()->compilePixelShader(L"PixelShader.hlsl", "psmain", &shader_byte_code, &size_shader);
-	m_ps = GraphicsEngine::getInstance()->createPixelShader(shader_byte_code, size_shader);
-	GraphicsEngine::getInstance()->releaseCompiledShader();
-
-	constant cc;
-	cc.m_angle = 0;
-
-	m_cb = GraphicsEngine::getInstance()->createConstantBuffer();
-	m_cb->load(&cc, sizeof(constant));
-}
-
-void AppWindow::onCreate()
-{
-	Window::onCreate();
-	GraphicsEngine::initialize();
-	m_swap_chain = GraphicsEngine::getInstance()->createSwapChain();
-
-	RECT rc = this->getClientWindowRect();
-	m_swap_chain->init(this->m_hwnd, rc.right - rc.left, rc.bottom - rc.top);
-
-	vertex list[] =
-	{
-		{-0.5f,-0.5f,0.0f,    -0.32f,-0.11f,0.0f,   0,0,0,  0,1,0 },
-		{-0.5f,0.5f,0.0f,     -0.11f,0.78f,0.0f,    1,1,0,  0,1,1 },
-		{ 0.5f,-0.5f,0.0f,     0.75f,-0.73f,0.0f,   0,0,1,  1,0,0 },
-		{ 0.5f,0.5f,0.0f,      0.88f,0.77f,0.0f,    1,1,1,  0,0,1 }
-	};
-
-	m_vb = GraphicsEngine::getInstance()->createVertexBuffer();
-	UINT size_list = ARRAYSIZE(list);
-
-	void* shader_byte_code = nullptr;
-	size_t size_shader = 0;
-	GraphicsEngine::getInstance()->compileVertexShader(L"VertexShader.hlsl", "vsmain", &shader_byte_code, &size_shader);
-
-	m_vs = GraphicsEngine::getInstance()->createVertexShader(shader_byte_code, size_shader);
 	m_vb->load(list, sizeof(vertex), size_list, shader_byte_code, size_shader);
 
 	GraphicsEngine::getInstance()->releaseCompiledShader();
@@ -143,7 +113,7 @@ void AppWindow::onUpdate()
 	Window::onUpdate();
 
 	GraphicsEngine::getInstance()->getImmediateDeviceContext()->clearRenderTargetColor(this->m_swap_chain,
-		0, 0, 0, 1);
+		0, 0.5, 0.5, 1);
 	RECT rc = this->getClientWindowRect();
 	GraphicsEngine::getInstance()->getImmediateDeviceContext()->setViewportSize(rc.right - rc.left, rc.bottom - rc.top);
 
@@ -155,11 +125,13 @@ void AppWindow::onUpdate()
 
 	total_time += EngineTime::getDeltaTime();
 
-	float speed = (2.0f * std::sin(static_cast<float>(total_time * 0.3f)));
+	//challenge 1 - increasing/decreasing animation
+	//float speed = (2.0f * std::sin(static_cast<float>(total_time * 0.3f)));
 
-	m_angle += 5.f * static_cast<float>(EngineTime::getDeltaTime()) * speed;
-	std::cout << m_angle << "\n";
-	std::cout << speed << "\n";
+	//challenge 2 - linear
+	float speed = 0.25f;
+
+	m_angle += 5.f * static_cast<float>(EngineTime::getDeltaTime()) * std::abs(speed);
 	constant cc;
 	cc.m_angle = m_angle;
 
@@ -187,4 +159,9 @@ void AppWindow::onDestroy()
 	m_vs->release();
 	m_ps->release();
 	GraphicsEngine::destroy();
+}
+
+void AppWindow::onCreate()
+{
+
 }
