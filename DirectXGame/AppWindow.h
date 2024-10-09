@@ -23,12 +23,13 @@ private:
 public:
 	void createGraphicsWindow();
 
+	void updateQuadPosition();
+
 	virtual void onCreate() override;
 	virtual void onUpdate() override;
 	virtual void onDestroy() override;
 private:
-	unsigned long m_old_time = 0;
-	float m_delta_time = 0;
+	float m_delta_pos = 0;
 	float m_angle = 0;
 	double total_time = 0;
 private:
