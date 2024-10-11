@@ -78,6 +78,8 @@
     <ClCompile Include="IndexBuffer.cpp">
       <Filter>GameEngine\GraphicsEngine\IndexBuffer</Filter>
     </ClCompile>
+    <ClCompile Include="RasterizerState.cpp" />
+    <ClCompile Include="Circle.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="AppWindow.h">
@@ -119,6 +121,8 @@
     <ClInclude Include="IndexBuffer.h">
       <Filter>GameEngine\GraphicsEngine\IndexBuffer</Filter>
     </ClInclude>
+    <ClInclude Include="RasterizerState.h" />
+    <ClInclude Include="Circle.h" />
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="shader.fx" />

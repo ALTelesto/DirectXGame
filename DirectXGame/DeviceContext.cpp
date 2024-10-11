@@ -7,6 +7,7 @@
 #include "IndexBuffer.h"
 #include "VertexShader.h"
 #include "PixelShader.h"
+#include <vector>
 
 DeviceContext::DeviceContext(ID3D11DeviceContext* device_context):m_device_context(device_context)
 {
@@ -49,6 +50,32 @@ void DeviceContext::drawTriangleStrip(UINT vertex_count, UINT start_vertex_index
 {
 	m_device_context->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLESTRIP);
 	m_device_context->Draw(vertex_count, start_vertex_index);
+}
+
+void DeviceContext::drawTriangleFan(UINT vertex_count, UINT start_vertex_index)
+{
+	// Set the primitive topology to triangle list
+	m_device_context->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+
+	// Create an index buffer to simulate the triangle fan
+	std::vector<UINT> indices;
+
+	// The first index is always the center vertex
+	for (UINT i = 1; i < vertex_count - 1; ++i)
+	{
+		// Create triangles: [center, edge_vertex_i, edge_vertex_(i + 1)]
+		indices.push_back(start_vertex_index);     // Center
+		indices.push_back(start_vertex_index + i); // Current edge vertex
+		indices.push_back(start_vertex_index + i + 1); // Next edge vertex
+	}
+
+	// The last triangle needs to connect the last edge vertex with the first edge vertex
+	indices.push_back(start_vertex_index);                   // Center
+	indices.push_back(start_vertex_index + vertex_count - 2); // Last edge vertex
+	indices.push_back(start_vertex_index + 1);                // First edge vertex
+
+	// Now draw the triangles using DrawIndexed
+	m_device_context->DrawIndexed(static_cast<UINT>(indices.size()), 0, 0);
 }
 
 void DeviceContext::setViewportSize(UINT width, UINT height)

@@ -8,6 +8,8 @@
 #include "IndexBuffer.h"
 #include "VertexShader.h"
 #include "PixelShader.h"
+#include "Circle.h"
+#include <vector>
 
 class AppWindow: public Window
 {
@@ -40,5 +42,10 @@ private:
 	PixelShader* m_ps;
 	ConstantBuffer* m_cb;
 	IndexBuffer* m_ib;
+
+private:
+	// Add a list of Circle objects
+	std::vector<Circle*> m_circles;
+	void createCircles();
 };
 

@@ -8,6 +8,8 @@
 #include "Vector3D.h"
 #include "Matrix4x4.h"
 
+#include <cstdlib> 
+
 struct vec3
 {
 	float x, y, z;
@@ -57,6 +59,12 @@ AppWindow::AppWindow()
 
 AppWindow::~AppWindow()
 {
+	// Clean up the list of circles
+	for (Circle* circle : m_circles)
+	{
+		delete circle;
+	}
+	m_circles.clear();
 }
 
 void AppWindow::createGraphicsWindow()
@@ -135,6 +143,9 @@ void AppWindow::createGraphicsWindow()
 
 	m_cb = GraphicsEngine::getInstance()->createConstantBuffer();
 	m_cb->load(&cc, sizeof(constant));
+
+	// Initialize the circle list
+	createCircles();
 }
 
 void AppWindow::updateQuadPosition()
@@ -157,16 +168,16 @@ void AppWindow::updateQuadPosition()
 	cc.m_world.setScale(Vector3D(0.7, 0.7, 0.7));
 
 	temp.setIdentity();
-	temp.setRotationZ(m_angle);
+	//temp.setRotationZ(m_angle);
 	cc.m_world *= temp;
 
 	temp.setIdentity();
-	temp.setRotationY(m_angle);
+	//temp.setRotationY(m_angle);
 	cc.m_world *= temp;
 
 	temp.setIdentity();
-	temp.setRotationX(m_angle);
-	temp.setTranslation(Vector3D(0, 0, 2));
+	//temp.setRotationX(m_angle);
+	temp.setTranslation(Vector3D(0, 0, 1));
 	cc.m_world *= temp;
 
 	cc.m_view.setIdentity();
@@ -186,7 +197,7 @@ void AppWindow::onUpdate()
 	Window::onUpdate();
 
 	GraphicsEngine::getInstance()->getImmediateDeviceContext()->clearRenderTargetColor(this->m_swap_chain,
-		0, 0.5, 0.5, 1);
+		0, 0, 0, 1);
 	RECT rc = this->getClientWindowRect();
 	GraphicsEngine::getInstance()->getImmediateDeviceContext()->setViewportSize(rc.right - rc.left, rc.bottom - rc.top);
 
@@ -202,7 +213,13 @@ void AppWindow::onUpdate()
 	GraphicsEngine::getInstance()->getImmediateDeviceContext()->setIndexBuffer(m_ib);
 
 	//GraphicsEngine::getInstance()->getImmediateDeviceContext()->drawTriangleStrip(m_vb->getSizeVertex(), 0);
-	GraphicsEngine::getInstance()->getImmediateDeviceContext()->drawIndexedTriangleList(m_ib->getSizeIndexList(), 0, 0);
+	//GraphicsEngine::getInstance()->getImmediateDeviceContext()->drawIndexedTriangleList(m_ib->getSizeIndexList(), 0, 0);
+
+	// Update and render each circle in the list
+	for (Circle* circle : m_circles)
+	{
+		circle->draw(m_vs, m_ps);
+	}
 
 	m_swap_chain->present(true);
 
@@ -224,4 +241,20 @@ void AppWindow::onDestroy()
 void AppWindow::onCreate()
 {
 
+}
+
+void AppWindow::createCircles()
+{
+	// Create a few circles with random positions and colors
+	int num_circles = 1;  // You can change the number of circles here
+	for (int i = 0; i < num_circles; ++i)
+	{
+		float x = 0;
+		float y = 0;
+		float radius = 0.3f;  // Random radius
+		Vector3D color = Vector3D( static_cast<float>(rand()) / RAND_MAX, static_cast<float>(rand()) / RAND_MAX, static_cast<float>(rand()) / RAND_MAX );
+
+		Circle* circle = new Circle(x, y, radius, color);
+		m_circles.push_back(circle);
+	}
 }
