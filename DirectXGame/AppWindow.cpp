@@ -16,7 +16,6 @@ struct vec3
 struct vertex
 {
 	Vector3D position;
-	Vector3D position1;
 	Vector3D color;
 	Vector3D color1;
 };
@@ -26,7 +25,7 @@ struct constant
 {
 	Matrix4x4 m_world;
 	Matrix4x4 m_view;
-	Matrix4x4 m_projection;
+	Matrix4x4 m_proj;
 	float m_angle;
 };
 
@@ -78,28 +77,52 @@ void AppWindow::createGraphicsWindow()
 	GraphicsEngine::getInstance()->compileVertexShader(L"VertexShader.hlsl", "vsmain", &shader_byte_code, &size_shader);
 	m_vs = GraphicsEngine::getInstance()->createVertexShader(shader_byte_code, size_shader);
 
-	//challenge 1
-	/*vertex list[] =
+	vertex vertex_list[] =
 	{
-		{Vector3D(-0.8f,-0.9f,0.0f),Vector3D(-0.32f,-0.11f,0.0f),Vector3D(0,0,0),Vector3D(0,1,0) },
-		{Vector3D(-0.9f,0.2f,0.0f),Vector3D(-0.11f,0.78f,0.0f),Vector3D(1,1,0),Vector3D(0,1,1) },
-		{Vector3D(0.2f,-0.3f,0.0f),Vector3D(0.75f,-0.73f,0.0f),Vector3D(0,0,1),Vector3D(1,0,0) },
-		{Vector3D(0.1f,0.25f,0.0f),Vector3D(0.88f,0.77f,0.0f),Vector3D(1,1,1),Vector3D(0,0,1) }
-	};*/
+		//front
+		{Vector3D(-0.5f,-0.5f,-0.5f),    Vector3D(1,0,0),  Vector3D(0.2f,0,0) },
+		{Vector3D(-0.5f,0.5f,-0.5f),    Vector3D(1,1,0), Vector3D(0.2f,0.2f,0) },
+		{ Vector3D(0.5f,0.5f,-0.5f),   Vector3D(1,1,0),  Vector3D(0.2f,0.2f,0) },
+		{ Vector3D(0.5f,-0.5f,-0.5f),     Vector3D(1,0,0), Vector3D(0.2f,0,0) },
+		//back
+		{ Vector3D(0.5f,-0.5f,0.5f),    Vector3D(0,1,0), Vector3D(0,0.2f,0) },
+		{ Vector3D(0.5f,0.5f,0.5f),    Vector3D(0,1,1), Vector3D(0,0.2f,0.2f) },
+		{ Vector3D(-0.5f,0.5f,0.5f),   Vector3D(0,1,1),  Vector3D(0,0.2f,0.2f) },
+		{ Vector3D(-0.5f,-0.5f,0.5f),     Vector3D(0,1,0), Vector3D(0,0.2f,0) }
 
-	//challenge 2
-	vertex list[] =
-	{
-		{Vector3D( -0.8f,-0.9f,0.0f),Vector3D(-0.3f,-0.2f,0.0f),Vector3D(0,0,0),Vector3D(0,1,0)},
-		{Vector3D(-0.9f,0.2f,0.0f),Vector3D(-0.2f,0.83f,0.0f),Vector3D(1,1,0),Vector3D(0,1,1) },
-		{Vector3D(0.95f,-0.3f,0.0f),Vector3D(0.05f,-0.73f,0.0f),Vector3D(0,0,1),Vector3D(1,0,0) },
-		{Vector3D(-0.8f,-0.9f,0.0f),Vector3D(0.85f,0.83f,0.0f),Vector3D(1,1,1),Vector3D(0,0,1) }
 	};
 
 	m_vb = GraphicsEngine::getInstance()->createVertexBuffer();
-	UINT size_list = ARRAYSIZE(list);
+	UINT size_list = ARRAYSIZE(vertex_list);
 
-	m_vb->load(list, sizeof(vertex), size_list, shader_byte_code, size_shader);
+	unsigned int index_list[] =
+	{
+		//front
+		0,1,2,
+		2,3,0,
+		//back
+		4,5,6,
+		6,7,4,
+		//top
+		1,6,5,
+		5,2,1,
+		//bottom
+		7,0,3,
+		3,4,7,
+		//right
+		3,2,5,
+		5,4,3,
+		//left
+		7,6,1,
+		1,0,7
+	};
+
+	m_ib = GraphicsEngine::getInstance()->createIndexBuffer();
+	UINT size_index_list = ARRAYSIZE(index_list);
+
+	m_ib->load(index_list, size_index_list);
+
+	m_vb->load(vertex_list, sizeof(vertex), size_list, shader_byte_code, size_shader);
 
 	GraphicsEngine::getInstance()->releaseCompiledShader();
 
@@ -116,37 +139,41 @@ void AppWindow::createGraphicsWindow()
 
 void AppWindow::updateQuadPosition()
 {
-	/*unsigned long new_time = 0;
-	if (m_old_time)
-		new_time = ::GetTickCount() - m_old_time;
-	m_delta_time = new_time / 1000.0f;
-	m_old_time = ::GetTickCount();*/
-
 	total_time += EngineTime::getDeltaTime();
 
-	//challenge 1 - increasing/decreasing animation
-	//float speed = (2.0f * std::sin(static_cast<float>(total_time * 0.3f)));
-
-	//challenge 2 - linear
 	float speed = 0.25f;
 
 	m_angle += 5.f * static_cast<float>(EngineTime::getDeltaTime()) * std::abs(speed);
 	constant cc;
 	cc.m_angle = m_angle;
 
-	if(m_angle > 1.0f)
+	/*if(m_angle > 1.0f)
 	{
 		m_angle = 0;
-	}
+	}*/
 
-	cc.m_world.setTranslation(Vector3D::lerp(Vector3D(-2,-2,0),Vector3D(2,2,0),m_angle));
+	Matrix4x4 temp;
 
-	//cc.m_world.setTranslation(Vector3D(0,0,0));
+	cc.m_world.setScale(Vector3D(0.7, 0.7, 0.7));
+
+	temp.setIdentity();
+	temp.setRotationZ(m_angle);
+	cc.m_world *= temp;
+
+	temp.setIdentity();
+	temp.setRotationY(m_angle);
+	cc.m_world *= temp;
+
+	temp.setIdentity();
+	temp.setRotationX(m_angle);
+	temp.setTranslation(Vector3D(0, 0, 2));
+	cc.m_world *= temp;
+
 	cc.m_view.setIdentity();
-	cc.m_projection.setOrthoLH
+	cc.m_proj.setOrthoLH
 	(
-		(this->getClientWindowRect().right - this->getClientWindowRect().left)/200.0f,
-		(this->getClientWindowRect().bottom - this->getClientWindowRect().top)/200.0f,
+		(this->getClientWindowRect().right - this->getClientWindowRect().left) / 300.0f,
+		(this->getClientWindowRect().bottom - this->getClientWindowRect().top) / 300.0f,
 		-4.0f,
 		4.0f
 	);
@@ -172,11 +199,14 @@ void AppWindow::onUpdate()
 	GraphicsEngine::getInstance()->getImmediateDeviceContext()->setPixelShader(m_ps);
 
 	GraphicsEngine::getInstance()->getImmediateDeviceContext()->setVertexBuffer(m_vb);
+	GraphicsEngine::getInstance()->getImmediateDeviceContext()->setIndexBuffer(m_ib);
 
-	GraphicsEngine::getInstance()->getImmediateDeviceContext()->drawTriangleStrip(m_vb->getSizeVertex(), 0);
+	//GraphicsEngine::getInstance()->getImmediateDeviceContext()->drawTriangleStrip(m_vb->getSizeVertex(), 0);
+	GraphicsEngine::getInstance()->getImmediateDeviceContext()->drawIndexedTriangleList(m_ib->getSizeIndexList(), 0, 0);
+
 	m_swap_chain->present(true);
 
-	std::cout << "delta time: " << EngineTime::getDeltaTime() << "\n";
+	//std::cout << "delta time: " << EngineTime::getDeltaTime() << "\n";
 }
 
 void AppWindow::onDestroy()
@@ -186,6 +216,8 @@ void AppWindow::onDestroy()
 	m_swap_chain->release();
 	m_vs->release();
 	m_ps->release();
+	m_ib->release();
+	m_cb->release();
 	GraphicsEngine::destroy();
 }
 
