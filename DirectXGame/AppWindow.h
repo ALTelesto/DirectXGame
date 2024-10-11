@@ -43,9 +43,13 @@ private:
 	ConstantBuffer* m_cb;
 	IndexBuffer* m_ib;
 
+	float width;
+	float height;
+
 private:
 	// Add a list of Circle objects
 	std::vector<Circle*> m_circles;
 	void createCircles();
+	void handleInput();
 };
 

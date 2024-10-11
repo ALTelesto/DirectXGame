@@ -1,14 +1,16 @@
 #include "Circle.h"
 #include "VertexBuffer.h"
+#include "IndexBuffer.h"
 #include "VertexShader.h"
 #include "PixelShader.h"
 #include "GraphicsEngine.h"
 #include "DeviceContext.h"
 #include <cmath>
+#include <vector>
 #include <cstdlib>
 #include <iostream>
 
-#define NUM_SEGMENTS 30 // Defines how smooth the circle is (more segments = smoother circle)
+#define NUM_SEGMENTS 30
 
 #ifndef PI
 #define PI 3.14159265359f
@@ -23,26 +25,31 @@ struct vertex
 Circle::Circle(float x, float y, float radius, Vector3D color)
     : m_position({ x, y, 0.0f }), m_color(color), m_radius(radius)
 {
-    // Randomize the initial direction (angle in radians)
     m_direction = static_cast<float>(rand()) / RAND_MAX * 2.0f * PI;
 
-    // Generate vertices for a circle centered at (x, y) with a given radius
-    vertex* vertices = new vertex[NUM_SEGMENTS + 2]; // +2 for the center point and the final point closing the loop
-    vertices[0] = { Vector3D(x, y, 0.0f), Vector3D(m_color.m_x, m_color.m_y, m_color.m_z) }; // Center vertex
+    std::vector<vertex> vertices;
 
-    for (int i = 1; i <= NUM_SEGMENTS + 1; ++i) // Correct number of vertices
-    {
-        float angle = (float)(i - 1) * 2.0f * PI / NUM_SEGMENTS; // Correctly distribute angles around the circle
-        float vx = x + cos(angle) * m_radius;
-        float vy = y + sin(angle) * m_radius;
-        vertices[i] = { Vector3D(vx, vy, 0.0f), Vector3D(m_color.m_x, m_color.m_y, m_color.m_z) };
-        std::cout << vx <<" " << vy << " \n";
+    vertex centerVertex;
+    centerVertex.position = Vector3D(x, y, 0.0f);
+    centerVertex.color = m_color;
+    vertices.push_back(centerVertex);
+
+    for (int i = 0; i <= NUM_SEGMENTS; ++i) {
+        float theta = (2.0f * PI * i) / NUM_SEGMENTS;
+        vertex edgeVertex;
+        edgeVertex.position = Vector3D(x, y, 0) + Vector3D(radius * cos(theta), radius * sin(theta), 0.0f);
+        edgeVertex.color = m_color;
+        vertices.push_back(edgeVertex);
+
+        edgeVertex;
+        edgeVertex.position = Vector3D(x, y, 0) + Vector3D(0, 0, 0);
+        edgeVertex.color = m_color;
+        vertices.push_back(edgeVertex);
     }
 
     m_vb = GraphicsEngine::getInstance()->createVertexBuffer();
-    m_vb->load(vertices, sizeof(vertex), NUM_SEGMENTS + 2, nullptr, 0); // Use NUM_SEGMENTS + 2 here
+    m_vb->load(vertices.data(), sizeof(vertex), vertices.size(), nullptr, 0);
 
-    delete[] vertices;
 }
 
 void Circle::draw(VertexShader* vs, PixelShader* ps)
@@ -51,33 +58,61 @@ void Circle::draw(VertexShader* vs, PixelShader* ps)
     GraphicsEngine::getInstance()->getImmediateDeviceContext()->setPixelShader(ps);
 
     GraphicsEngine::getInstance()->getImmediateDeviceContext()->setVertexBuffer(m_vb);
-    GraphicsEngine::getInstance()->getImmediateDeviceContext()->drawTriangleFan(m_vb->getSizeVertex(), 0);
+
+    // i dont understand why this works
+    GraphicsEngine::getInstance()->getImmediateDeviceContext()->drawTriangleList(m_vb->getSizeVertex(), 0);
+    GraphicsEngine::getInstance()->getImmediateDeviceContext()->drawTriangleList(m_vb->getSizeVertex()-1, 1);
+    GraphicsEngine::getInstance()->getImmediateDeviceContext()->drawTriangleList(m_vb->getSizeVertex()-2, 2);
+    // but i'll take it
 }
 
+//similar to constructor
 void Circle::setPosition(float x, float y)
 {
     m_position.m_x = x;
     m_position.m_y = y;
-    // Update the vertex buffer to move the circle to the new position
-    vertex* vertices = new vertex[NUM_SEGMENTS + 1];
-    vertices[0] = { Vector3D(x, y, 0.0f), Vector3D(m_color.m_x, m_color.m_y, m_color.m_z) }; // Center vertex
+    std::vector<vertex> vertices;
 
-    for (int i = 1; i <= NUM_SEGMENTS; ++i)
-    {
-        float angle = (float)(i - 1) * 2.0f * 3.14159265359f / NUM_SEGMENTS;
-        float vx = x + cos(angle) * m_radius;
-        float vy = y + sin(angle) * m_radius;
-        vertices[i] = { Vector3D(vx, vy, 0.0f), Vector3D(m_color.m_x, m_color.m_y, m_color.m_z) };
+    vertex centerVertex;
+    centerVertex.position = Vector3D(m_position.m_x, m_position.m_y, 0.0f);
+    centerVertex.color = m_color;
+    vertices.push_back(centerVertex);
+
+    for (int i = 0; i <= NUM_SEGMENTS; ++i) {
+        float theta = (2.0f * PI * i) / NUM_SEGMENTS;
+        vertex edgeVertex;
+        edgeVertex.position = Vector3D(m_position.m_x, m_position.m_y, 0) + Vector3D(m_radius * cos(theta), m_radius * sin(theta), 0.0f);
+        edgeVertex.color = m_color;
+        vertices.push_back(edgeVertex);
+
+        edgeVertex.position = Vector3D(m_position.m_x, m_position.m_y, 0.0f);
+        edgeVertex.color = m_color;
+        vertices.push_back(edgeVertex);
+        
     }
 
-    m_vb->load(vertices, sizeof(vertex), NUM_SEGMENTS + 1, nullptr, 0);
+    m_vb->load(vertices.data(), sizeof(vertex), vertices.size(), nullptr, 0);
+}
 
-    delete[] vertices;
+void Circle::move(float deltaTime)
+{
+    float vx = cos(m_direction) * m_speed;
+    float vy = sin(m_direction) * m_speed;
+
+    m_position.m_x += vx * deltaTime;
+    m_position.m_y += vy * deltaTime;
+
+    setPosition(m_position.m_x, m_position.m_y);
 }
 
 float Circle::getRadius() const
 {
     return m_radius;
+}
+
+Vector3D Circle::getPosition()
+{
+    return m_position;
 }
 
 Circle::~Circle()
@@ -106,4 +141,9 @@ void Circle::setDirection(float angle)
 float Circle::getDirection()
 {
     return m_direction;
+}
+
+void Circle::setColor(Vector3D color)
+{
+    m_color = color;
 }

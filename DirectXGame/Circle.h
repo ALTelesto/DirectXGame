@@ -17,14 +17,19 @@ public:
     // Setters
     void setPosition(float x, float y);
 
+    void move(float deltaTime);
+
     // Getters
     float getRadius() const;
+    Vector3D getPosition();
 
     // New methods
     void setSpeed(float speed);
     float getSpeed();
     void setDirection(float angle);
     float getDirection();
+
+    void setColor(Vector3D color);
 
 private:
     VertexBuffer* m_vb;
@@ -34,7 +39,6 @@ private:
     Vector3D m_color;
     float m_radius;
 
-    // Variables for movement
     float m_speed;
-    float m_direction;  // Angle in radians
+    float m_direction;
 };

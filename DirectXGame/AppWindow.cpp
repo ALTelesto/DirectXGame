@@ -8,7 +8,11 @@
 #include "Vector3D.h"
 #include "Matrix4x4.h"
 
-#include <cstdlib> 
+#include <cstdlib>
+
+#ifndef PI
+#define PI 3.14159265359f
+#endif
 
 struct vec3
 {
@@ -74,10 +78,13 @@ void AppWindow::createGraphicsWindow()
 
 	this->m_swap_chain = GraphicsEngine::getInstance()->createSwapChain();
 	RECT windowRect = this->getClientWindowRect();
-	int width = windowRect.right - windowRect.left;
-	int height = windowRect.bottom - windowRect.top;
+	int pixelWidth = windowRect.right - windowRect.left;
+	int pixelHeight = windowRect.bottom - windowRect.top;
 
-	this->m_swap_chain->init(this->m_hwnd, width, height);
+	width = (pixelWidth / 300.0f);
+	height = (pixelHeight / 300.0f);
+
+	this->m_swap_chain->init(this->m_hwnd, pixelWidth, pixelHeight);
 
 	void* shader_byte_code = nullptr;
 	size_t size_shader = 0;
@@ -145,7 +152,7 @@ void AppWindow::createGraphicsWindow()
 	m_cb->load(&cc, sizeof(constant));
 
 	// Initialize the circle list
-	createCircles();
+	//createCircles();
 }
 
 void AppWindow::updateQuadPosition()
@@ -192,6 +199,10 @@ void AppWindow::updateQuadPosition()
 	m_cb->update(GraphicsEngine::getInstance()->getImmediateDeviceContext(), &cc);
 }
 
+bool isKeyPressed(int key) {
+	return GetAsyncKeyState(key) & 0x8000;
+}
+
 void AppWindow::onUpdate()
 {
 	Window::onUpdate();
@@ -211,15 +222,39 @@ void AppWindow::onUpdate()
 
 	GraphicsEngine::getInstance()->getImmediateDeviceContext()->setVertexBuffer(m_vb);
 	GraphicsEngine::getInstance()->getImmediateDeviceContext()->setIndexBuffer(m_ib);
+	
 
-	//GraphicsEngine::getInstance()->getImmediateDeviceContext()->drawTriangleStrip(m_vb->getSizeVertex(), 0);
-	//GraphicsEngine::getInstance()->getImmediateDeviceContext()->drawIndexedTriangleList(m_ib->getSizeIndexList(), 0, 0);
-
-	// Update and render each circle in the list
 	for (Circle* circle : m_circles)
 	{
+		float circleX = circle->getPosition().m_x;
+		float circleY = circle->getPosition().m_y;
+		float radius = circle->getRadius();
+
+		bool bounce = false;
+		// incredibly scuffed collision check made by you-know-who + fined-tuned by me
+		if (circleX - radius * 3.35 <= -width / 2 || circleX + radius * 3.35 >= width / 2)
+		{
+			float direction = circle->getDirection();
+			circle->setDirection(PI - direction);
+			bounce = true;
+		}
+		if (circleY - radius * 2.7 <= -height / 2 || circleY + radius * 2.7 >= height / 2)
+		{
+			float direction = circle->getDirection();
+			circle->setDirection(-direction);
+			bounce = true;
+		}
+		if(bounce)
+		{
+			Vector3D color = Vector3D(static_cast<float>(rand()) / RAND_MAX, static_cast<float>(rand()) / RAND_MAX, static_cast<float>(rand()) / RAND_MAX);
+			circle->setColor(color);
+		}
+
+		circle->move(EngineTime::getDeltaTime());
 		circle->draw(m_vs, m_ps);
 	}
+
+	handleInput();
 
 	m_swap_chain->present(true);
 
@@ -249,12 +284,50 @@ void AppWindow::createCircles()
 	int num_circles = 1;  // You can change the number of circles here
 	for (int i = 0; i < num_circles; ++i)
 	{
-		float x = 0;
-		float y = 0;
-		float radius = 0.3f;  // Random radius
+		float x = 0.f;
+		float y = 0.f;
+		float radius = 0.2f;  // Random radius
 		Vector3D color = Vector3D( static_cast<float>(rand()) / RAND_MAX, static_cast<float>(rand()) / RAND_MAX, static_cast<float>(rand()) / RAND_MAX );
 
 		Circle* circle = new Circle(x, y, radius, color);
+
+		float randomSpeed = 0.1f + static_cast<float>(rand()) / (static_cast<float>(RAND_MAX / (0.7f - 0.1f)));
+		circle->setSpeed(randomSpeed);
+
 		m_circles.push_back(circle);
 	}
+}
+
+void AppWindow::handleInput()
+{
+	static bool spacePressed = false;
+	static bool backspacePressed = false;
+	static bool deletePressed = false;
+
+	// Space -> Spawn 1 circle
+	if (isKeyPressed(VK_SPACE) && !spacePressed) {
+		createCircles();
+		spacePressed = true;
+	}
+	if (!isKeyPressed(VK_SPACE)) spacePressed = false;
+
+	// Backspace -> Delete the most recent circle
+	if (isKeyPressed(VK_BACK) && !backspacePressed) {
+		if (!m_circles.empty()) {
+			delete m_circles.back();
+			m_circles.pop_back();
+		}
+		backspacePressed = true;
+	}
+	if (!isKeyPressed(VK_BACK)) backspacePressed = false;
+
+	// Delete -> Delete all circles
+	if (isKeyPressed(VK_DELETE) && !deletePressed) {
+		for (Circle* circle : m_circles) {
+			delete circle;
+		}
+		m_circles.clear();
+		deletePressed = true;
+	}
+	if (!isKeyPressed(VK_DELETE)) deletePressed = false;
 }

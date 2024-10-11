@@ -16,6 +16,11 @@ public:
 		return v;
 	}
 
+	Vector3D operator+(const Vector3D& other) const
+	{
+		return Vector3D(m_x + other.m_x, m_y + other.m_y, m_z + other.m_z);
+	}
+
 	~Vector3D() {}
 public:
 	float m_x, m_y, m_z;
