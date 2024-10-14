@@ -9,6 +9,9 @@
 #include "VertexShader.h"
 #include "PixelShader.h"
 
+#include "Cube.h"
+#include <vector>
+
 class AppWindow: public Window
 {
 public:
@@ -33,7 +36,14 @@ private:
 	float m_delta_pos = 0;
 	float m_angle = 0;
 	double total_time = 0;
+
 private:
+	vector<AGameObject*> gameObjectList;
+
+private:
+	int width;
+	int height;
+
 	SwapChain* m_swap_chain;
 	VertexBuffer* m_vb;
 	VertexShader* m_vs;

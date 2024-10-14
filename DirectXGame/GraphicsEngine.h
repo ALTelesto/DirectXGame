@@ -48,6 +48,7 @@ private:
 	IDXGIAdapter* m_dxgi_adapter;
 	IDXGIFactory* m_dxgi_factory;
 	ID3D11DeviceContext* m_imm_context;
+	ID3D11DepthStencilState* m_depthStencilState;
 private:
 	ID3DBlob* m_blob = nullptr;
 	ID3DBlob* m_vsblob = nullptr;

@@ -1,6 +1,7 @@
 #include "IndexBuffer.h"
 
 #include "GraphicsEngine.h"
+#include <iostream>
 
 IndexBuffer::IndexBuffer() :m_buffer(0)
 {
@@ -24,6 +25,7 @@ bool IndexBuffer::load(void* list_indices, UINT size_list)
 
 	if (FAILED(GraphicsEngine::getInstance()->m_d3d_device->CreateBuffer(&buff_desc, &init_data, &m_buffer)))
 	{
+		std::cout << "indexbuffer failure \n";
 		return false;
 	}
 

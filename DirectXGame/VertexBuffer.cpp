@@ -1,4 +1,7 @@
 #include "VertexBuffer.h"
+
+#include <iostream>
+
 #include "GraphicsEngine.h"
 
 VertexBuffer::VertexBuffer():m_layout(0),m_buffer(0)
@@ -39,6 +42,7 @@ bool VertexBuffer::load(void* list_vertices, UINT size_vertex, UINT size_list, v
 
 	if (FAILED(GraphicsEngine::getInstance()->m_d3d_device->CreateInputLayout(layout, size_layout, shader_byte_code, size_byte_shader, &m_layout)))
 	{
+		std::cout << "indexbuffer failure \n";
 		return false;
 	}
 

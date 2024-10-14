@@ -82,6 +82,22 @@ bool GraphicsEngine::init()
 	m_dxgi_device->GetParent(_uuidof(IDXGIAdapter), (void**)&m_dxgi_adapter);
 	m_dxgi_adapter->GetParent(_uuidof(IDXGIFactory),(void**)&m_dxgi_factory);
 
+	D3D11_DEPTH_STENCIL_DESC depthStencilDesc = {};
+	depthStencilDesc.DepthEnable = TRUE; 
+	depthStencilDesc.DepthWriteMask = D3D11_DEPTH_WRITE_MASK_ALL;
+	depthStencilDesc.DepthFunc = D3D11_COMPARISON_LESS;
+
+	depthStencilDesc.StencilEnable = FALSE;
+
+	HRESULT hr = m_d3d_device->CreateDepthStencilState(&depthStencilDesc, &m_depthStencilState);
+	if (FAILED(hr))
+	{
+		std::cout << "Failed to create Depth Stencil State\n";
+		return false;
+	}
+
+	m_imm_context->OMSetDepthStencilState(m_depthStencilState, 0);
+
 	return true;
 }
 

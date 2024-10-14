@@ -8,6 +8,11 @@
 #include "Vector3D.h"
 #include "Matrix4x4.h"
 
+#include <cstdlib>
+#include <ctime> 
+
+#include "Plane.h"
+
 struct vec3
 {
 	float x, y, z;
@@ -66,8 +71,8 @@ void AppWindow::createGraphicsWindow()
 
 	this->m_swap_chain = GraphicsEngine::getInstance()->createSwapChain();
 	RECT windowRect = this->getClientWindowRect();
-	int width = windowRect.right - windowRect.left;
-	int height = windowRect.bottom - windowRect.top;
+	width = windowRect.right - windowRect.left;
+	height = windowRect.bottom - windowRect.top;
 
 	this->m_swap_chain->init(this->m_hwnd, width, height);
 
@@ -77,52 +82,73 @@ void AppWindow::createGraphicsWindow()
 	GraphicsEngine::getInstance()->compileVertexShader(L"VertexShader.hlsl", "vsmain", &shader_byte_code, &size_shader);
 	m_vs = GraphicsEngine::getInstance()->createVertexShader(shader_byte_code, size_shader);
 
-	vertex vertex_list[] =
+	for (int i = 0; i < 1; ++i)
 	{
-		//front
-		{Vector3D(-0.5f,-0.5f,-0.5f),    Vector3D(1,0,0),  Vector3D(0.2f,0,0) },
-		{Vector3D(-0.5f,0.5f,-0.5f),    Vector3D(1,1,0), Vector3D(0.2f,0.2f,0) },
-		{ Vector3D(0.5f,0.5f,-0.5f),   Vector3D(1,1,0),  Vector3D(0.2f,0.2f,0) },
-		{ Vector3D(0.5f,-0.5f,-0.5f),     Vector3D(1,0,0), Vector3D(0.2f,0,0) },
-		//back
-		{ Vector3D(0.5f,-0.5f,0.5f),    Vector3D(0,1,0), Vector3D(0,0.2f,0) },
-		{ Vector3D(0.5f,0.5f,0.5f),    Vector3D(0,1,1), Vector3D(0,0.2f,0.2f) },
-		{ Vector3D(-0.5f,0.5f,0.5f),   Vector3D(0,1,1),  Vector3D(0,0.2f,0.2f) },
-		{ Vector3D(-0.5f,-0.5f,0.5f),     Vector3D(0,1,0), Vector3D(0,0.2f,0) }
+		/*float x = -0.75f + static_cast<float>(rand()) / (static_cast<float>(RAND_MAX / (1.5f)));
+		float y = -0.75f + static_cast<float>(rand()) / (static_cast<float>(RAND_MAX / (1.5f)));*/
 
-	};
+		float x = 0;
+		float y = 0;
 
-	m_vb = GraphicsEngine::getInstance()->createVertexBuffer();
-	UINT size_list = ARRAYSIZE(vertex_list);
+		Cube* cubeObject = new Cube("Cube "+to_string(i + 1), shader_byte_code, size_shader);
+		cubeObject->setAnimSpeed(-3.75f + static_cast<float>(rand()) / (static_cast<float>(RAND_MAX / (7.5f))));
+		cubeObject->setPosition(Vector3D(x, y, 2.0f));
+		cubeObject->setScale(Vector3D(0.15, 0.15, 0.15));
+		this->gameObjectList.push_back(cubeObject);
+	}
 
-	unsigned int index_list[] =
-	{
-		//front
-		0,1,2,
-		2,3,0,
-		//back
-		4,5,6,
-		6,7,4,
-		//top
-		1,6,5,
-		5,2,1,
-		//bottom
-		7,0,3,
-		3,4,7,
-		//right
-		3,2,5,
-		5,4,3,
-		//left
-		7,6,1,
-		1,0,7
-	};
+	Plane* planeObject = new Plane("Plane " + to_string(1), shader_byte_code, size_shader);
+	planeObject->setPosition(Vector3D(0, 0, 2.0f));
+	planeObject->setRotation(-2, -2,-2);
+	planeObject->setScale(Vector3D(0.5, 0.5, 0.5));
+	this->gameObjectList.push_back(planeObject);
 
-	m_ib = GraphicsEngine::getInstance()->createIndexBuffer();
-	UINT size_index_list = ARRAYSIZE(index_list);
+	//vertex vertex_list[] =
+	//{
+	//	//front
+	//	{Vector3D(-0.5f,-0.5f,-0.5f),    Vector3D(1,0,0),  Vector3D(0.2f,0,0) },
+	//	{Vector3D(-0.5f,0.5f,-0.5f),    Vector3D(1,1,0), Vector3D(0.2f,0.2f,0) },
+	//	{ Vector3D(0.5f,0.5f,-0.5f),   Vector3D(1,1,0),  Vector3D(0.2f,0.2f,0) },
+	//	{ Vector3D(0.5f,-0.5f,-0.5f),     Vector3D(1,0,0), Vector3D(0.2f,0,0) },
+	//	//back
+	//	{ Vector3D(0.5f,-0.5f,0.5f),    Vector3D(0,1,0), Vector3D(0,0.2f,0) },
+	//	{ Vector3D(0.5f,0.5f,0.5f),    Vector3D(0,1,1), Vector3D(0,0.2f,0.2f) },
+	//	{ Vector3D(-0.5f,0.5f,0.5f),   Vector3D(0,1,1),  Vector3D(0,0.2f,0.2f) },
+	//	{ Vector3D(-0.5f,-0.5f,0.5f),     Vector3D(0,1,0), Vector3D(0,0.2f,0) }
 
-	m_ib->load(index_list, size_index_list);
+	//};
 
-	m_vb->load(vertex_list, sizeof(vertex), size_list, shader_byte_code, size_shader);
+	//m_vb = GraphicsEngine::getInstance()->createVertexBuffer();
+	//UINT size_list = ARRAYSIZE(vertex_list);
+
+	//unsigned int index_list[] =
+	//{
+	//	//front
+	//	0,1,2,
+	//	2,3,0,
+	//	//back
+	//	4,5,6,
+	//	6,7,4,
+	//	//top
+	//	1,6,5,
+	//	5,2,1,
+	//	//bottom
+	//	7,0,3,
+	//	3,4,7,
+	//	//right
+	//	3,2,5,
+	//	5,4,3,
+	//	//left
+	//	7,6,1,
+	//	1,0,7
+	//};
+
+	//m_ib = GraphicsEngine::getInstance()->createIndexBuffer();
+	//UINT size_index_list = ARRAYSIZE(index_list);
+
+	//m_ib->load(index_list, size_index_list);
+
+	//m_vb->load(vertex_list, sizeof(vertex), size_list, shader_byte_code, size_shader);
 
 	GraphicsEngine::getInstance()->releaseCompiledShader();
 
@@ -130,11 +156,11 @@ void AppWindow::createGraphicsWindow()
 	m_ps = GraphicsEngine::getInstance()->createPixelShader(shader_byte_code, size_shader);
 	GraphicsEngine::getInstance()->releaseCompiledShader();
 
-	constant cc;
+	/*constant cc;
 	cc.m_angle = 0;
 
 	m_cb = GraphicsEngine::getInstance()->createConstantBuffer();
-	m_cb->load(&cc, sizeof(constant));
+	m_cb->load(&cc, sizeof(constant));*/
 }
 
 void AppWindow::updateQuadPosition()
@@ -187,22 +213,30 @@ void AppWindow::onUpdate()
 
 	GraphicsEngine::getInstance()->getImmediateDeviceContext()->clearRenderTargetColor(this->m_swap_chain,
 		0, 0.5, 0.5, 1);
-	RECT rc = this->getClientWindowRect();
-	GraphicsEngine::getInstance()->getImmediateDeviceContext()->setViewportSize(rc.right - rc.left, rc.bottom - rc.top);
+	RECT windowRect = this->getClientWindowRect();
+	GraphicsEngine::getInstance()->getImmediateDeviceContext()->setViewportSize(windowRect.right - windowRect.left, windowRect.bottom - windowRect.top);
 
-	this->updateQuadPosition();
+	width = windowRect.right - windowRect.left;
+	height = windowRect.bottom - windowRect.top;
 
-	GraphicsEngine::getInstance()->getImmediateDeviceContext()->setConstantBuffer(m_vs, m_cb);
+	//this->updateQuadPosition();
+
+	/*GraphicsEngine::getInstance()->getImmediateDeviceContext()->setConstantBuffer(m_vs, m_cb);
 	GraphicsEngine::getInstance()->getImmediateDeviceContext()->setConstantBuffer(m_ps, m_cb);
 
 	GraphicsEngine::getInstance()->getImmediateDeviceContext()->setVertexShader(m_vs);
 	GraphicsEngine::getInstance()->getImmediateDeviceContext()->setPixelShader(m_ps);
 
 	GraphicsEngine::getInstance()->getImmediateDeviceContext()->setVertexBuffer(m_vb);
-	GraphicsEngine::getInstance()->getImmediateDeviceContext()->setIndexBuffer(m_ib);
+	GraphicsEngine::getInstance()->getImmediateDeviceContext()->setIndexBuffer(m_ib);*/
 
-	//GraphicsEngine::getInstance()->getImmediateDeviceContext()->drawTriangleStrip(m_vb->getSizeVertex(), 0);
-	GraphicsEngine::getInstance()->getImmediateDeviceContext()->drawIndexedTriangleList(m_ib->getSizeIndexList(), 0, 0);
+	//GraphicsEngine::getInstance()->getImmediateDeviceContext()->drawIndexedTriangleList(m_ib->getSizeIndexList(), 0, 0);
+
+	for (AGameObject* gameObject : this->gameObjectList)
+	{
+		gameObject->update(EngineTime::getDeltaTime());
+		gameObject->draw(width, height, this->m_vs, this->m_ps);
+	}
 
 	m_swap_chain->present(true);
 
@@ -212,12 +246,19 @@ void AppWindow::onUpdate()
 void AppWindow::onDestroy()
 {
 	Window::onDestroy();
-	m_vb->release();
-	m_swap_chain->release();
-	m_vs->release();
-	m_ps->release();
-	m_ib->release();
-	m_cb->release();
+
+	for (AGameObject* gameObject : gameObjectList)
+	{
+		delete gameObject;
+	}
+	gameObjectList.clear();
+
+	if(m_vb)m_vb->release();
+	if(m_swap_chain)m_swap_chain->release();
+	if(m_vs)m_vs->release();
+	if(m_ps)m_ps->release();
+	if(m_ib)m_ib->release();
+	if(m_cb)m_cb->release();
 	GraphicsEngine::destroy();
 }
 

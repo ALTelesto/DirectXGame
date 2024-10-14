@@ -1,6 +1,21 @@
 ﻿  AppWindow.cpp
-D:\Game Dev\GDENG03\DirectXGame\DirectXGame\AppWindow.cpp(125,71): warning C4267: 'argument': conversion from 'size_t' to 'UINT', possible loss of data
-D:\Game Dev\GDENG03\DirectXGame\DirectXGame\AppWindow.cpp(157,41): warning C4305: 'argument': truncation from 'double' to 'float'
-D:\Game Dev\GDENG03\DirectXGame\DirectXGame\AppWindow.cpp(157,36): warning C4305: 'argument': truncation from 'double' to 'float'
-D:\Game Dev\GDENG03\DirectXGame\DirectXGame\AppWindow.cpp(157,31): warning C4305: 'argument': truncation from 'double' to 'float'
+D:\Game Dev\GDENG03\DirectXGame\DirectXGame\Matrix4x4.h(36,20): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
+D:\Game Dev\GDENG03\DirectXGame\DirectXGame\Matrix4x4.h(37,20): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
+D:\Game Dev\GDENG03\DirectXGame\DirectXGame\Matrix4x4.h(38,17): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
+D:\Game Dev\GDENG03\DirectXGame\DirectXGame\Matrix4x4.h(39,20): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
+D:\Game Dev\GDENG03\DirectXGame\DirectXGame\Matrix4x4.h(44,20): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
+D:\Game Dev\GDENG03\DirectXGame\DirectXGame\Matrix4x4.h(45,17): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
+D:\Game Dev\GDENG03\DirectXGame\DirectXGame\Matrix4x4.h(46,20): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
+D:\Game Dev\GDENG03\DirectXGame\DirectXGame\Matrix4x4.h(47,20): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
+D:\Game Dev\GDENG03\DirectXGame\DirectXGame\Matrix4x4.h(52,20): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
+D:\Game Dev\GDENG03\DirectXGame\DirectXGame\Matrix4x4.h(53,20): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
+D:\Game Dev\GDENG03\DirectXGame\DirectXGame\Matrix4x4.h(54,17): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
+D:\Game Dev\GDENG03\DirectXGame\DirectXGame\Matrix4x4.h(55,20): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
+D:\Game Dev\GDENG03\DirectXGame\DirectXGame\AppWindow.cpp(96,45): warning C4305: 'argument': truncation from 'double' to 'float'
+D:\Game Dev\GDENG03\DirectXGame\DirectXGame\AppWindow.cpp(96,39): warning C4305: 'argument': truncation from 'double' to 'float'
+D:\Game Dev\GDENG03\DirectXGame\DirectXGame\AppWindow.cpp(96,33): warning C4305: 'argument': truncation from 'double' to 'float'
+D:\Game Dev\GDENG03\DirectXGame\DirectXGame\AppWindow.cpp(183,41): warning C4305: 'argument': truncation from 'double' to 'float'
+D:\Game Dev\GDENG03\DirectXGame\DirectXGame\AppWindow.cpp(183,36): warning C4305: 'argument': truncation from 'double' to 'float'
+D:\Game Dev\GDENG03\DirectXGame\DirectXGame\AppWindow.cpp(183,31): warning C4305: 'argument': truncation from 'double' to 'float'
+D:\Game Dev\GDENG03\DirectXGame\DirectXGame\AppWindow.cpp(237,46): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
   DirectXGame.vcxproj -> D:\Game Dev\GDENG03\DirectXGame\x64\Debug\DirectXGame.exe

@@ -1,5 +1,7 @@
 #include "ConstantBuffer.h"
 
+#include <iostream>
+
 #include "DeviceContext.h"
 #include "GraphicsEngine.h"
 
@@ -23,6 +25,7 @@ bool ConstantBuffer::load(void* buffer, UINT size_buffer)
 
 	if (FAILED(GraphicsEngine::getInstance()->m_d3d_device->CreateBuffer(&buff_desc, &init_data, &m_buffer)))
 	{
+		std::cout << "indexbuffer failure \n";
 		return false;
 	}
 

@@ -1,6 +1,8 @@
 #include "SwapChain.h"
 #include "GraphicsEngine.h"
 
+#include <iostream>
+
 SwapChain::SwapChain()
 {
 }
@@ -43,6 +45,33 @@ bool SwapChain::init(HWND hwnd, UINT width, UINT height)
 		return false;
 	}
 
+	D3D11_TEXTURE2D_DESC texDesc = {};
+	texDesc.Width = width;
+	texDesc.Height = height;
+	texDesc.Format = DXGI_FORMAT_D24_UNORM_S8_UINT;
+	texDesc.Usage = D3D11_USAGE_DEFAULT;
+	texDesc.BindFlags = D3D11_BIND_DEPTH_STENCIL;
+	texDesc.MipLevels = 1;
+	texDesc.SampleDesc.Count = 1;
+	texDesc.SampleDesc.Quality = 0;
+	texDesc.MiscFlags = 0;
+	texDesc.ArraySize = 1;
+	texDesc.CPUAccessFlags = 0;
+
+	hr = device->CreateTexture2D(&texDesc, NULL, &buffer);
+	if (FAILED(hr))
+	{
+		std::cout << "dsv failure 1 \n";
+		return false;
+	}
+
+	hr = device->CreateDepthStencilView(buffer, NULL, &this->depthView);
+	if (FAILED(hr))
+	{
+		std::cout << "dsv failure 2 \n";
+		return false;
+	}
+
 	return true;
 }
 
@@ -61,4 +90,14 @@ bool SwapChain::release()
 
 SwapChain::~SwapChain()
 {
+}
+
+ID3D11RenderTargetView* SwapChain::getRenderTargetView()
+{
+	return this->m_rtv;
+}
+
+ID3D11DepthStencilView* SwapChain::getDepthStencilView()
+{
+	return this->depthView;
 }

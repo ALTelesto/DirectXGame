@@ -11,9 +11,13 @@ public:
 
 	bool release();
 	~SwapChain();
+
+	ID3D11RenderTargetView* getRenderTargetView();
+	ID3D11DepthStencilView* getDepthStencilView();
 private:
 	IDXGISwapChain* m_swap_chain;
 	ID3D11RenderTargetView* m_rtv;
+	ID3D11DepthStencilView* depthView;
 
 private:
 	friend class DeviceContext;

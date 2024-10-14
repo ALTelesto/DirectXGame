@@ -16,6 +16,8 @@ public:
 		return v;
 	}
 
+	static Vector3D zeros() { return Vector3D(0,0,0); }
+
 	~Vector3D() {}
 public:
 	float m_x, m_y, m_z;
