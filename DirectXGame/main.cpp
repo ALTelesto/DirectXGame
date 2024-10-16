@@ -4,6 +4,7 @@
 int main()
 {
 	AppWindow::initialize();
+	InputSystem::initialize();
 	AppWindow* runningApp = (AppWindow*)AppWindow::getInstance();
 	runningApp->init();
 	runningApp->createGraphicsWindow();
@@ -12,6 +13,9 @@ int main()
 	{
 		runningApp->broadcast();
 	}
+
+	AppWindow::destroy();
+	InputSystem::destroy();
 
 	return 0;
 }

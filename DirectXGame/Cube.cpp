@@ -4,6 +4,7 @@
 #include "ConstantBuffer.h"
 #include "DeviceContext.h"
 #include "IndexBuffer.h"
+#include "AppWindow.h"
 
 #include <iostream>
 
@@ -117,8 +118,8 @@ void Cube::draw(int width, int height, VertexShader* vertexShader, PixelShader* 
 	cbData.worldMatrix *= translationMatrix;
 
 
-	cbData.viewMatrix.setIdentity();
-	cbData.projMatrix.setOrthoLH(width / 300.0f, height / 300.0f, -4.0f, 4.0f);
+	cbData.viewMatrix = AppWindow::getInstance()->getWorldCam();
+	cbData.projMatrix = AppWindow::getInstance()->getProjection();
 
 	this->constantBuffer->update(deviceContext, &cbData);
 	deviceContext->setConstantBuffer(vertexShader, this->constantBuffer);

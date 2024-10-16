@@ -7,6 +7,8 @@
 
 #include <iostream>
 
+#include "AppWindow.h"
+
 Plane::Plane(string name, void* shaderByteCode, size_t sizeShader) : AGameObject(name)
 {
     GraphicsEngine* graphicsEngine = GraphicsEngine::getInstance();
@@ -83,8 +85,8 @@ void Plane::draw(int width, int height, VertexShader* vertexShader, PixelShader*
 	translationMatrix.setTranslation(position);
 	cbData.worldMatrix *= translationMatrix;
 
-	cbData.viewMatrix.setIdentity();
-	cbData.projMatrix.setOrthoLH(width / 300.0f, height / 300.0f, -4.0f, 4.0f);
+	cbData.viewMatrix = AppWindow::getInstance()->getWorldCam();
+	cbData.projMatrix = AppWindow::getInstance()->getProjection();
 
 	this->constantBuffer->update(deviceContext, &cbData);
 	deviceContext->setConstantBuffer(vertexShader, this->constantBuffer);
