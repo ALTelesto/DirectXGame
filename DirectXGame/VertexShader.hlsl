@@ -12,28 +12,22 @@ struct VS_OUTPUT
 	float3 color1: COLOR1;
 };
 
-
 cbuffer constant: register(b0)
 {
 	row_major float4x4 m_world;
 	row_major float4x4 m_view;
 	row_major float4x4 m_proj;
-	unsigned int m_time;
+	float m_angle;
 };
-
-
 
 VS_OUTPUT vsmain(VS_INPUT input)
 {
 	VS_OUTPUT output = (VS_OUTPUT)0;
 	
-	//output.position = lerp(input.position, input.position1, (float)((sin((float)(m_time / (float)1000.0f)) + 1.0f) / 2.0f));
-	
-	//WORLD SPACE
-	output.position = mul(input.position, m_world);
-	//VIEW SPACE
-	output.position = mul(output.position, m_view);
-	//SCREEN SPACE
+	//output.position = lerp(input.position, input.position1, (sin(m_angle) + 1.0f) / 2.0f);
+
+	output.position = mul(input.position,m_world);
+	output.position = mul(output.position,m_view);
 	output.position = mul(output.position, m_proj);
 
 
