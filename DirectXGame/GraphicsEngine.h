@@ -9,6 +9,7 @@ class VertexShader;
 class PixelShader;
 class ConstantBuffer;
 class IndexBuffer;
+class SamplerState;
 
 class GraphicsEngine
 {
@@ -30,8 +31,10 @@ public:
 	VertexBuffer* createVertexBuffer();
 	ConstantBuffer* createConstantBuffer();
 	IndexBuffer* createIndexBuffer();
+	SamplerState* createSamplerState();
 	VertexShader* createVertexShader(const void* shader_byte_code, size_t byte_code_size);
 	PixelShader* createPixelShader(const void* shader_byte_code, size_t byte_code_size);
+	
 public:
 	bool compileVertexShader(const wchar_t* file_name, const char* entry_point_name, void** shader_byte_code, size_t* byte_code_size);
 	bool compilePixelShader(const wchar_t* file_name, const char* entry_point_name, void** shader_byte_code, size_t* byte_code_size);
@@ -62,5 +65,6 @@ private:
 	friend class PixelShader;
 	friend class ConstantBuffer;
 	friend class IndexBuffer;
+	friend class SamplerState;
 };
 

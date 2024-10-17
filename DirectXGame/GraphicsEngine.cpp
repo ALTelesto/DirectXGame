@@ -10,6 +10,7 @@
 #include <d3dcompiler.h>
 
 #include "EngineTime.h"
+#include "SamplerState.h"
 
 GraphicsEngine* GraphicsEngine::sharedInstance = nullptr;
 
@@ -140,6 +141,11 @@ IndexBuffer* GraphicsEngine::createIndexBuffer()
 	return new IndexBuffer();
 }
 
+SamplerState* GraphicsEngine::createSamplerState()
+{
+	return new SamplerState();
+}
+
 VertexShader* GraphicsEngine::createVertexShader(const void* shader_byte_code, size_t byte_code_size)
 {
 	VertexShader* vs = new VertexShader();
@@ -163,6 +169,8 @@ PixelShader* GraphicsEngine::createPixelShader(const void* shader_byte_code, siz
 	}
 	return ps;
 }
+
+
 
 bool GraphicsEngine::compileVertexShader(const wchar_t* file_name, const char* entry_point_name, void** shader_byte_code, size_t* byte_code_size)
 {

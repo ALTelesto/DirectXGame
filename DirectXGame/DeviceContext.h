@@ -1,12 +1,15 @@
 #pragma once
 #include <d3d11.h>
 
+#include "SamplerState.h"
+
 class SwapChain;
 class VertexBuffer;
 class ConstantBuffer;
 class IndexBuffer;
 class VertexShader;
 class PixelShader;
+
 
 class DeviceContext
 {
@@ -25,11 +28,15 @@ public:
 	void setVertexShader(VertexShader* vertex_shader);
 	void setPixelShader(PixelShader* pixel_shader);
 
+	void setSamplerState(SamplerState* sampler_state);
+
 	void setConstantBuffer(VertexShader* vertex_shader, ConstantBuffer* buffer);
 	void setConstantBuffer(PixelShader* pixel_shader, ConstantBuffer* buffer);
 
 	bool release();
 	~DeviceContext();
+	
+
 private:
 	ID3D11DeviceContext* m_device_context;
 private:

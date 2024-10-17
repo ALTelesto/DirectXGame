@@ -10,6 +10,7 @@
 #include "PixelShader.h"
 #include "InputListener.h"
 #include "InputSystem.h"
+#include "SamplerState.h"
 
 #include "Cube.h"
 #include <vector>
@@ -80,5 +81,6 @@ private:
 	PixelShader* m_ps;
 	ConstantBuffer* m_cb;
 	IndexBuffer* m_ib;
+	SamplerState* m_ss;
 };
 

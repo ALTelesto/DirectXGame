@@ -164,6 +164,9 @@ void AppWindow::createGraphicsWindow()
 
 	m_cb = GraphicsEngine::getInstance()->createConstantBuffer();
 	m_cb->load(&cc, sizeof(constant));
+
+	m_ss = GraphicsEngine::getInstance()->createSamplerState();
+	m_ss->load();
 }
 
 Matrix4x4 AppWindow::getWorldCam()
@@ -236,6 +239,8 @@ void AppWindow::onUpdate()
 	height = windowRect.bottom - windowRect.top;
 
 	this->update();
+
+	GraphicsEngine::getInstance()->getImmediateDeviceContext()->setSamplerState(m_ss);
 
 	GraphicsEngine::getInstance()->getImmediateDeviceContext()->setConstantBuffer(m_vs, m_cb);
 	GraphicsEngine::getInstance()->getImmediateDeviceContext()->setConstantBuffer(m_ps, m_cb);
