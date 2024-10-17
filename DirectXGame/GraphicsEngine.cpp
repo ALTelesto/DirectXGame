@@ -256,9 +256,9 @@ void GraphicsEngine::releaseCompiledShader()
 	if (m_blob) m_blob->Release();
 }
 
-void GraphicsEngine::setToRenderTexture(SwapChain* swap_chain)
+void GraphicsEngine::setToRenderTexture()
 {
-	m_imm_device_context->setRenderTargets(m_renderTargetView, swap_chain->getDepthStencilView());
+	m_imm_device_context->setRenderTargets(m_renderTargetView, NULL);
 }
 
 

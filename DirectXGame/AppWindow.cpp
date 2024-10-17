@@ -201,6 +201,22 @@ void AppWindow::createGraphicsWindow()
 
 	m_ss = GraphicsEngine::getInstance()->createSamplerState();
 	m_ss->load();
+
+	ConstantBuffer* cb;
+
+	//we have two post-processing shaders, so create two SRVs
+	srvList.push_back(GraphicsEngine::getInstance()->createShaderResourceView());
+
+	GraphicsEngine::getInstance()->compilePixelShader(L"PixelShader.hlsl", "psmain", &shader_byte_code, &size_shader);
+	ppList.push_back(GraphicsEngine::getInstance()->createPixelShader(shader_byte_code, size_shader));
+
+	constant cc2;
+	cb = GraphicsEngine::getInstance()->createConstantBuffer();
+	cb->load(&cc2, sizeof(constant));
+	cbList.push_back(cb);
+	
+
+	srvList.push_back(GraphicsEngine::getInstance()->createShaderResourceView());
 }
 
 Matrix4x4 AppWindow::getWorldCam()
@@ -279,8 +295,6 @@ void AppWindow::onUpdate()
 	width = windowRect.right - windowRect.left;
 	height = windowRect.bottom - windowRect.top;
 
-	//GraphicsEngine::getInstance()->getImmediateDeviceContext()->
-
 	this->update();
 
 	GraphicsEngine::getInstance()->getImmediateDeviceContext()->setSamplerState(m_ss);
@@ -301,6 +315,14 @@ void AppWindow::onUpdate()
 		gameObject->update(EngineTime::getDeltaTime());
 		gameObject->draw(width, height, this->m_vs, this->m_ps);
 	}
+
+	//post processing stage
+
+	/*GraphicsEngine::getInstance()->setToRenderTexture();
+	GraphicsEngine::getInstance()->getImmediateDeviceContext()->setPixelShader(NULL);
+	GraphicsEngine::getInstance()->getImmediateDeviceContext()->setConstantBuffer(NULL);
+	GraphicsEngine::getInstance()->getImmediateDeviceContext()->setShaderResources(0, 1,&srvList[0]);
+	renderFullScreenQuad();*/
 
 	m_swap_chain->present(true);
 

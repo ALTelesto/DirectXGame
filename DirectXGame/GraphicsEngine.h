@@ -39,7 +39,7 @@ public:
 	bool compileVertexShader(const wchar_t* file_name, const char* entry_point_name, void** shader_byte_code, size_t* byte_code_size);
 	bool compilePixelShader(const wchar_t* file_name, const char* entry_point_name, void** shader_byte_code, size_t* byte_code_size);
 	void releaseCompiledShader();
-	void setToRenderTexture(SwapChain* swap_chain);
+	void setToRenderTexture();
 public:
 	
 private:
