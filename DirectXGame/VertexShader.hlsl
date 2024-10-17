@@ -1,13 +1,13 @@
 struct VS_INPUT
 {
 	float4 position : POSITION;
-    float2 texCoord : TEXCOORD;
+    float2 texCoord : TEXCOORD0;
 };
 
 struct VS_OUTPUT
 {
 	float4 position: SV_POSITION;
-    float2 texCoord : TEXCOORD;
+    float2 texCoord : TEXCOORD0;
 };
 
 cbuffer constant: register(b0)
