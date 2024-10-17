@@ -11,6 +11,8 @@
 
 #include "EngineTime.h"
 
+#include "Settings.h"
+
 GraphicsEngine* GraphicsEngine::sharedInstance = nullptr;
 
 GraphicsEngine* GraphicsEngine::getInstance()
@@ -98,6 +100,39 @@ bool GraphicsEngine::init()
 
 	m_imm_context->OMSetDepthStencilState(m_depthStencilState, 0);
 
+
+	//render to image stuff
+	D3D11_TEXTURE2D_DESC textureDesc = {};
+	textureDesc.Width = WIDTH;
+	textureDesc.Height = HEIGHT;
+	textureDesc.MipLevels = 1;
+	textureDesc.ArraySize = 1;
+	textureDesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM;
+	textureDesc.SampleDesc.Count = 1;
+	textureDesc.Usage = D3D11_USAGE_DEFAULT;
+	textureDesc.BindFlags = D3D11_BIND_RENDER_TARGET | D3D11_BIND_SHADER_RESOURCE;
+
+	hr = m_d3d_device->CreateTexture2D(&textureDesc, NULL, &m_renderTargetTexture);
+	if (FAILED(hr))
+	{
+		std::cout << "Failed to create render target texture\n";
+		return false;
+	}
+
+	hr = m_d3d_device->CreateRenderTargetView(m_renderTargetTexture, NULL, &m_renderTargetView);
+	if (FAILED(hr))
+	{
+		std::cout << "Failed to create render target view\n";
+		return false;
+	}
+
+	hr = m_d3d_device->CreateShaderResourceView(m_renderTargetTexture, NULL, &m_shaderResourceView);
+	if (FAILED(hr))
+	{
+		std::cout << "Failed to create shader resource view\n";
+		return false;
+	}
+
 	return true;
 }
 
@@ -164,6 +199,21 @@ PixelShader* GraphicsEngine::createPixelShader(const void* shader_byte_code, siz
 	return ps;
 }
 
+ID3D11ShaderResourceView* GraphicsEngine::createShaderResourceView()
+{
+	if(m_renderTargetTexture == nullptr || m_renderTargetView == nullptr) return nullptr;
+
+	ID3D11ShaderResourceView* shader_resource_view;
+
+	HRESULT hr = m_d3d_device->CreateShaderResourceView(m_renderTargetTexture, NULL, &shader_resource_view);
+	if (FAILED(hr))
+	{
+		std::cout << "Failed to create shader resource view\n";
+		return nullptr;
+	}
+	return shader_resource_view;
+}
+
 bool GraphicsEngine::compileVertexShader(const wchar_t* file_name, const char* entry_point_name, void** shader_byte_code, size_t* byte_code_size)
 {
 	ID3DBlob* error_blob = nullptr;
@@ -198,6 +248,11 @@ bool GraphicsEngine::compilePixelShader(const wchar_t* file_name, const char* en
 void GraphicsEngine::releaseCompiledShader()
 {
 	if (m_blob) m_blob->Release();
+}
+
+void GraphicsEngine::setToRenderTexture(SwapChain* swap_chain)
+{
+	m_imm_device_context->setRenderTargets(m_renderTargetView, swap_chain->getDepthStencilView());
 }
 
 

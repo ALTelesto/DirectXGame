@@ -32,6 +32,7 @@ public:
 	Matrix4x4 getProjection();
 private:
 	void update();
+	void renderFullScreenQuad();
 
 	//virtual void onCreate() override;
 	virtual void onUpdate() override;
@@ -80,5 +81,9 @@ private:
 	PixelShader* m_ps;
 	ConstantBuffer* m_cb;
 	IndexBuffer* m_ib;
+
+	VertexBuffer* fsquad_vb;
+	IndexBuffer* fsquad_ib;
+	vector<ID3D11ShaderResourceView*> shaderResourceViewList;
 };
 

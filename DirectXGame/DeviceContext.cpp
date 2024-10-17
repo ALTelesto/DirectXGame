@@ -85,6 +85,16 @@ void DeviceContext::setConstantBuffer(PixelShader* pixel_shader, ConstantBuffer*
 	m_device_context->PSSetConstantBuffers(0, 1, &buffer->m_buffer);
 }
 
+void DeviceContext::setRenderTargets(ID3D11RenderTargetView* render_target_view, ID3D11DepthStencilView* depth_stencil_view)
+{
+	m_device_context->OMSetRenderTargets(1, &render_target_view, depth_stencil_view);
+}
+
+void DeviceContext::setShaderResources(UINT start_slot, UINT num_views, ID3D11ShaderResourceView** shader_resource_views)
+{
+	m_device_context->PSSetShaderResources(start_slot, num_views, shader_resource_views);
+}
+
 bool DeviceContext::release()
 {
 	m_device_context->Release();
@@ -94,4 +104,5 @@ bool DeviceContext::release()
 
 DeviceContext::~DeviceContext()
 {
+
 }

@@ -32,10 +32,12 @@ public:
 	IndexBuffer* createIndexBuffer();
 	VertexShader* createVertexShader(const void* shader_byte_code, size_t byte_code_size);
 	PixelShader* createPixelShader(const void* shader_byte_code, size_t byte_code_size);
+	ID3D11ShaderResourceView* createShaderResourceView();
 public:
 	bool compileVertexShader(const wchar_t* file_name, const char* entry_point_name, void** shader_byte_code, size_t* byte_code_size);
 	bool compilePixelShader(const wchar_t* file_name, const char* entry_point_name, void** shader_byte_code, size_t* byte_code_size);
 	void releaseCompiledShader();
+	void setToRenderTexture(SwapChain* swap_chain);
 public:
 	
 private:
@@ -55,6 +57,10 @@ private:
 	ID3DBlob* m_psblob = nullptr;
 	ID3D11VertexShader* m_vs = nullptr;
 	ID3D11PixelShader* m_ps = nullptr;
+
+	ID3D11Texture2D* m_renderTargetTexture = nullptr;
+	ID3D11RenderTargetView* m_renderTargetView = nullptr;
+	ID3D11ShaderResourceView* m_shaderResourceView = nullptr;
 private:
 	friend class SwapChain;
 	friend class VertexBuffer;
@@ -62,5 +68,6 @@ private:
 	friend class PixelShader;
 	friend class ConstantBuffer;
 	friend class IndexBuffer;
+	friend class ShaderResourceView;
 };
 

@@ -18,6 +18,17 @@ struct vec3
 	float x, y, z;
 };
 
+struct vec2
+{
+	float x, y;
+};
+
+struct fsquad_vertex
+{
+	Vector3D position;
+	vec2 texcoord;
+};
+
 struct vertex
 {
 	Vector3D position;
@@ -153,6 +164,29 @@ void AppWindow::createGraphicsWindow()
 
 	m_vb->load(vertex_list, sizeof(vertex), size_list, shader_byte_code, size_shader);
 
+
+	fsquad_vertex fsquad_list[] =
+	{
+		{Vector3D(-1.0f,-1.0f,0.0f),(0.0f,1.0f)},
+		{Vector3D(-1.0f,1.0f,0.0f),(0.0f,0.0f)},
+		{Vector3D(1.0f,-1.0f,0.0f),(1.0f,1.0f)},
+		{Vector3D(1.0f,1.0f,0.0f),(1.0f,1.0f)},
+	};
+
+	fsquad_vb = GraphicsEngine::getInstance()->createVertexBuffer();
+	UINT fsquad_size_list = ARRAYSIZE(fsquad_list);
+	fsquad_vb->load(fsquad_list, sizeof(fsquad_vertex), fsquad_size_list, shader_byte_code, size_shader);
+
+	unsigned int fsquad_index_list[] =
+	{
+		0, 1, 2,
+		2, 1, 3
+	};
+	UINT fsquad_size_index_list = ARRAYSIZE(index_list);
+
+	fsquad_ib = GraphicsEngine::getInstance()->createIndexBuffer();
+	fsquad_ib->load(fsquad_list, fsquad_size_index_list);
+
 	GraphicsEngine::getInstance()->releaseCompiledShader();
 
 	GraphicsEngine::getInstance()->compilePixelShader(L"PixelShader.hlsl", "psmain", &shader_byte_code, &size_shader);
@@ -164,6 +198,7 @@ void AppWindow::createGraphicsWindow()
 
 	m_cb = GraphicsEngine::getInstance()->createConstantBuffer();
 	m_cb->load(&cc, sizeof(constant));
+
 }
 
 Matrix4x4 AppWindow::getWorldCam()
@@ -221,6 +256,13 @@ void AppWindow::update()
 	m_cb->update(GraphicsEngine::getInstance()->getImmediateDeviceContext(), &cc);
 }
 
+void AppWindow::renderFullScreenQuad()
+{
+	GraphicsEngine::getInstance()->getImmediateDeviceContext()->setVertexBuffer(fsquad_vb);
+	GraphicsEngine::getInstance()->getImmediateDeviceContext()->setIndexBuffer(fsquad_ib);
+	GraphicsEngine::getInstance()->getImmediateDeviceContext()->drawIndexedTriangleList(fsquad_ib->getSizeIndexList(), 0, 0);
+}
+
 void AppWindow::onUpdate()
 {
 	Window::onUpdate();
@@ -234,6 +276,8 @@ void AppWindow::onUpdate()
 
 	width = windowRect.right - windowRect.left;
 	height = windowRect.bottom - windowRect.top;
+
+	//GraphicsEngine::getInstance()->getImmediateDeviceContext()->
 
 	this->update();
 
@@ -318,12 +362,12 @@ void AppWindow::onKeyUp(int key)
 
 void AppWindow::onMouseMove(const Point& mouse_pos)
 {
-	std::cout <<"mouse_pos values: "<< mouse_pos.m_x << " " << mouse_pos.m_y << "\n";
+	//std::cout <<"mouse_pos values: "<< mouse_pos.m_x << " " << mouse_pos.m_y << "\n";
 
 	m_rot_x += (mouse_pos.m_y - (height / 2.0f)) * EngineTime::getDeltaTime() * 0.1f;
 	m_rot_y += (mouse_pos.m_x - (width / 2.0f)) * EngineTime::getDeltaTime() * 0.1f;
 
-	std::cout << "rotation values: " << m_rot_x << " " << m_rot_y << "\n";
+	//std::cout << "rotation values: " << m_rot_x << " " << m_rot_y << "\n";
 
 	InputSystem::getInstance()->setCursorPosition(Point((int)(width / 2.0f), (int)(height / 2.0f)));
 }

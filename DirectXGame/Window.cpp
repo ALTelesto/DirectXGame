@@ -1,6 +1,7 @@
 #include "Window.h"
 
 #include "EngineTime.h"
+#include "Settings.h"
 
 //Window* window = nullptr;
 
@@ -68,7 +69,7 @@ bool Window::init()
 	if (!::RegisterClassEx(&wc))
 		return false;
 
-	m_hwnd = ::CreateWindowEx(WS_EX_OVERLAPPEDWINDOW, "MyWindowClass", "DirectX Application", WS_OVERLAPPEDWINDOW, CW_USEDEFAULT, CW_USEDEFAULT, 1024, 768,
+	m_hwnd = ::CreateWindowEx(WS_EX_OVERLAPPEDWINDOW, "MyWindowClass", "DirectX Application", WS_OVERLAPPEDWINDOW, CW_USEDEFAULT, CW_USEDEFAULT, WIDTH, HEIGHT,
 		NULL, NULL, NULL, this);
 
 	if (!m_hwnd)
