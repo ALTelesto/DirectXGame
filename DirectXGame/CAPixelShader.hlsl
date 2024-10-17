@@ -18,7 +18,7 @@ cbuffer constant : register(b0)
 float4 psmain(PS_INPUT input) : SV_TARGET
 {
     float2 texCoordR = input.texCoord + 0.05 * float2(-1.0, 0.0);
-    float2 texCoordG = input.texCoord;
+    float2 texCoordG = input.texCoord + 0.05 * float2(-1.0, 1.0);
     float2 texCoordB = input.texCoord + 0.05 * float2(1.0, 0.0);
     
     float4 colorR = _texture.Sample(_sampler_state, texCoordR);
