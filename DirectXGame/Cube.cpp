@@ -119,8 +119,9 @@ void Cube::draw(int width, int height, VertexShader* vertexShader, PixelShader* 
 	translationMatrix.setTranslation(position);
 	cbData.worldMatrix *= translationMatrix;
 
-
-	cbData.viewMatrix = AppWindow::getInstance()->getWorldCam();
+	Matrix4x4 temp = AppWindow::getInstance()->getWorldCam();
+	temp.inverse();
+	cbData.viewMatrix = temp;
 	cbData.projMatrix = AppWindow::getInstance()->getProjection();
 
 	this->constantBuffer->update(deviceContext, &cbData);
