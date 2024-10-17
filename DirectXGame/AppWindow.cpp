@@ -320,12 +320,12 @@ void AppWindow::onMouseMove(const Point& mouse_pos)
 {
 	std::cout <<"mouse_pos values: "<< mouse_pos.m_x << " " << mouse_pos.m_y << "\n";
 
-	m_rot_x += (mouse_pos.m_y - (width / 2.0f)) * EngineTime::getDeltaTime() * 0.01f;
-	m_rot_y += (mouse_pos.m_x - (height / 2.0f)) * EngineTime::getDeltaTime() * 0.01f;
+	m_rot_x += (mouse_pos.m_y - (height / 2.0f)) * EngineTime::getDeltaTime() * 0.1f;
+	m_rot_y += (mouse_pos.m_x - (width / 2.0f)) * EngineTime::getDeltaTime() * 0.1f;
 
 	std::cout << "rotation values: " << m_rot_x << " " << m_rot_y << "\n";
 
-	//InputSystem::getInstance()->setCursorPosition(Point((int)(width / 2.0f), (int)(height / 2.0f)));
+	InputSystem::getInstance()->setCursorPosition(Point((int)(width / 2.0f), (int)(height / 2.0f)));
 }
 
 void AppWindow::onLeftMouseDown(const Point& mouse_pos)
