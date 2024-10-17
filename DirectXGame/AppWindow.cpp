@@ -95,13 +95,13 @@ void AppWindow::createGraphicsWindow()
 
 		Cube* cubeObject = new Cube("Cube "+to_string(i + 1), shader_byte_code, size_shader);
 		cubeObject->setAnimSpeed(-3.75f + static_cast<float>(rand()) / (static_cast<float>(RAND_MAX / (7.5f))));
-		cubeObject->setPosition(Vector3D(x, y, 2.0f));
+		cubeObject->setPosition(Vector3D(x, y, 2));
 		cubeObject->setScale(Vector3D(0.15, 0.15, 0.15));
 		this->gameObjectList.push_back(cubeObject);
 	}
 
 	Plane* planeObject = new Plane("Plane " + to_string(1), shader_byte_code, size_shader);
-	planeObject->setPosition(Vector3D(0, 0, 2.0f));
+	planeObject->setPosition(Vector3D(0, 0, 2));
 	planeObject->setRotation(-2, -2,-2);
 	planeObject->setScale(Vector3D(0.5, 0.5, 0.5));
 	this->gameObjectList.push_back(planeObject);

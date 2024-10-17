@@ -97,6 +97,7 @@ void Cube::draw(int width, int height, VertexShader* vertexShader, PixelShader* 
 	Vector3D rotation = this->getLocalRotation();
 	Vector3D position = this->getLocalPosition();
 
+	cbData.worldMatrix.setIdentity();
 	cbData.worldMatrix.setScale(this->getLocalScale());
 
 	Matrix4x4 rotMatrix;
@@ -114,6 +115,7 @@ void Cube::draw(int width, int height, VertexShader* vertexShader, PixelShader* 
 	cbData.worldMatrix *= rotMatrix;
 
 	Matrix4x4 translationMatrix;
+	translationMatrix.setIdentity();
 	translationMatrix.setTranslation(position);
 	cbData.worldMatrix *= translationMatrix;
 
