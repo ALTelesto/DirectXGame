@@ -9,6 +9,7 @@ class VertexShader;
 class PixelShader;
 class ConstantBuffer;
 class IndexBuffer;
+class SamplerState;
 
 class GraphicsEngine
 {
@@ -30,6 +31,7 @@ public:
 	VertexBuffer* createVertexBuffer();
 	ConstantBuffer* createConstantBuffer();
 	IndexBuffer* createIndexBuffer();
+	SamplerState* createSamplerState();
 	VertexShader* createVertexShader(const void* shader_byte_code, size_t byte_code_size);
 	PixelShader* createPixelShader(const void* shader_byte_code, size_t byte_code_size);
 	ID3D11ShaderResourceView* createShaderResourceView();
@@ -68,6 +70,6 @@ private:
 	friend class PixelShader;
 	friend class ConstantBuffer;
 	friend class IndexBuffer;
-	friend class ShaderResourceView;
+	friend class SamplerState;
 };
 

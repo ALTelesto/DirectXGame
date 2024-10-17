@@ -10,6 +10,7 @@
 #include <d3dcompiler.h>
 
 #include "EngineTime.h"
+#include "SamplerState.h"
 
 #include "Settings.h"
 
@@ -173,6 +174,11 @@ ConstantBuffer* GraphicsEngine::createConstantBuffer()
 IndexBuffer* GraphicsEngine::createIndexBuffer()
 {
 	return new IndexBuffer();
+}
+
+SamplerState* GraphicsEngine::createSamplerState()
+{
+	return new SamplerState();
 }
 
 VertexShader* GraphicsEngine::createVertexShader(const void* shader_byte_code, size_t byte_code_size)

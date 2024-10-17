@@ -10,6 +10,7 @@
 #include "PixelShader.h"
 #include "InputListener.h"
 #include "InputSystem.h"
+#include "SamplerState.h"
 
 #include "Cube.h"
 #include <vector>
@@ -85,5 +86,7 @@ private:
 	VertexBuffer* fsquad_vb;
 	IndexBuffer* fsquad_ib;
 	vector<ID3D11ShaderResourceView*> shaderResourceViewList;
+
+	SamplerState* m_ss;
 };
 
