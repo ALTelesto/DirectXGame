@@ -13,11 +13,6 @@
 
 #include "Plane.h"
 
-struct vec3
-{
-	float x, y, z;
-};
-
 struct vec2
 {
 	float x, y;
@@ -43,6 +38,11 @@ struct constant
 	Matrix4x4 m_view;
 	Matrix4x4 m_proj;
 	unsigned int m_time;
+};
+
+struct constant_distortion
+{
+	float distortionStrength;
 };
 
 AppWindow* AppWindow::sharedInstance = nullptr;
@@ -207,16 +207,18 @@ void AppWindow::createGraphicsWindow()
 	//we have two post-processing shaders, so create two SRVs
 	srvList.push_back(GraphicsEngine::getInstance()->createShaderResourceView());
 
-	GraphicsEngine::getInstance()->compilePixelShader(L"PixelShader.hlsl", "psmain", &shader_byte_code, &size_shader);
+	GraphicsEngine::getInstance()->compilePixelShader(L"LensDistortion.hlsl", "main", &shader_byte_code, &size_shader);
 	ppList.push_back(GraphicsEngine::getInstance()->createPixelShader(shader_byte_code, size_shader));
 
-	constant cc2;
+	constant_distortion cc2;
+	cc2.distortionStrength = 0.2f;
+
 	cb = GraphicsEngine::getInstance()->createConstantBuffer();
 	cb->load(&cc2, sizeof(constant));
 	cbList.push_back(cb);
 	
 
-	srvList.push_back(GraphicsEngine::getInstance()->createShaderResourceView());
+	//srvList.push_back(GraphicsEngine::getInstance()->createShaderResourceView());
 }
 
 Matrix4x4 AppWindow::getWorldCam()
@@ -318,11 +320,16 @@ void AppWindow::onUpdate()
 
 	//post processing stage
 
-	/*GraphicsEngine::getInstance()->setToRenderTexture();
-	GraphicsEngine::getInstance()->getImmediateDeviceContext()->setPixelShader(NULL);
-	GraphicsEngine::getInstance()->getImmediateDeviceContext()->setConstantBuffer(NULL);
+	GraphicsEngine::getInstance()->setToRenderTexture();
+
+	constant_distortion cc;
+	cc.distortionStrength = 0.2f;
+
+	GraphicsEngine::getInstance()->getImmediateDeviceContext()->setPixelShader(ppList[0]);
+	GraphicsEngine::getInstance()->getImmediateDeviceContext()->setConstantBuffer(ppList[0],cbList[0]);
+	cbList[0]->update(GraphicsEngine::getInstance()->getImmediateDeviceContext(),&cc);
 	GraphicsEngine::getInstance()->getImmediateDeviceContext()->setShaderResources(0, 1,&srvList[0]);
-	renderFullScreenQuad();*/
+	renderFullScreenQuad();
 
 	m_swap_chain->present(true);
 

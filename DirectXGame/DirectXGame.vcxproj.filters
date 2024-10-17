@@ -96,6 +96,7 @@
     <ClCompile Include="InputSystem.cpp">
       <Filter>GameEngine\InputSystem</Filter>
     </ClCompile>
+    <ClCompile Include="SamplerState.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="AppWindow.h">
@@ -161,6 +162,7 @@
     <ClInclude Include="Settings.h">
       <Filter>App</Filter>
     </ClInclude>
+    <ClInclude Include="SamplerState.h" />
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="shader.fx" />
@@ -168,6 +170,10 @@
       <Filter>App</Filter>
     </FxCompile>
     <FxCompile Include="PixelShader.hlsl">
+      <Filter>App</Filter>
+    </FxCompile>
+    <FxCompile Include="CAPixelShader.hlsl" />
+    <FxCompile Include="LensDistortion.hlsl">
       <Filter>App</Filter>
     </FxCompile>
   </ItemGroup>
