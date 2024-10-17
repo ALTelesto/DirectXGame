@@ -31,11 +31,16 @@ public:
 
 	string getName();
 
+	struct vec2 {
+		vec2(float _x, float _y):x(_x), y(_y){}
+
+		float x, y;
+	};
+
 	struct Vertex
 	{
 		Vector3D position;
-		Vector3D color;
-		Vector3D color2;
+		vec2 texCoord;
 	};
 
 	_declspec(align(16))
