@@ -302,8 +302,7 @@ void AppWindow::onUpdate()
 	Window::onUpdate();
 
 	InputSystem::getInstance()->update();
-
-	GraphicsEngine::getInstance()->getImmediateDeviceContext()->clearRenderTargetColor(this->m_swap_chain,
+	GraphicsEngine::getInstance()->getImmediateDeviceContext()->clearRenderTargetColor(this->m_swap_chain, 
 		0, 0.5, 0.5, 1);
 	RECT windowRect = this->getClientWindowRect();
 	GraphicsEngine::getInstance()->getImmediateDeviceContext()->setViewportSize(windowRect.right - windowRect.left, windowRect.bottom - windowRect.top);
