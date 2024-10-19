@@ -86,11 +86,11 @@ private:
 	//fullscreen quad
 	VertexBuffer* fsquad_vb;
 	IndexBuffer* fsquad_ib;
+	ConstantBuffer* fsquad_cb;
 
 	//post-processing
 	vector<ID3D11ShaderResourceView*> srvList;
 	vector<PixelShader*> ppList;
-	vector<ConstantBuffer*> cbList;
 
 	SamplerState* m_ss;
 };
