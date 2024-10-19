@@ -183,7 +183,7 @@ void AppWindow::createGraphicsWindow()
 		{Vector3D(-1.0f,-1.0f,0.0f),Vector2D(0.0f,1.0f)},
 		{Vector3D(-1.0f,1.0f,0.0f),Vector2D(0.0f,0.0f)},
 		{Vector3D(1.0f,-1.0f,0.0f),Vector2D(1.0f,1.0f)},
-		{Vector3D(1.0f,1.0f,0.0f),Vector2D(1.0f,1.0f)},
+		{Vector3D(1.0f,1.0f,0.0f),Vector2D(1.0f,0.0f)},
 	};
 
 	fsquad_vb = GraphicsEngine::getInstance()->createVertexBuffer();
@@ -228,7 +228,7 @@ void AppWindow::createGraphicsWindow()
 	//we have two post-processing shaders, so create two SRVs
 	srvList.push_back(GraphicsEngine::getInstance()->createShaderResourceView());
 
-	GraphicsEngine::getInstance()->compilePixelShader(L"Vignette.hlsl", "psmain", &shader_byte_code, &size_shader);
+	GraphicsEngine::getInstance()->compilePixelShader(L"Test.hlsl", "psmain", &shader_byte_code, &size_shader);
 	ppList.push_back(GraphicsEngine::getInstance()->createPixelShader(shader_byte_code, size_shader));
 
 	constant_vignette cc2;
@@ -299,9 +299,11 @@ void AppWindow::update()
 
 void AppWindow::renderFullScreenQuad()
 {
+	GraphicsEngine::getInstance()->getImmediateDeviceContext()->setDepthStencilState(nullptr);
+
 	GraphicsEngine::getInstance()->getImmediateDeviceContext()->setVertexBuffer(fsquad_vb);
 	GraphicsEngine::getInstance()->getImmediateDeviceContext()->setIndexBuffer(fsquad_ib);
-	GraphicsEngine::getInstance()->getImmediateDeviceContext()->drawIndexedTriangleList(fsquad_ib->getSizeIndexList(), 0, 0);
+	GraphicsEngine::getInstance()->getImmediateDeviceContext()->drawIndexedTriangleList(fsquad_ib->getSizeIndexList(), 0,0);
 }
 
 void AppWindow::onUpdate()
@@ -342,12 +344,11 @@ void AppWindow::onUpdate()
 
 	GraphicsEngine::getInstance()->setToRenderTexture(); //set render target to the render texture target for post processing
 
-	GraphicsEngine::getInstance()->getImmediateDeviceContext()->setSamplerState(m_ss);
-
 	constant_vignette cc;
 	cc.vignetteRadius = 0.5f;
 	cc.vignetteStrength = 0.5f;
 
+	GraphicsEngine::getInstance()->getImmediateDeviceContext()->setVertexShader(fsquad_vs);
 	GraphicsEngine::getInstance()->getImmediateDeviceContext()->setPixelShader(ppList[0]);
 	GraphicsEngine::getInstance()->getImmediateDeviceContext()->setConstantBuffer(fsquad_vs, fsquad_cb);
 	GraphicsEngine::getInstance()->getImmediateDeviceContext()->setConstantBuffer(ppList[0],fsquad_cb);
@@ -355,11 +356,9 @@ void AppWindow::onUpdate()
 	GraphicsEngine::getInstance()->getImmediateDeviceContext()->setShaderResources(0, 1, &srvList[0]);
 	renderFullScreenQuad();
 
-	GraphicsEngine::getInstance()->getImmediateDeviceContext()->setRenderTargets(m_swap_chain->getRenderTargetView(), m_swap_chain->getDepthStencilView());
+	GraphicsEngine::getInstance()->getImmediateDeviceContext()->setRenderTargets(m_swap_chain->getRenderTargetView(), nullptr);
 
 	m_swap_chain->present(true);
-
-	//std::cout << "delta time: " << EngineTime::getDeltaTime() << "\n";
 
 }
 

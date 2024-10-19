@@ -103,6 +103,11 @@ void DeviceContext::setShaderResources(UINT start_slot, UINT num_views, ID3D11Sh
 	m_device_context->PSSetShaderResources(start_slot, num_views, shader_resource_views);
 }
 
+void DeviceContext::setDepthStencilState(ID3D11DepthStencilState* depth_stencil_state)
+{
+	m_device_context->OMSetDepthStencilState(depth_stencil_state, 0);
+}
+
 bool DeviceContext::release()
 {
 	m_device_context->Release();

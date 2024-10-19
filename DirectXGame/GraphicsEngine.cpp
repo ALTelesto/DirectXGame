@@ -120,14 +120,25 @@ bool GraphicsEngine::init()
 		return false;
 	}
 
-	hr = m_d3d_device->CreateRenderTargetView(m_renderTargetTexture, NULL, &m_renderTargetView);
+	D3D11_RENDER_TARGET_VIEW_DESC renderTargetViewDesc;
+	renderTargetViewDesc.Format = textureDesc.Format;
+	renderTargetViewDesc.ViewDimension = D3D11_RTV_DIMENSION_TEXTURE2D;
+	renderTargetViewDesc.Texture2D.MipSlice = 0;
+
+	hr = m_d3d_device->CreateRenderTargetView(m_renderTargetTexture, &renderTargetViewDesc, &m_renderTargetView);
 	if (FAILED(hr))
 	{
 		std::cout << "Failed to create render target view\n";
 		return false;
 	}
 
-	hr = m_d3d_device->CreateShaderResourceView(m_renderTargetTexture, NULL, &m_shaderResourceView);
+	D3D11_SHADER_RESOURCE_VIEW_DESC srvDesc;
+	srvDesc.Format = textureDesc.Format;
+	srvDesc.ViewDimension = D3D11_SRV_DIMENSION_TEXTURE2D;
+	srvDesc.Texture2D.MostDetailedMip = 0;
+	srvDesc.Texture2D.MipLevels = 1;
+
+	hr = m_d3d_device->CreateShaderResourceView(m_renderTargetTexture, &srvDesc, &m_shaderResourceView);
 	if (FAILED(hr))
 	{
 		std::cout << "Failed to create shader resource view\n";

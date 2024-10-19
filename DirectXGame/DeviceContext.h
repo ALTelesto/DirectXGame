@@ -37,6 +37,8 @@ public:
 	void setRenderTargets(ID3D11RenderTargetView* render_target_view, ID3D11DepthStencilView* depth_stencil_view);
 	void setShaderResources(UINT start_slot, UINT num_views, ID3D11ShaderResourceView** shader_resource_views);
 
+	void setDepthStencilState(ID3D11DepthStencilState* depth_stencil_state);
+
 	bool release();
 	~DeviceContext();
 	

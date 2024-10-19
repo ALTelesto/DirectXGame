@@ -163,6 +163,7 @@
       <Filter>App</Filter>
     </ClInclude>
     <ClInclude Include="SamplerState.h" />
+    <ClInclude Include="Vector2D.h" />
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="shader.fx" />
@@ -182,6 +183,9 @@
       <Filter>App</Filter>
     </FxCompile>
     <FxCompile Include="CAVertexShader.hlsl">
+      <Filter>App</Filter>
+    </FxCompile>
+    <FxCompile Include="Test.hlsl">
       <Filter>App</Filter>
     </FxCompile>
   </ItemGroup>
