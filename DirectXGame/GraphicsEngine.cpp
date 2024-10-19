@@ -261,4 +261,3 @@ void GraphicsEngine::setToRenderTexture()
 	m_imm_device_context->setRenderTargets(m_renderTargetView, NULL);
 }
 
-

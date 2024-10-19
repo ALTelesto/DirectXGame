@@ -213,9 +213,8 @@ void AppWindow::createGraphicsWindow()
 	constant_distortion cc2;
 	cc2.distortionStrength = 0.2f;
 
-	cb = GraphicsEngine::getInstance()->createConstantBuffer();
-	cb->load(&cc2, sizeof(constant));
-	cbList.push_back(cb);
+	fsquad_cb = GraphicsEngine::getInstance()->createConstantBuffer();
+	fsquad_cb->load(&cc2, sizeof(constant));
 	
 
 	//srvList.push_back(GraphicsEngine::getInstance()->createShaderResourceView());
@@ -322,14 +321,18 @@ void AppWindow::onUpdate()
 
 	GraphicsEngine::getInstance()->setToRenderTexture();
 
+	GraphicsEngine::getInstance()->getImmediateDeviceContext()->setSamplerState(m_ss);
+
 	constant_distortion cc;
 	cc.distortionStrength = 0.2f;
 
 	GraphicsEngine::getInstance()->getImmediateDeviceContext()->setPixelShader(ppList[0]);
-	GraphicsEngine::getInstance()->getImmediateDeviceContext()->setConstantBuffer(ppList[0],cbList[0]);
-	cbList[0]->update(GraphicsEngine::getInstance()->getImmediateDeviceContext(),&cc);
-	GraphicsEngine::getInstance()->getImmediateDeviceContext()->setShaderResources(0, 1,&srvList[0]);
+	GraphicsEngine::getInstance()->getImmediateDeviceContext()->setConstantBuffer(ppList[0],fsquad_cb);
+	fsquad_cb->update(GraphicsEngine::getInstance()->getImmediateDeviceContext(),&cc);
+	GraphicsEngine::getInstance()->getImmediateDeviceContext()->setShaderResources(0, 1, &srvList[0]);
 	renderFullScreenQuad();
+
+	GraphicsEngine::getInstance()->getImmediateDeviceContext()->setRenderTargets(m_swap_chain->getRenderTargetView(), m_swap_chain->getDepthStencilView());
 
 	m_swap_chain->present(true);
 
