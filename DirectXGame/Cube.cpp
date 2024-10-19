@@ -12,15 +12,15 @@ Cube::Cube(string name, void* shaderByteCode, size_t sizeShader) : AGameObject(n
 {
 	Vertex quadList[] = {
 		//front
-		{Vector3D(-0.5f,-0.5f,-0.5f),   vec2(-.5f,-.5f)},
-		{Vector3D(-0.5f,0.5f,-0.5f),    vec2(-.5f,.5f)},
-		{ Vector3D(0.5f,0.5f,-0.5f),   vec2(.5f,.5f) },
-		{ Vector3D(0.5f,-0.5f,-0.5f),     vec2(.5f,-.5f) },
+		{Vector3D(-0.5f,-0.5f,-0.5f),   vec2(0,1)},
+		{Vector3D(-0.5f,0.5f,-0.5f),    vec2(0,0)},
+		{ Vector3D(0.5f,0.5f,-0.5f),  vec2(0,1) },
+		{ Vector3D(0.5f,-0.5f,-0.5f),      vec2(1,1) },
 		//back
-		{ Vector3D(0.5f,-0.5f,0.5f),   vec2(.5f,-.5f) },
-		{ Vector3D(0.5f,0.5f,0.5f),    vec2(.5f,.5f) },
-		{ Vector3D(-0.5f,0.5f,0.5f),   vec2(-.5f,.5f) },
-		{ Vector3D(-0.5f,-0.5f,0.5f),     vec2(-.5f,-.5f) }
+		{ Vector3D(0.5f,-0.5f,0.5f),   vec2(1,1) },
+		{ Vector3D(0.5f,0.5f,0.5f),   vec2(1,0) },
+		{ Vector3D(-0.5f,0.5f,0.5f),   vec2(0,0) },
+		{ Vector3D(-0.5f,-0.5f,0.5f),    vec2(0,1) }
 	};
 
 	this->vertexBuffer = GraphicsEngine::getInstance()->createVertexBuffer();

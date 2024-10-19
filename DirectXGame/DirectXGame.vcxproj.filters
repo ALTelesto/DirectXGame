@@ -172,8 +172,10 @@
     <FxCompile Include="PixelShader.hlsl">
       <Filter>App</Filter>
     </FxCompile>
-    <FxCompile Include="CAPixelShader.hlsl" />
     <FxCompile Include="LensDistortion.hlsl">
+      <Filter>App</Filter>
+    </FxCompile>
+    <FxCompile Include="CAPixelShader.hlsl">
       <Filter>App</Filter>
     </FxCompile>
   </ItemGroup>

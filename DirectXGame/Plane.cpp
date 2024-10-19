@@ -14,10 +14,10 @@ Plane::Plane(string name, void* shaderByteCode, size_t sizeShader) : AGameObject
     GraphicsEngine* graphicsEngine = GraphicsEngine::getInstance();
 
     Vertex quadList[] = {
-        { Vector3D(-0.5f, -0.5f, 0.0f), vec2(-.5f,-.5f)},  // bl
-        { Vector3D(-0.5f, 0.5f, 0.0f),  vec2(-.5f,.5f) },   // tl
-        { Vector3D(0.5f, 0.5f, 0.0f),  vec2(.5f,.5f) },    // tr
-        { Vector3D(0.5f, -0.5f, 0.0f),  vec2(.5f,-.5f) }    // br
+        { Vector3D(-0.5f, -0.5f, 0.0f), vec2(0,1)},  // bl
+        { Vector3D(-0.5f, 0.5f, 0.0f), vec2(0,0) },   // tl
+        { Vector3D(0.5f, 0.5f, 0.0f),  vec2(1,0) },    // tr
+        { Vector3D(0.5f, -0.5f, 0.0f),   vec2(1,1) }    // br
     };
 
     this->vertexBuffer = graphicsEngine->createVertexBuffer();
