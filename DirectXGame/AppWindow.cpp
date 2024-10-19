@@ -171,6 +171,12 @@ void AppWindow::createGraphicsWindow()
 
 	m_vb->load(vertex_list, sizeof(vertex), size_list, shader_byte_code, size_shader);
 
+	GraphicsEngine::getInstance()->releaseCompiledShader();
+
+
+	GraphicsEngine::getInstance()->compileVertexShader(L"CAVertexShader.hlsl", "vsmain", &shader_byte_code, &size_shader);
+	fsquad_vs = GraphicsEngine::getInstance()->createVertexShader(shader_byte_code, size_shader);
+
 
 	fsquad_vertex fsquad_list[] =
 	{
@@ -227,7 +233,7 @@ void AppWindow::createGraphicsWindow()
 
 	constant_vignette cc2;
 	cc2.vignetteRadius = 0.5f;
-	cc2.vignetteStrength = 0.5f;
+	cc2.vignetteStrength = 1.0f;
 
 	fsquad_cb = GraphicsEngine::getInstance()->createConstantBuffer();
 	fsquad_cb->load(&cc2, sizeof(constant));
@@ -343,13 +349,13 @@ void AppWindow::onUpdate()
 	cc.vignetteStrength = 0.5f;
 
 	GraphicsEngine::getInstance()->getImmediateDeviceContext()->setPixelShader(ppList[0]);
-	GraphicsEngine::getInstance()->getImmediateDeviceContext()->setConstantBuffer(m_vs, fsquad_cb);
+	GraphicsEngine::getInstance()->getImmediateDeviceContext()->setConstantBuffer(fsquad_vs, fsquad_cb);
 	GraphicsEngine::getInstance()->getImmediateDeviceContext()->setConstantBuffer(ppList[0],fsquad_cb);
 	fsquad_cb->update(GraphicsEngine::getInstance()->getImmediateDeviceContext(),&cc);
 	GraphicsEngine::getInstance()->getImmediateDeviceContext()->setShaderResources(0, 1, &srvList[0]);
 	renderFullScreenQuad();
 
-	//GraphicsEngine::getInstance()->getImmediateDeviceContext()->setRenderTargets(m_swap_chain->getRenderTargetView(), m_swap_chain->getDepthStencilView());
+	GraphicsEngine::getInstance()->getImmediateDeviceContext()->setRenderTargets(m_swap_chain->getRenderTargetView(), m_swap_chain->getDepthStencilView());
 
 	m_swap_chain->present(true);
 

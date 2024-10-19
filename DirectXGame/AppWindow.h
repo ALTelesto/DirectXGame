@@ -84,6 +84,7 @@ private:
 	IndexBuffer* m_ib;
 
 	//fullscreen quad
+	VertexShader* fsquad_vs;
 	VertexBuffer* fsquad_vb;
 	IndexBuffer* fsquad_ib;
 	ConstantBuffer* fsquad_cb;
