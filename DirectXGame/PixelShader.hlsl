@@ -17,8 +17,8 @@ cbuffer constant: register(b0)
 
 float4 psmain(PS_INPUT input) : SV_TARGET
 {
-	
-    return float4(_texture.Sample(_sampler_state, input.texCoord));
+    return float4(input.texCoord, 0, 1);
+    //return float4(_texture.Sample(_sampler_state, input.texCoord));
     //return float4(1,1,1,1);
 
 }
