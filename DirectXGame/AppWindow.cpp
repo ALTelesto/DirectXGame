@@ -5,6 +5,7 @@
 
 #include "EngineTime.h"
 
+#include "Vector2D.h"
 #include "Vector3D.h"
 #include "Matrix4x4.h"
 
@@ -21,7 +22,7 @@ struct vec2
 struct fsquad_vertex
 {
 	Vector3D position;
-	vec2 texcoord;
+	Vector2D texcoord;
 };
 
 struct vertex
@@ -173,10 +174,10 @@ void AppWindow::createGraphicsWindow()
 
 	fsquad_vertex fsquad_list[] =
 	{
-		{Vector3D(-1.0f,-1.0f,0.0f),(0.0f,1.0f)},
-		{Vector3D(-1.0f,1.0f,0.0f),(0.0f,0.0f)},
-		{Vector3D(1.0f,-1.0f,0.0f),(1.0f,1.0f)},
-		{Vector3D(1.0f,1.0f,0.0f),(1.0f,1.0f)},
+		{Vector3D(-1.0f,-1.0f,0.0f),Vector2D(0.0f,1.0f)},
+		{Vector3D(-1.0f,1.0f,0.0f),Vector2D(0.0f,0.0f)},
+		{Vector3D(1.0f,-1.0f,0.0f),Vector2D(1.0f,1.0f)},
+		{Vector3D(1.0f,1.0f,0.0f),Vector2D(1.0f,1.0f)},
 	};
 
 	fsquad_vb = GraphicsEngine::getInstance()->createVertexBuffer();
