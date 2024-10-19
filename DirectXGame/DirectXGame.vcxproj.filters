@@ -178,5 +178,8 @@
     <FxCompile Include="CAPixelShader.hlsl">
       <Filter>App</Filter>
     </FxCompile>
+    <FxCompile Include="Vignette.hlsl">
+      <Filter>App</Filter>
+    </FxCompile>
   </ItemGroup>
 </Project>

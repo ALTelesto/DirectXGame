@@ -45,6 +45,12 @@ struct constant_distortion
 	float distortionStrength;
 };
 
+struct constant_vignette
+{
+	float vignetteRadius;
+	float vignetteStrength;
+};
+
 AppWindow* AppWindow::sharedInstance = nullptr;
 
 AppWindow* AppWindow::getInstance()
@@ -175,7 +181,15 @@ void AppWindow::createGraphicsWindow()
 
 	fsquad_vb = GraphicsEngine::getInstance()->createVertexBuffer();
 	UINT fsquad_size_list = ARRAYSIZE(fsquad_list);
-	fsquad_vb->load(fsquad_list, sizeof(fsquad_vertex), fsquad_size_list, shader_byte_code, size_shader);
+
+	D3D11_BUFFER_DESC buff_desc = {};
+	buff_desc.Usage = D3D11_USAGE_DYNAMIC;
+	buff_desc.ByteWidth = sizeof(fsquad_vertex) * fsquad_size_list;
+	buff_desc.BindFlags = D3D11_BIND_VERTEX_BUFFER;
+	buff_desc.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
+	buff_desc.MiscFlags = 0;
+
+	fsquad_vb->load(fsquad_list, sizeof(fsquad_vertex), fsquad_size_list, shader_byte_code, size_shader, buff_desc);
 
 	unsigned int fsquad_index_list[] =
 	{
@@ -207,11 +221,12 @@ void AppWindow::createGraphicsWindow()
 	//we have two post-processing shaders, so create two SRVs
 	srvList.push_back(GraphicsEngine::getInstance()->createShaderResourceView());
 
-	GraphicsEngine::getInstance()->compilePixelShader(L"LensDistortion.hlsl", "main", &shader_byte_code, &size_shader);
+	GraphicsEngine::getInstance()->compilePixelShader(L"Vignette.hlsl", "psmain", &shader_byte_code, &size_shader);
 	ppList.push_back(GraphicsEngine::getInstance()->createPixelShader(shader_byte_code, size_shader));
 
-	constant_distortion cc2;
-	cc2.distortionStrength = 0.2f;
+	constant_vignette cc2;
+	cc2.vignetteRadius = 0.5f;
+	cc2.vignetteStrength = 0.5f;
 
 	fsquad_cb = GraphicsEngine::getInstance()->createConstantBuffer();
 	fsquad_cb->load(&cc2, sizeof(constant));
@@ -323,10 +338,12 @@ void AppWindow::onUpdate()
 
 	GraphicsEngine::getInstance()->getImmediateDeviceContext()->setSamplerState(m_ss);
 
-	constant_distortion cc;
-	cc.distortionStrength = 0.2f;
+	constant_vignette cc;
+	cc.vignetteRadius = 0.5f;
+	cc.vignetteStrength = 0.5f;
 
 	GraphicsEngine::getInstance()->getImmediateDeviceContext()->setPixelShader(ppList[0]);
+	GraphicsEngine::getInstance()->getImmediateDeviceContext()->setConstantBuffer(m_vs, fsquad_cb);
 	GraphicsEngine::getInstance()->getImmediateDeviceContext()->setConstantBuffer(ppList[0],fsquad_cb);
 	fsquad_cb->update(GraphicsEngine::getInstance()->getImmediateDeviceContext(),&cc);
 	GraphicsEngine::getInstance()->getImmediateDeviceContext()->setShaderResources(0, 1, &srvList[0]);
