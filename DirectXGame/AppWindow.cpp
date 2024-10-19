@@ -334,7 +334,7 @@ void AppWindow::onUpdate()
 
 	//post processing stage
 
-	GraphicsEngine::getInstance()->setToRenderTexture();
+	GraphicsEngine::getInstance()->setToRenderTexture(); //set render target to the render texture target for post processing
 
 	GraphicsEngine::getInstance()->getImmediateDeviceContext()->setSamplerState(m_ss);
 
@@ -349,7 +349,7 @@ void AppWindow::onUpdate()
 	GraphicsEngine::getInstance()->getImmediateDeviceContext()->setShaderResources(0, 1, &srvList[0]);
 	renderFullScreenQuad();
 
-	GraphicsEngine::getInstance()->getImmediateDeviceContext()->setRenderTargets(m_swap_chain->getRenderTargetView(), m_swap_chain->getDepthStencilView());
+	//GraphicsEngine::getInstance()->getImmediateDeviceContext()->setRenderTargets(m_swap_chain->getRenderTargetView(), m_swap_chain->getDepthStencilView());
 
 	m_swap_chain->present(true);
 

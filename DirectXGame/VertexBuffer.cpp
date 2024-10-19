@@ -36,7 +36,7 @@ bool VertexBuffer::load(void* list_vertices, UINT size_vertex, UINT size_list, v
 	D3D11_INPUT_ELEMENT_DESC layout[] =
 	{
 		{"POSITION", 0,  DXGI_FORMAT_R32G32B32_FLOAT, 0, 0,D3D11_INPUT_PER_VERTEX_DATA ,0},
-		{ "TEXCOORD0", 0, DXGI_FORMAT_R32G32_FLOAT, 0, sizeof(Vector2D), D3D11_INPUT_PER_VERTEX_DATA, 0 },
+		{ "TEXCOORD", 0, DXGI_FORMAT_R32G32_FLOAT, 0, sizeof(Vector2D), D3D11_INPUT_PER_VERTEX_DATA, 0 },
 	};
 
 	UINT size_layout = ARRAYSIZE(layout);
