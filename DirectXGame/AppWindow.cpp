@@ -124,52 +124,52 @@ void AppWindow::createGraphicsWindow()
 	planeObject->setScale(Vector3D(0.5, 0.5, 0.5));
 	this->gameObjectList.push_back(planeObject);
 
-	//vertex vertex_list[] =
-	//{
-	//	//front
-	//	{Vector3D(-0.5f,-0.5f,-0.5f),    Vector3D(1,0,0),  Vector3D(0.2f,0,0) },
-	//	{Vector3D(-0.5f,0.5f,-0.5f),    Vector3D(1,1,0), Vector3D(0.2f,0.2f,0) },
-	//	{ Vector3D(0.5f,0.5f,-0.5f),   Vector3D(1,1,0),  Vector3D(0.2f,0.2f,0) },
-	//	{ Vector3D(0.5f,-0.5f,-0.5f),     Vector3D(1,0,0), Vector3D(0.2f,0,0) },
-	//	//back
-	//	{ Vector3D(0.5f,-0.5f,0.5f),    Vector3D(0,1,0), Vector3D(0,0.2f,0) },
-	//	{ Vector3D(0.5f,0.5f,0.5f),    Vector3D(0,1,1), Vector3D(0,0.2f,0.2f) },
-	//	{ Vector3D(-0.5f,0.5f,0.5f),   Vector3D(0,1,1),  Vector3D(0,0.2f,0.2f) },
-	//	{ Vector3D(-0.5f,-0.5f,0.5f),     Vector3D(0,1,0), Vector3D(0,0.2f,0) }
+	vertex vertex_list[] =
+	{
+		//front
+		{Vector3D(-0.5f,-0.5f,-0.5f),    Vector3D(1,0,0),  Vector3D(0.2f,0,0) },
+		{Vector3D(-0.5f,0.5f,-0.5f),    Vector3D(1,1,0), Vector3D(0.2f,0.2f,0) },
+		{ Vector3D(0.5f,0.5f,-0.5f),   Vector3D(1,1,0),  Vector3D(0.2f,0.2f,0) },
+		{ Vector3D(0.5f,-0.5f,-0.5f),     Vector3D(1,0,0), Vector3D(0.2f,0,0) },
+		//back
+		{ Vector3D(0.5f,-0.5f,0.5f),    Vector3D(0,1,0), Vector3D(0,0.2f,0) },
+		{ Vector3D(0.5f,0.5f,0.5f),    Vector3D(0,1,1), Vector3D(0,0.2f,0.2f) },
+		{ Vector3D(-0.5f,0.5f,0.5f),   Vector3D(0,1,1),  Vector3D(0,0.2f,0.2f) },
+		{ Vector3D(-0.5f,-0.5f,0.5f),     Vector3D(0,1,0), Vector3D(0,0.2f,0) }
 
-	//};
+	};
 
-	//m_vb = GraphicsEngine::getInstance()->createVertexBuffer();
-	//UINT size_list = ARRAYSIZE(vertex_list);
+	m_vb = GraphicsEngine::getInstance()->createVertexBuffer();
+	UINT size_list = ARRAYSIZE(vertex_list);
 
-	//unsigned int index_list[] =
-	//{
-	//	//front
-	//	0,1,2,
-	//	2,3,0,
-	//	//back
-	//	4,5,6,
-	//	6,7,4,
-	//	//top
-	//	1,6,5,
-	//	5,2,1,
-	//	//bottom
-	//	7,0,3,
-	//	3,4,7,
-	//	//right
-	//	3,2,5,
-	//	5,4,3,
-	//	//left
-	//	7,6,1,
-	//	1,0,7
-	//};
+	unsigned int index_list[] =
+	{
+		//front
+		0,1,2,
+		2,3,0,
+		//back
+		4,5,6,
+		6,7,4,
+		//top
+		1,6,5,
+		5,2,1,
+		//bottom
+		7,0,3,
+		3,4,7,
+		//right
+		3,2,5,
+		5,4,3,
+		//left
+		7,6,1,
+		1,0,7
+	};
 
-	//m_ib = GraphicsEngine::getInstance()->createIndexBuffer();
-	//UINT size_index_list = ARRAYSIZE(index_list);
+	m_ib = GraphicsEngine::getInstance()->createIndexBuffer();
+	UINT size_index_list = ARRAYSIZE(index_list);
 
-	//m_ib->load(index_list, size_index_list);
+	m_ib->load(index_list, size_index_list);
 
-	//m_vb->load(vertex_list, sizeof(vertex), size_list, shader_byte_code, size_shader);
+	m_vb->load(vertex_list, sizeof(vertex), size_list, shader_byte_code, size_shader);
 
 	
 	
@@ -302,7 +302,7 @@ void AppWindow::update()
 
 void AppWindow::renderFullScreenQuad()
 {
-	GraphicsEngine::getInstance()->getImmediateDeviceContext()->setDepthStencilState(nullptr);
+	
 
 	GraphicsEngine::getInstance()->getImmediateDeviceContext()->setVertexBuffer(fsquad_vb);
 	GraphicsEngine::getInstance()->getImmediateDeviceContext()->setIndexBuffer(fsquad_ib);
@@ -315,10 +315,11 @@ void AppWindow::onUpdate()
 
 	InputSystem::getInstance()->update();
 
-
-
 	GraphicsEngine::getInstance()->getImmediateDeviceContext()->clearRenderTargetView(this->m_swap_chain, GraphicsEngine::getInstance()->getRenderTargetView(),
 		0, 0.5, 0.5, 1);
+
+	GraphicsEngine::getInstance()->EnableDepthTest();
+
 	RECT windowRect = this->getClientWindowRect();
 	GraphicsEngine::getInstance()->getImmediateDeviceContext()->setViewportSize(windowRect.right - windowRect.left, windowRect.bottom - windowRect.top);
 
@@ -327,6 +328,7 @@ void AppWindow::onUpdate()
 
 	this->update();
 
+	
 		
 
 	GraphicsEngine::getInstance()->getImmediateDeviceContext()->setConstantBuffer(m_vs, m_cb);
@@ -335,10 +337,10 @@ void AppWindow::onUpdate()
 	GraphicsEngine::getInstance()->getImmediateDeviceContext()->setVertexShader(m_vs);
 	GraphicsEngine::getInstance()->getImmediateDeviceContext()->setPixelShader(m_ps);
 	
-	/*GraphicsEngine::getInstance()->getImmediateDeviceContext()->setVertexBuffer(m_vb);
+	GraphicsEngine::getInstance()->getImmediateDeviceContext()->setVertexBuffer(m_vb);
 	GraphicsEngine::getInstance()->getImmediateDeviceContext()->setIndexBuffer(m_ib);
 
-	GraphicsEngine::getInstance()->getImmediateDeviceContext()->drawIndexedTriangleList(m_ib->getSizeIndexList(), 0, 0);*/
+	GraphicsEngine::getInstance()->getImmediateDeviceContext()->drawIndexedTriangleList(m_ib->getSizeIndexList(), 0, 0);
 
 	for (AGameObject* gameObject : this->gameObjectList)
 	{
@@ -350,8 +352,15 @@ void AppWindow::onUpdate()
 
 	//GraphicsEngine::getInstance()->setToRenderTexture(); //set render target to the render texture target for post processing
 
+	ID3D11RenderTargetView* NULL_RT = nullptr;
+	GraphicsEngine::getInstance()->getImmediateDeviceContext()->setRenderTargets(NULL_RT, nullptr);
+	GraphicsEngine::getInstance()->DisableDepthTest();
+
 	GraphicsEngine::getInstance()->getImmediateDeviceContext()->setRenderTargets(m_swap_chain->getRenderTargetView(), m_swap_chain->getDepthStencilView());
 	
+	GraphicsEngine::getInstance()->getImmediateDeviceContext()->setVertexShader(fsquad_vs);
+	GraphicsEngine::getInstance()->getImmediateDeviceContext()->setPixelShader(ppList[0]);
+
 	GraphicsEngine::getInstance()->getImmediateDeviceContext()->setShaderResources(0, 1, &srvList[0]);
 
 	GraphicsEngine::getInstance()->getImmediateDeviceContext()->setSamplerState(m_ss);
@@ -362,8 +371,7 @@ void AppWindow::onUpdate()
 
 	
 
-	GraphicsEngine::getInstance()->getImmediateDeviceContext()->setVertexShader(fsquad_vs);
-	GraphicsEngine::getInstance()->getImmediateDeviceContext()->setPixelShader(ppList[0]);
+	
 	GraphicsEngine::getInstance()->getImmediateDeviceContext()->setConstantBuffer(fsquad_vs, fsquad_cb);
 	GraphicsEngine::getInstance()->getImmediateDeviceContext()->setConstantBuffer(ppList[0],fsquad_cb);
 	fsquad_cb->update(GraphicsEngine::getInstance()->getImmediateDeviceContext(),&cc);

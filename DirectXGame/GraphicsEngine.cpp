@@ -92,14 +92,22 @@ bool GraphicsEngine::init()
 
 	depthStencilDesc.StencilEnable = FALSE;
 
-	HRESULT hr = m_d3d_device->CreateDepthStencilState(&depthStencilDesc, &m_depthStencilState);
+	HRESULT hr = m_d3d_device->CreateDepthStencilState(&depthStencilDesc, &m_depthStencilStateEnabled);
 	if (FAILED(hr))
 	{
 		std::cout << "Failed to create Depth Stencil State\n";
 		return false;
 	}
 
-	m_imm_context->OMSetDepthStencilState(m_depthStencilState, 0);
+	//m_imm_context->OMSetDepthStencilState(m_depthStencilStateEnabled, 0);
+
+	depthStencilDesc.DepthEnable = FALSE;
+	hr = m_d3d_device->CreateDepthStencilState(&depthStencilDesc, &m_depthStencilStateDisabled);
+	if (FAILED(hr))
+	{
+		std::cout << "Failed to create Depth Stencil State\n";
+		return false;
+	}
 
 
 	//render to image stuff
@@ -111,7 +119,7 @@ bool GraphicsEngine::init()
 	textureDesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM;
 	textureDesc.SampleDesc.Count = 1;
 	textureDesc.Usage = D3D11_USAGE_DEFAULT;
-	textureDesc.BindFlags = D3D11_BIND_RENDER_TARGET | D3D11_BIND_SHADER_RESOURCE;
+	textureDesc.BindFlags = D3D11_BIND_RENDER_TARGET | D3D11_BIND_SHADER_RESOURCE | D3D11_BIND_UNORDERED_ACCESS;
 
 	hr = m_d3d_device->CreateTexture2D(&textureDesc, NULL, &m_renderTargetTexture);
 	if (FAILED(hr))
@@ -280,5 +288,13 @@ void GraphicsEngine::setToRenderTargetView(ID3D11RenderTargetView* render_target
 ID3D11RenderTargetView* GraphicsEngine::getRenderTargetView()
 {
 	return this->m_renderTargetView;
+}
+
+void GraphicsEngine::EnableDepthTest() {
+	m_imm_context->OMSetDepthStencilState(m_depthStencilStateEnabled, 0);
+}
+
+void GraphicsEngine::DisableDepthTest() {
+	m_imm_context->OMSetDepthStencilState(m_depthStencilStateDisabled, 0);
 }
 

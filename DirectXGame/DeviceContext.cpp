@@ -29,7 +29,7 @@ void DeviceContext::clearRenderTargetView(SwapChain* swap_chain, ID3D11RenderTar
 	FLOAT clear_color[] = { red,green,blue,alpha };
 	ID3D11DepthStencilView* depthView = swap_chain->getDepthStencilView();
 	m_device_context->OMSetRenderTargets(1, &renderView, depthView);
-	m_device_context->ClearRenderTargetView(swap_chain->getRenderTargetView(), clear_color);
+	//m_device_context->ClearRenderTargetView(swap_chain->getRenderTargetView(), clear_color);
 	m_device_context->ClearRenderTargetView(renderView, clear_color);
 	m_device_context->ClearDepthStencilView(depthView, D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1, 0);
 	
@@ -120,8 +120,8 @@ void DeviceContext::setShaderResources(UINT start_slot, UINT num_views, ID3D11Sh
 }
 void DeviceContext::unbindShaderResources()
 {
-	ID3D11ShaderResourceView* nullSRV[1] = { nullptr };
-	m_device_context->PSSetShaderResources(0, 1, &nullSRV[0]);
+	constexpr ID3D11ShaderResourceView* nullSRV = nullptr;
+	m_device_context->PSSetShaderResources(0, 1, &nullSRV);
 }
 
 void DeviceContext::setDepthStencilState(ID3D11DepthStencilState* depth_stencil_state)
