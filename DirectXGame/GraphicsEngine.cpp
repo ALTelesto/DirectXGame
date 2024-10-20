@@ -272,3 +272,13 @@ void GraphicsEngine::setToRenderTexture()
 	m_imm_device_context->setRenderTargets(m_renderTargetView, NULL);
 }
 
+void GraphicsEngine::setToRenderTargetView(ID3D11RenderTargetView* render_target_view, ID3D11DepthStencilView* depth_stencil_view)
+{
+	m_imm_device_context->setRenderTargets(render_target_view, depth_stencil_view);
+}
+
+ID3D11RenderTargetView* GraphicsEngine::getRenderTargetView()
+{
+	return this->m_renderTargetView;
+}
+

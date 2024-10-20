@@ -25,7 +25,7 @@ float4 psmain(PS_INPUT input) : SV_TARGET
     float4 colorG = _texture.Sample(_sampler_state, texCoordG);
     float4 colorB = _texture.Sample(_sampler_state, texCoordB);
     
-    return float4(colorR.r, colorG.g, colorB.b, 1.0);
+    return float4(1, 0, 0, 1.0);
     //return float4(_texture.Sample(_sampler_state, input.texCoord));
     
 

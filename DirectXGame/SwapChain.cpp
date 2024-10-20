@@ -38,7 +38,7 @@ bool SwapChain::init(HWND hwnd, UINT width, UINT height)
 		return false;
 	}
 
-	hr = device->CreateRenderTargetView(buffer, NULL, &m_rtv);
+	hr = device->CreateRenderTargetView(buffer, NULL, &m_backbufferRTV);
 	buffer->Release();
 	if(FAILED(hr))
 	{
@@ -94,7 +94,7 @@ SwapChain::~SwapChain()
 
 ID3D11RenderTargetView* SwapChain::getRenderTargetView()
 {
-	return this->m_rtv;
+	return this->m_backbufferRTV;
 }
 
 ID3D11DepthStencilView* SwapChain::getDepthStencilView()

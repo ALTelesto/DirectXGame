@@ -30,6 +30,7 @@ bool VertexBuffer::load(void* list_vertices, UINT size_vertex, UINT size_list, v
 
 	if (FAILED(GraphicsEngine::getInstance()->m_d3d_device->CreateBuffer(&buff_desc, &init_data, &m_buffer)))
 	{
+		std::cout << "vertex buffer failure \n";
 		return false;
 	}
 
@@ -64,6 +65,7 @@ bool VertexBuffer::load(void* list_vertices, UINT size_vertex, UINT size_list, v
 
 	if (FAILED(GraphicsEngine::getInstance()->m_d3d_device->CreateBuffer(&buff_desc, &init_data, &m_buffer)))
 	{
+		std::cout << "vertex buffer failure \n";
 		return false;
 	}
 

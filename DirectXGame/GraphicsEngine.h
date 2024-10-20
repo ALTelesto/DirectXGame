@@ -40,6 +40,9 @@ public:
 	bool compilePixelShader(const wchar_t* file_name, const char* entry_point_name, void** shader_byte_code, size_t* byte_code_size);
 	void releaseCompiledShader();
 	void setToRenderTexture();
+	void setToRenderTargetView(ID3D11RenderTargetView* render_target_view, ID3D11DepthStencilView* depth_stencil_view);
+	ID3D11RenderTargetView* getRenderTargetView();
+
 public:
 	
 private:
