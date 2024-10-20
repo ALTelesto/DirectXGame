@@ -231,9 +231,6 @@ void AppWindow::createGraphicsWindow()
 	//we have two post-processing shaders, so create two SRVs
 	srvList.push_back(GraphicsEngine::getInstance()->createShaderResourceView());
 
-	shader_byte_code = nullptr;
-	size_shader = 0;
-
 	GraphicsEngine::getInstance()->compilePixelShader(L"Vignette.hlsl", "psmain", &shader_byte_code, &size_shader);
 	ppList.push_back(GraphicsEngine::getInstance()->createPixelShader(shader_byte_code, size_shader));
 
@@ -330,7 +327,7 @@ void AppWindow::onUpdate()
 
 	this->update();
 
-	GraphicsEngine::getInstance()->getImmediateDeviceContext()->setSamplerState(m_ss);
+		
 
 	GraphicsEngine::getInstance()->getImmediateDeviceContext()->setConstantBuffer(m_vs, m_cb);
 	GraphicsEngine::getInstance()->getImmediateDeviceContext()->setConstantBuffer(m_ps, m_cb);
@@ -357,7 +354,7 @@ void AppWindow::onUpdate()
 	
 	GraphicsEngine::getInstance()->getImmediateDeviceContext()->setShaderResources(0, 1, &srvList[0]);
 
-	
+	GraphicsEngine::getInstance()->getImmediateDeviceContext()->setSamplerState(m_ss);
 
 	constant_vignette cc;
 	cc.vignetteRadius = 0.5f;
