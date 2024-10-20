@@ -109,50 +109,6 @@ bool GraphicsEngine::init()
 		return false;
 	}
 
-
-	//render to image stuff
-	D3D11_TEXTURE2D_DESC textureDesc = {};
-	textureDesc.Width = WIDTH;
-	textureDesc.Height = HEIGHT;
-	textureDesc.MipLevels = 1;
-	textureDesc.ArraySize = 1;
-	textureDesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM;
-	textureDesc.SampleDesc.Count = 1;
-	textureDesc.Usage = D3D11_USAGE_DEFAULT;
-	textureDesc.BindFlags = D3D11_BIND_RENDER_TARGET | D3D11_BIND_SHADER_RESOURCE | D3D11_BIND_UNORDERED_ACCESS;
-
-	hr = m_d3d_device->CreateTexture2D(&textureDesc, NULL, &m_renderTargetTexture);
-	if (FAILED(hr))
-	{
-		std::cout << "Failed to create render target texture\n";
-		return false;
-	}
-
-	D3D11_RENDER_TARGET_VIEW_DESC renderTargetViewDesc;
-	renderTargetViewDesc.Format = textureDesc.Format;
-	renderTargetViewDesc.ViewDimension = D3D11_RTV_DIMENSION_TEXTURE2D;
-	renderTargetViewDesc.Texture2D.MipSlice = 0;
-
-	hr = m_d3d_device->CreateRenderTargetView(m_renderTargetTexture, &renderTargetViewDesc, &m_renderTargetView);
-	if (FAILED(hr))
-	{
-		std::cout << "Failed to create render target view\n";
-		return false;
-	}
-
-	D3D11_SHADER_RESOURCE_VIEW_DESC srvDesc;
-	srvDesc.Format = textureDesc.Format;
-	srvDesc.ViewDimension = D3D11_SRV_DIMENSION_TEXTURE2D;
-	srvDesc.Texture2D.MostDetailedMip = 0;
-	srvDesc.Texture2D.MipLevels = 1;
-
-	hr = m_d3d_device->CreateShaderResourceView(m_renderTargetTexture, &srvDesc, &m_shaderResourceView);
-	if (FAILED(hr))
-	{
-		std::cout << "Failed to create shader resource view\n";
-		return false;
-	}
-
 	return true;
 }
 
@@ -224,26 +180,83 @@ PixelShader* GraphicsEngine::createPixelShader(const void* shader_byte_code, siz
 	return ps;
 }
 
-ID3D11ShaderResourceView* GraphicsEngine::createShaderResourceView()
+bool GraphicsEngine::createRenderTexture(ID3D11ShaderResourceView** srv, ID3D11RenderTargetView** rtv)
 {
-	if(m_renderTargetTexture == nullptr || m_renderTargetView == nullptr) return nullptr;
+	//std::cout << "createRenderTexture srv edition\n";
+	D3D11_TEXTURE2D_DESC textureDesc = {};
+	textureDesc.Width = WIDTH;
+	textureDesc.Height = HEIGHT;
+	textureDesc.MipLevels = 1;
+	textureDesc.ArraySize = 1;
+	textureDesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM;
+	textureDesc.SampleDesc.Count = 1;
+	textureDesc.Usage = D3D11_USAGE_DEFAULT;
+	textureDesc.BindFlags = D3D11_BIND_RENDER_TARGET | D3D11_BIND_SHADER_RESOURCE;
 
-	ID3D11ShaderResourceView* shader_resource_view;
+	ID3D11Texture2D* texture = nullptr;
+	HRESULT hr = m_d3d_device->CreateTexture2D(&textureDesc, NULL, &texture);
+	if (FAILED(hr)) {
+		std::cout << "Failed to create texture\n";
+		return false;
+	}
 
-	D3D11_SHADER_RESOURCE_VIEW_DESC srvDesc;
+	D3D11_RENDER_TARGET_VIEW_DESC renderTargetViewDesc;
+	renderTargetViewDesc.Format = textureDesc.Format;
+	renderTargetViewDesc.ViewDimension = D3D11_RTV_DIMENSION_TEXTURE2D;
+	renderTargetViewDesc.Texture2D.MipSlice = 0;
 
-	srvDesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM;
+	hr = m_d3d_device->CreateRenderTargetView(texture, &renderTargetViewDesc, rtv);
+	if (FAILED(hr)) {
+		std::cout << "Failed to create render target view\n";
+		return false;
+	}
+
+	D3D11_SHADER_RESOURCE_VIEW_DESC srvDesc = {};
+	srvDesc.Format = textureDesc.Format;
 	srvDesc.ViewDimension = D3D11_SRV_DIMENSION_TEXTURE2D;
 	srvDesc.Texture2D.MostDetailedMip = 0;
 	srvDesc.Texture2D.MipLevels = 1;
+	hr = m_d3d_device->CreateShaderResourceView(texture, &srvDesc, srv);
+	if (FAILED(hr)) {
+		std::cout << "Failed to create shader resource view\n";
+		return false;
+	}
 
-	HRESULT hr = m_d3d_device->CreateShaderResourceView(m_renderTargetTexture, &srvDesc, &shader_resource_view);
+	texture->Release();
+	return true;
+}
+
+bool GraphicsEngine::createDepthStencilView(ID3D11DepthStencilView** dsv)
+{
+	HRESULT hr;
+	ID3D11Texture2D* texture = nullptr;
+
+	D3D11_TEXTURE2D_DESC texDesc = {};
+	texDesc.Width = WIDTH;
+	texDesc.Height = HEIGHT;
+	texDesc.Format = DXGI_FORMAT_D24_UNORM_S8_UINT;
+	texDesc.Usage = D3D11_USAGE_DEFAULT;
+	texDesc.BindFlags = D3D11_BIND_DEPTH_STENCIL;
+	texDesc.MipLevels = 1;
+	texDesc.SampleDesc.Count = 1;
+	texDesc.SampleDesc.Quality = 0;
+	texDesc.MiscFlags = 0;
+	texDesc.ArraySize = 1;
+	texDesc.CPUAccessFlags = 0;
+
+	hr = m_d3d_device->CreateTexture2D(&texDesc, NULL, &texture);
 	if (FAILED(hr))
 	{
-		std::cout << "Failed to create shader resource view\n";
-		return nullptr;
+		std::cout << "dsv failure 1 \n";
+		return false;
 	}
-	return shader_resource_view;
+
+	hr = m_d3d_device->CreateDepthStencilView(texture, NULL, dsv);
+	if (FAILED(hr))
+	{
+		std::cout << "dsv failure 2 \n";
+		return false;
+	}
 }
 
 bool GraphicsEngine::compileVertexShader(const wchar_t* file_name, const char* entry_point_name, void** shader_byte_code, size_t* byte_code_size)
@@ -282,19 +295,10 @@ void GraphicsEngine::releaseCompiledShader()
 	if (m_blob) m_blob->Release();
 }
 
-void GraphicsEngine::setToRenderTexture()
-{
-	m_imm_device_context->setRenderTargets(m_renderTargetView, NULL);
-}
 
 void GraphicsEngine::setToRenderTargetView(ID3D11RenderTargetView* render_target_view, ID3D11DepthStencilView* depth_stencil_view)
 {
 	m_imm_device_context->setRenderTargets(render_target_view, depth_stencil_view);
-}
-
-ID3D11RenderTargetView* GraphicsEngine::getRenderTargetView()
-{
-	return this->m_renderTargetView;
 }
 
 void GraphicsEngine::EnableDepthTest() {

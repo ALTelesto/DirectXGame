@@ -89,8 +89,14 @@ private:
 	IndexBuffer* fsquad_ib;
 	ConstantBuffer* fsquad_cb;
 
+	ID3D11RenderTargetView* rtv_first;
+	ID3D11DepthStencilView* dsv_first;
+
 	//post-processing
+	vector<ID3D11RenderTargetView*> rtvList;
 	vector<ID3D11ShaderResourceView*> srvList;
+	int currentRenderTarget = 0;
+
 	vector<PixelShader*> ppList;
 
 	SamplerState* m_ss;

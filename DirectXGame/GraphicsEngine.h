@@ -34,14 +34,13 @@ public:
 	SamplerState* createSamplerState();
 	VertexShader* createVertexShader(const void* shader_byte_code, size_t byte_code_size);
 	PixelShader* createPixelShader(const void* shader_byte_code, size_t byte_code_size);
-	ID3D11ShaderResourceView* createShaderResourceView();
+	bool createRenderTexture(ID3D11ShaderResourceView** srv, ID3D11RenderTargetView** rtv);
+	bool createDepthStencilView(ID3D11DepthStencilView** dsv);
 public:
 	bool compileVertexShader(const wchar_t* file_name, const char* entry_point_name, void** shader_byte_code, size_t* byte_code_size);
 	bool compilePixelShader(const wchar_t* file_name, const char* entry_point_name, void** shader_byte_code, size_t* byte_code_size);
 	void releaseCompiledShader();
-	void setToRenderTexture();
 	void setToRenderTargetView(ID3D11RenderTargetView* render_target_view, ID3D11DepthStencilView* depth_stencil_view);
-	ID3D11RenderTargetView* getRenderTargetView();
 	void EnableDepthTest();
 	void DisableDepthTest();
 
@@ -65,10 +64,6 @@ private:
 	ID3DBlob* m_psblob = nullptr;
 	ID3D11VertexShader* m_vs = nullptr;
 	ID3D11PixelShader* m_ps = nullptr;
-
-	ID3D11Texture2D* m_renderTargetTexture = nullptr;
-	ID3D11RenderTargetView* m_renderTargetView = nullptr;
-	ID3D11ShaderResourceView* m_shaderResourceView = nullptr;
 private:
 	friend class SwapChain;
 	friend class VertexBuffer;
