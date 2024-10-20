@@ -12,7 +12,7 @@ cbuffer constant_distortion
     float distortionStrength;
 };
 
-float4 main(VS_OUTPUT input) : SV_TARGET
+float4 psmain(VS_OUTPUT input) : SV_TARGET
 {
     float2 screenCenter = float2(0.5f, 0.5f);
 
