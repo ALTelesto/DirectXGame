@@ -129,6 +129,11 @@ void DeviceContext::setDepthStencilState(ID3D11DepthStencilState* depth_stencil_
 	m_device_context->OMSetDepthStencilState(depth_stencil_state, 0);
 }
 
+void DeviceContext::Dispatch(UINT thread_group_count_x, UINT thread_group_count_y, UINT thread_group_count_z)
+{
+	m_device_context->Dispatch(thread_group_count_x, thread_group_count_y, thread_group_count_z);
+}
+
 bool DeviceContext::release()
 {
 	m_device_context->Release();

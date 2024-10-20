@@ -1,7 +1,7 @@
 cbuffer ConstantBuffer : register(b0)
 {
-    float vignetteRadius;  // How far the vignette reaches (0.0 to 1.0)
-    float vignetteStrength; // How strong the vignette effect is (0.0 to 1.0)
+    float vignetteRadius;
+    float vignetteStrength;
 };
 
 Texture2D sceneTexture : register(t0);

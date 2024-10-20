@@ -230,7 +230,14 @@ ID3D11ShaderResourceView* GraphicsEngine::createShaderResourceView()
 
 	ID3D11ShaderResourceView* shader_resource_view;
 
-	HRESULT hr = m_d3d_device->CreateShaderResourceView(m_renderTargetTexture, NULL, &shader_resource_view);
+	D3D11_SHADER_RESOURCE_VIEW_DESC srvDesc;
+
+	srvDesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM;
+	srvDesc.ViewDimension = D3D11_SRV_DIMENSION_TEXTURE2D;
+	srvDesc.Texture2D.MostDetailedMip = 0;
+	srvDesc.Texture2D.MipLevels = 1;
+
+	HRESULT hr = m_d3d_device->CreateShaderResourceView(m_renderTargetTexture, &srvDesc, &shader_resource_view);
 	if (FAILED(hr))
 	{
 		std::cout << "Failed to create shader resource view\n";

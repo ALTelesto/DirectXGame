@@ -235,8 +235,8 @@ void AppWindow::createGraphicsWindow()
 	ppList.push_back(GraphicsEngine::getInstance()->createPixelShader(shader_byte_code, size_shader));
 
 	constant_vignette cc2;
-	cc2.vignetteRadius = 0.5f;
-	cc2.vignetteStrength = 1.0f;
+	cc2.vignetteRadius = 0.1f;
+	cc2.vignetteStrength = 0.3f;
 
 	fsquad_cb = GraphicsEngine::getInstance()->createConstantBuffer();
 	fsquad_cb->load(&cc2, sizeof(constant));
@@ -302,8 +302,7 @@ void AppWindow::update()
 
 void AppWindow::renderFullScreenQuad()
 {
-	
-
+	GraphicsEngine::getInstance()->DisableDepthTest();
 	GraphicsEngine::getInstance()->getImmediateDeviceContext()->setVertexBuffer(fsquad_vb);
 	GraphicsEngine::getInstance()->getImmediateDeviceContext()->setIndexBuffer(fsquad_ib);
 	GraphicsEngine::getInstance()->getImmediateDeviceContext()->drawIndexedTriangleList(fsquad_ib->getSizeIndexList(), 0,0);
@@ -317,6 +316,10 @@ void AppWindow::onUpdate()
 
 	GraphicsEngine::getInstance()->getImmediateDeviceContext()->clearRenderTargetView(this->m_swap_chain, GraphicsEngine::getInstance()->getRenderTargetView(),
 		0, 0.5, 0.5, 1);
+	GraphicsEngine::getInstance()->getImmediateDeviceContext()->clearRenderTargetColor(this->m_swap_chain,
+		0, 0.5, 0.5, 1);
+
+	GraphicsEngine::getInstance()->getImmediateDeviceContext()->unbindShaderResources();
 
 	GraphicsEngine::getInstance()->EnableDepthTest();
 
@@ -328,7 +331,7 @@ void AppWindow::onUpdate()
 
 	this->update();
 
-	
+	GraphicsEngine::getInstance()->setToRenderTexture();
 		
 
 	GraphicsEngine::getInstance()->getImmediateDeviceContext()->setConstantBuffer(m_vs, m_cb);
@@ -350,8 +353,6 @@ void AppWindow::onUpdate()
 	
 	//post-processing stage ----------------------------------------------------------------------
 
-	//GraphicsEngine::getInstance()->setToRenderTexture(); //set render target to the render texture target for post processing
-
 	ID3D11RenderTargetView* NULL_RT = nullptr;
 	GraphicsEngine::getInstance()->getImmediateDeviceContext()->setRenderTargets(NULL_RT, nullptr);
 	GraphicsEngine::getInstance()->DisableDepthTest();
@@ -366,21 +367,16 @@ void AppWindow::onUpdate()
 	GraphicsEngine::getInstance()->getImmediateDeviceContext()->setSamplerState(m_ss);
 
 	constant_vignette cc;
-	cc.vignetteRadius = 0.5f;
+	cc.vignetteRadius = 0.9f;
 	cc.vignetteStrength = 0.5f;
 
-	
-
-	
 	GraphicsEngine::getInstance()->getImmediateDeviceContext()->setConstantBuffer(fsquad_vs, fsquad_cb);
 	GraphicsEngine::getInstance()->getImmediateDeviceContext()->setConstantBuffer(ppList[0],fsquad_cb);
 	fsquad_cb->update(GraphicsEngine::getInstance()->getImmediateDeviceContext(),&cc);
 
-	
 	renderFullScreenQuad();
-	
 
-	GraphicsEngine::getInstance()->getImmediateDeviceContext()->unbindShaderResources();
+	//GraphicsEngine::getInstance()->getImmediateDeviceContext()->setRenderTargets(m_swap_chain->getRenderTargetView(), m_swap_chain->getDepthStencilView());
 
 	m_swap_chain->present(true);
 
