@@ -171,7 +171,7 @@ void AppWindow::createGraphicsWindow()
 
 	//m_vb->load(vertex_list, sizeof(vertex), size_list, shader_byte_code, size_shader);
 
-
+	
 	
 
 	GraphicsEngine::getInstance()->releaseCompiledShader();
@@ -182,10 +182,10 @@ void AppWindow::createGraphicsWindow()
 
 	fsquad_vertex fsquad_list[] =
 	{
-		{Vector3D(-1.0f,-1.0f,.50f),Vector2D(0.0f,1.0f)},
-		{Vector3D(-1.0f,1.0f,.50f),Vector2D(0.0f,0.0f)},
-		{Vector3D(1.0f,-1.0f,.50f),Vector2D(1.0f,1.0f)},
-		{Vector3D(1.0f,1.0f,.50f),Vector2D(1.0f,0.0f)}
+		{Vector3D(-1.0f,-1.0f,0),Vector2D(0.0f,1.0f)},
+		{Vector3D(-1.0f,1.0f,0),Vector2D(0.0f,0.0f)},
+		{Vector3D(1.0f,1.0f,0),Vector2D(1.0f,0.0f)},
+		{Vector3D(1.0f,-1.0f,0),Vector2D(1.0f,1.0f)}
 	};
 
 	fsquad_vb = GraphicsEngine::getInstance()->createVertexBuffer();
@@ -203,12 +203,12 @@ void AppWindow::createGraphicsWindow()
 	unsigned int fsquad_index_list[] =
 	{
 		0, 1, 2,
-		2, 1, 3
+		2, 3, 0
 	};
 	UINT fsquad_size_index_list = ARRAYSIZE(fsquad_index_list);
 
 	fsquad_ib = GraphicsEngine::getInstance()->createIndexBuffer();
-	fsquad_ib->load(fsquad_list, fsquad_size_index_list);
+	fsquad_ib->load(fsquad_index_list, fsquad_size_index_list);
 	
 
 	GraphicsEngine::getInstance()->releaseCompiledShader();
@@ -234,7 +234,7 @@ void AppWindow::createGraphicsWindow()
 	shader_byte_code = nullptr;
 	size_shader = 0;
 
-	GraphicsEngine::getInstance()->compilePixelShader(L"CAPixelShader.hlsl", "psmain", &shader_byte_code, &size_shader);
+	GraphicsEngine::getInstance()->compilePixelShader(L"Vignette.hlsl", "psmain", &shader_byte_code, &size_shader);
 	ppList.push_back(GraphicsEngine::getInstance()->createPixelShader(shader_byte_code, size_shader));
 
 	constant_vignette cc2;
@@ -305,7 +305,7 @@ void AppWindow::update()
 
 void AppWindow::renderFullScreenQuad()
 {
-	//GraphicsEngine::getInstance()->getImmediateDeviceContext()->setDepthStencilState(nullptr);
+	GraphicsEngine::getInstance()->getImmediateDeviceContext()->setDepthStencilState(nullptr);
 
 	GraphicsEngine::getInstance()->getImmediateDeviceContext()->setVertexBuffer(fsquad_vb);
 	GraphicsEngine::getInstance()->getImmediateDeviceContext()->setIndexBuffer(fsquad_ib);
@@ -337,7 +337,7 @@ void AppWindow::onUpdate()
 
 	GraphicsEngine::getInstance()->getImmediateDeviceContext()->setVertexShader(m_vs);
 	GraphicsEngine::getInstance()->getImmediateDeviceContext()->setPixelShader(m_ps);
-	renderFullScreenQuad();
+	
 	/*GraphicsEngine::getInstance()->getImmediateDeviceContext()->setVertexBuffer(m_vb);
 	GraphicsEngine::getInstance()->getImmediateDeviceContext()->setIndexBuffer(m_ib);
 
@@ -359,20 +359,20 @@ void AppWindow::onUpdate()
 
 	
 
-	/*constant_vignette cc;
+	constant_vignette cc;
 	cc.vignetteRadius = 0.5f;
 	cc.vignetteStrength = 0.5f;
 
 	
 
-	GraphicsEngine::getInstance()->getImmediateDeviceContext()->setVertexShader(fsquad_vs);*/
+	GraphicsEngine::getInstance()->getImmediateDeviceContext()->setVertexShader(fsquad_vs);
 	GraphicsEngine::getInstance()->getImmediateDeviceContext()->setPixelShader(ppList[0]);
-	/*GraphicsEngine::getInstance()->getImmediateDeviceContext()->setConstantBuffer(fsquad_vs, fsquad_cb);
+	GraphicsEngine::getInstance()->getImmediateDeviceContext()->setConstantBuffer(fsquad_vs, fsquad_cb);
 	GraphicsEngine::getInstance()->getImmediateDeviceContext()->setConstantBuffer(ppList[0],fsquad_cb);
-	fsquad_cb->update(GraphicsEngine::getInstance()->getImmediateDeviceContext(),&cc);*/
+	fsquad_cb->update(GraphicsEngine::getInstance()->getImmediateDeviceContext(),&cc);
 
 	
-	
+	renderFullScreenQuad();
 	
 
 	GraphicsEngine::getInstance()->getImmediateDeviceContext()->unbindShaderResources();
