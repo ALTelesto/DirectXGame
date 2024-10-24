@@ -176,7 +176,7 @@
     <FxCompile Include="LensDistortion.hlsl">
       <Filter>App</Filter>
     </FxCompile>
-    <FxCompile Include="CAPixelShader.hlsl">
+    <FxCompile Include="Chromaberration.hlsl">
       <Filter>App</Filter>
     </FxCompile>
     <FxCompile Include="Vignette.hlsl">

@@ -237,7 +237,7 @@ void AppWindow::createGraphicsWindow()
 
 	//chromatic abberation
 	{
-		GraphicsEngine::getInstance()->compilePixelShader(L"CAPixelShader.hlsl", "psmain", &shader_byte_code, &size_shader);
+		GraphicsEngine::getInstance()->compilePixelShader(L"Chromaberration.hlsl", "psmain", &shader_byte_code, &size_shader);
 		ppList.push_back(GraphicsEngine::getInstance()->createPixelShader(shader_byte_code, size_shader));
 		GraphicsEngine::getInstance()->releaseCompiledShader();
 	}
