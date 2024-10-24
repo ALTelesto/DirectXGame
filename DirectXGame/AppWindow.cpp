@@ -177,7 +177,7 @@ void AppWindow::createGraphicsWindow()
 	GraphicsEngine::getInstance()->releaseCompiledShader();
 
 
-	GraphicsEngine::getInstance()->compileVertexShader(L"CAVertexShader.hlsl", "vsmain", &shader_byte_code, &size_shader);
+	GraphicsEngine::getInstance()->compileVertexShader(L"FSVertexShader.hlsl", "vsmain", &shader_byte_code, &size_shader);
 	fsquad_vs = GraphicsEngine::getInstance()->createVertexShader(shader_byte_code, size_shader);
 
 	fsquad_vertex fsquad_list[] =

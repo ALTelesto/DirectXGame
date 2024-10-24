@@ -182,7 +182,7 @@
     <FxCompile Include="Vignette.hlsl">
       <Filter>App</Filter>
     </FxCompile>
-    <FxCompile Include="CAVertexShader.hlsl">
+    <FxCompile Include="FSVertexShader.hlsl">
       <Filter>App</Filter>
     </FxCompile>
     <FxCompile Include="Test.hlsl">

@@ -25,4 +25,6 @@ float4 psmain(PS_INPUT input) : SV_TARGET
     color.rgb *= vignette;
 
     return color;
+    
+    //return sceneTexture.Sample(sceneSampler, input.texcoord);
 }
