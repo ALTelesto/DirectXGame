@@ -16,6 +16,16 @@ public:
 		return v;
 	}
 
+	Vector3D operator *(float num)
+	{
+		return Vector3D(m_x * num, m_y * num, m_z * num);
+	}
+
+	Vector3D operator +(Vector3D vec)
+	{
+		return Vector3D(m_x + vec.m_x, m_y + vec.m_y, m_z + vec.m_z);
+	}
+
 	static Vector3D zeros() { return Vector3D(0,0,0); }
 
 	~Vector3D() {}

@@ -7,6 +7,7 @@
 #include "IndexBuffer.h"
 #include "VertexShader.h"
 #include "PixelShader.h"
+#include "SamplerState.h"
 
 DeviceContext::DeviceContext(ID3D11DeviceContext* device_context):m_device_context(device_context)
 {
@@ -21,6 +22,25 @@ void DeviceContext::clearRenderTargetColor(SwapChain* swap_chain,float red, floa
 	m_device_context->ClearRenderTargetView(renderView, clear_color);
 	m_device_context->ClearDepthStencilView(depthView, D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1, 0);
 	m_device_context->OMSetRenderTargets(1, &renderView, depthView);
+}
+
+void DeviceContext::clearRenderTargetColor(ID3D11RenderTargetView* render_target_view, ID3D11DepthStencilView* depth_stencil_view, float red, float green, float blue, float alpha)
+{
+	FLOAT clear_color[] = { red,green,blue,alpha };
+	m_device_context->ClearRenderTargetView(render_target_view, clear_color);
+	m_device_context->ClearDepthStencilView(depth_stencil_view, D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1, 0);
+	m_device_context->OMSetRenderTargets(1, &render_target_view, depth_stencil_view);
+}
+
+void DeviceContext::clearRenderTargetView(SwapChain* swap_chain, ID3D11RenderTargetView* renderView, float red, float green, float blue, float alpha)
+{
+	FLOAT clear_color[] = { red,green,blue,alpha };
+	ID3D11DepthStencilView* depthView = swap_chain->getDepthStencilView();
+	m_device_context->OMSetRenderTargets(1, &renderView, depthView);
+	//m_device_context->ClearRenderTargetView(swap_chain->getRenderTargetView(), clear_color);
+	m_device_context->ClearRenderTargetView(renderView, clear_color);
+	m_device_context->ClearDepthStencilView(depthView, D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1, 0);
+	
 }
 
 void DeviceContext::setVertexBuffer(VertexBuffer* vertex_buffer)
@@ -54,6 +74,8 @@ void DeviceContext::drawTriangleStrip(UINT vertex_count, UINT start_vertex_index
 	m_device_context->Draw(vertex_count, start_vertex_index);
 }
 
+
+
 void DeviceContext::setViewportSize(UINT width, UINT height)
 {
 	D3D11_VIEWPORT vp = {};
@@ -75,6 +97,11 @@ void DeviceContext::setPixelShader(PixelShader* pixel_shader)
 	m_device_context->PSSetShader(pixel_shader->m_ps, nullptr, 0);
 }
 
+void DeviceContext::setSamplerState(SamplerState* sampler_state)
+{
+	m_device_context->PSSetSamplers(0, 1, &sampler_state->m_sampler_state);
+}
+
 void DeviceContext::setConstantBuffer(VertexShader* vertex_shader, ConstantBuffer* buffer)
 {
 	m_device_context->VSSetConstantBuffers(0,1,&buffer->m_buffer);
@@ -83,6 +110,36 @@ void DeviceContext::setConstantBuffer(VertexShader* vertex_shader, ConstantBuffe
 void DeviceContext::setConstantBuffer(PixelShader* pixel_shader, ConstantBuffer* buffer)
 {
 	m_device_context->PSSetConstantBuffers(0, 1, &buffer->m_buffer);
+}
+
+void DeviceContext::setRenderTargets(ID3D11RenderTargetView* render_target_view, ID3D11DepthStencilView* depth_stencil_view)
+{
+	m_device_context->OMSetRenderTargets(1, &render_target_view, depth_stencil_view);
+}
+void DeviceContext::setBackBufferRenderTargets(SwapChain* swap_chain)
+{
+	ID3D11RenderTargetView* renderView = swap_chain->getRenderTargetView();
+	m_device_context->OMSetRenderTargets(1, &renderView, swap_chain->getDepthStencilView());
+}
+
+void DeviceContext::setShaderResources(UINT start_slot, UINT num_views, ID3D11ShaderResourceView** shader_resource_views)
+{
+	m_device_context->PSSetShaderResources(start_slot, num_views, shader_resource_views);
+}
+void DeviceContext::unbindShaderResources()
+{
+	constexpr ID3D11ShaderResourceView* nullSRV = nullptr;
+	m_device_context->PSSetShaderResources(0, 1, &nullSRV);
+}
+
+void DeviceContext::setDepthStencilState(ID3D11DepthStencilState* depth_stencil_state)
+{
+	m_device_context->OMSetDepthStencilState(depth_stencil_state, 0);
+}
+
+void DeviceContext::Dispatch(UINT thread_group_count_x, UINT thread_group_count_y, UINT thread_group_count_z)
+{
+	m_device_context->Dispatch(thread_group_count_x, thread_group_count_y, thread_group_count_z);
 }
 
 bool DeviceContext::release()
@@ -94,4 +151,5 @@ bool DeviceContext::release()
 
 DeviceContext::~DeviceContext()
 {
+
 }

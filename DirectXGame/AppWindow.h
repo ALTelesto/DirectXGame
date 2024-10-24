@@ -8,11 +8,14 @@
 #include "IndexBuffer.h"
 #include "VertexShader.h"
 #include "PixelShader.h"
+#include "InputListener.h"
+#include "InputSystem.h"
+#include "SamplerState.h"
 
 #include "Cube.h"
 #include <vector>
 
-class AppWindow: public Window
+class AppWindow: public Window, public InputListener
 {
 public:
 	static AppWindow* getInstance();
@@ -26,16 +29,45 @@ private:
 	static AppWindow* sharedInstance;
 public:
 	void createGraphicsWindow();
+	Matrix4x4 getWorldCam();
+	Matrix4x4 getProjection();
+private:
+	void update();
+	void renderFullScreenQuad();
 
-	void updateQuadPosition();
-
-	virtual void onCreate() override;
+	//virtual void onCreate() override;
 	virtual void onUpdate() override;
 	virtual void onDestroy() override;
+	virtual void onFocus() override;
+	virtual void onKillFocus() override;
+
+	virtual void onKeyDown(int key) override;
+	virtual void onKeyUp(int key) override;
+
+	virtual void onMouseMove(const Point& delta_mouse_pos) override;
+
+	virtual void onLeftMouseDown(const Point& mouse_pos) override;
+	virtual void onLeftMouseUp(const Point& mouse_pos) override;
+
+	virtual void onRightMouseDown(const Point& mouse_pos) override;
+	virtual void onRightMouseUp(const Point& mouse_pos) override;
 private:
-	float m_delta_pos = 0;
-	float m_angle = 0;
-	double total_time = 0;
+	long m_old_delta;
+	long m_new_delta;
+	float m_delta_time;
+
+	float m_delta_pos;
+	float m_delta_scale;
+	float m_delta_rot;
+
+	float m_rot_x = 0.0f;
+	float m_rot_y = 0.0f;
+
+	float m_scale_cube = 1;
+	float m_forward = 0.0f;
+	float m_rightward = 0.0f;
+	Matrix4x4 m_world_cam;
+	Matrix4x4 m_proj;
 
 private:
 	vector<AGameObject*> gameObjectList;
@@ -50,5 +82,23 @@ private:
 	PixelShader* m_ps;
 	ConstantBuffer* m_cb;
 	IndexBuffer* m_ib;
+
+	//fullscreen quad
+	VertexShader* fsquad_vs;
+	VertexBuffer* fsquad_vb;
+	IndexBuffer* fsquad_ib;
+	ConstantBuffer* fsquad_cb;
+
+	ID3D11RenderTargetView* rtv_first;
+	ID3D11DepthStencilView* dsv_first;
+
+	//post-processing
+	vector<ID3D11RenderTargetView*> rtvList;
+	vector<ID3D11ShaderResourceView*> srvList;
+	int currentRenderTarget = 0;
+
+	vector<PixelShader*> ppList;
+
+	SamplerState* m_ss;
 };
 

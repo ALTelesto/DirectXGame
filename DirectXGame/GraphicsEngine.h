@@ -9,6 +9,7 @@ class VertexShader;
 class PixelShader;
 class ConstantBuffer;
 class IndexBuffer;
+class SamplerState;
 
 class GraphicsEngine
 {
@@ -30,12 +31,19 @@ public:
 	VertexBuffer* createVertexBuffer();
 	ConstantBuffer* createConstantBuffer();
 	IndexBuffer* createIndexBuffer();
+	SamplerState* createSamplerState();
 	VertexShader* createVertexShader(const void* shader_byte_code, size_t byte_code_size);
 	PixelShader* createPixelShader(const void* shader_byte_code, size_t byte_code_size);
+	bool createRenderTexture(ID3D11ShaderResourceView** srv, ID3D11RenderTargetView** rtv);
+	bool createDepthStencilView(ID3D11DepthStencilView** dsv);
 public:
 	bool compileVertexShader(const wchar_t* file_name, const char* entry_point_name, void** shader_byte_code, size_t* byte_code_size);
 	bool compilePixelShader(const wchar_t* file_name, const char* entry_point_name, void** shader_byte_code, size_t* byte_code_size);
 	void releaseCompiledShader();
+	void setToRenderTargetView(ID3D11RenderTargetView* render_target_view, ID3D11DepthStencilView* depth_stencil_view);
+	void EnableDepthTest();
+	void DisableDepthTest();
+
 public:
 	
 private:
@@ -48,7 +56,8 @@ private:
 	IDXGIAdapter* m_dxgi_adapter;
 	IDXGIFactory* m_dxgi_factory;
 	ID3D11DeviceContext* m_imm_context;
-	ID3D11DepthStencilState* m_depthStencilState;
+	ID3D11DepthStencilState* m_depthStencilStateEnabled;
+	ID3D11DepthStencilState* m_depthStencilStateDisabled;
 private:
 	ID3DBlob* m_blob = nullptr;
 	ID3DBlob* m_vsblob = nullptr;
@@ -62,5 +71,6 @@ private:
 	friend class PixelShader;
 	friend class ConstantBuffer;
 	friend class IndexBuffer;
+	friend class SamplerState;
 };
 

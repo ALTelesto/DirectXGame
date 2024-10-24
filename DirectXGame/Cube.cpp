@@ -4,6 +4,7 @@
 #include "ConstantBuffer.h"
 #include "DeviceContext.h"
 #include "IndexBuffer.h"
+#include "AppWindow.h"
 
 #include <iostream>
 
@@ -11,15 +12,15 @@ Cube::Cube(string name, void* shaderByteCode, size_t sizeShader) : AGameObject(n
 {
 	Vertex quadList[] = {
 		//front
-		{Vector3D(-0.5f,-0.5f,-0.5f),    Vector3D(1,0,0),  Vector3D(0.2f,0,0) },
-		{Vector3D(-0.5f,0.5f,-0.5f),    Vector3D(1,1,0), Vector3D(0.2f,0.2f,0) },
-		{ Vector3D(0.5f,0.5f,-0.5f),   Vector3D(1,1,0),  Vector3D(0.2f,0.2f,0) },
-		{ Vector3D(0.5f,-0.5f,-0.5f),     Vector3D(1,0,0), Vector3D(0.2f,0,0) },
+		{Vector3D(-0.5f,-0.5f,-0.5f),   vec2(0,1)},
+		{Vector3D(-0.5f,0.5f,-0.5f),    vec2(0,0)},
+		{ Vector3D(0.5f,0.5f,-0.5f),  vec2(0,1) },
+		{ Vector3D(0.5f,-0.5f,-0.5f),      vec2(1,1) },
 		//back
-		{ Vector3D(0.5f,-0.5f,0.5f),    Vector3D(0,1,0), Vector3D(0,0.2f,0) },
-		{ Vector3D(0.5f,0.5f,0.5f),    Vector3D(0,1,1), Vector3D(0,0.2f,0.2f) },
-		{ Vector3D(-0.5f,0.5f,0.5f),   Vector3D(0,1,1),  Vector3D(0,0.2f,0.2f) },
-		{ Vector3D(-0.5f,-0.5f,0.5f),     Vector3D(0,1,0), Vector3D(0,0.2f,0) }
+		{ Vector3D(0.5f,-0.5f,0.5f),   vec2(1,1) },
+		{ Vector3D(0.5f,0.5f,0.5f),   vec2(1,0) },
+		{ Vector3D(-0.5f,0.5f,0.5f),   vec2(0,0) },
+		{ Vector3D(-0.5f,-0.5f,0.5f),    vec2(0,1) }
 	};
 
 	this->vertexBuffer = GraphicsEngine::getInstance()->createVertexBuffer();
@@ -96,6 +97,7 @@ void Cube::draw(int width, int height, VertexShader* vertexShader, PixelShader* 
 	Vector3D rotation = this->getLocalRotation();
 	Vector3D position = this->getLocalPosition();
 
+	cbData.worldMatrix.setIdentity();
 	cbData.worldMatrix.setScale(this->getLocalScale());
 
 	Matrix4x4 rotMatrix;
@@ -113,12 +115,14 @@ void Cube::draw(int width, int height, VertexShader* vertexShader, PixelShader* 
 	cbData.worldMatrix *= rotMatrix;
 
 	Matrix4x4 translationMatrix;
+	translationMatrix.setIdentity();
 	translationMatrix.setTranslation(position);
 	cbData.worldMatrix *= translationMatrix;
 
-
-	cbData.viewMatrix.setIdentity();
-	cbData.projMatrix.setOrthoLH(width / 300.0f, height / 300.0f, -4.0f, 4.0f);
+	Matrix4x4 temp = AppWindow::getInstance()->getWorldCam();
+	temp.inverse();
+	cbData.viewMatrix = temp;
+	cbData.projMatrix = AppWindow::getInstance()->getProjection();
 
 	this->constantBuffer->update(deviceContext, &cbData);
 	deviceContext->setConstantBuffer(vertexShader, this->constantBuffer);

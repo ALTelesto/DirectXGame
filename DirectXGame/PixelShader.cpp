@@ -7,7 +7,7 @@ PixelShader::PixelShader()
 
 bool PixelShader::release()
 {
-	m_ps->Release();
+	if(m_ps != nullptr)m_ps->Release();
 	delete this;
 	return true;
 }

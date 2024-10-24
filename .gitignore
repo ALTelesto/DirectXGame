@@ -290,3 +290,21 @@ paket-files/
 # JetBrains Rider
 .idea/
 *.sln.iml
+x64/Debug/DirectXGame.pdb
+DirectXGame/x64/Debug/vc143.pdb
+DirectXGame/x64/Debug/vc143.idb
+DirectXGame/x64/Debug/DirectXGame.tlog/link.write.1.tlog
+DirectXGame/x64/Debug/DirectXGame.tlog/link.secondary.1.tlog
+DirectXGame/x64/Debug/DirectXGame.tlog/link.read.1.tlog
+DirectXGame/x64/Debug/DirectXGame.tlog/link.command.1.tlog
+DirectXGame/x64/Debug/DirectXGame.tlog/CL.write.1.tlog
+DirectXGame/x64/Debug/DirectXGame.tlog/CL.read.1.tlog
+DirectXGame/x64/Debug/DirectXGame.tlog/Cl.items.tlog
+DirectXGame/x64/Debug/DirectXGame.tlog/CL.command.1.tlog
+DirectXGame/x64/Debug/DirectXGame.log
+DirectXGame/x64/Debug/DirectXGame.ilk
+*.db
+*.ipch
+*.ilk
+*.tlog
+*.pdb

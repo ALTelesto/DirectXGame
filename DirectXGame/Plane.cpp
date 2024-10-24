@@ -7,15 +7,17 @@
 
 #include <iostream>
 
+#include "AppWindow.h"
+
 Plane::Plane(string name, void* shaderByteCode, size_t sizeShader) : AGameObject(name)
 {
     GraphicsEngine* graphicsEngine = GraphicsEngine::getInstance();
 
     Vertex quadList[] = {
-        { Vector3D(-0.5f, -0.5f, 0.0f), Vector3D(1, 1, 1) },  // bl
-        { Vector3D(-0.5f, 0.5f, 0.0f), Vector3D(1, 1, 1) },   // tl
-        { Vector3D(0.5f, 0.5f, 0.0f), Vector3D(1, 1, 1) },    // tr
-        { Vector3D(0.5f, -0.5f, 0.0f), Vector3D(1, 1, 1) }    // br
+        { Vector3D(-0.5f, -0.5f, 0.0f), vec2(0,1)},  // bl
+        { Vector3D(-0.5f, 0.5f, 0.0f), vec2(0,0) },   // tl
+        { Vector3D(0.5f, 0.5f, 0.0f),  vec2(1,0) },    // tr
+        { Vector3D(0.5f, -0.5f, 0.0f),   vec2(1,1) }    // br
     };
 
     this->vertexBuffer = graphicsEngine->createVertexBuffer();
@@ -63,6 +65,7 @@ void Plane::draw(int width, int height, VertexShader* vertexShader, PixelShader*
 	Vector3D rotation = this->getLocalRotation();
 	Vector3D position = this->getLocalPosition();
 
+	cbData.worldMatrix.setIdentity();
 	cbData.worldMatrix.setScale(this->getLocalScale());
 
 	Matrix4x4 rotMatrix;
@@ -80,11 +83,14 @@ void Plane::draw(int width, int height, VertexShader* vertexShader, PixelShader*
 	cbData.worldMatrix *= rotMatrix;
 
 	Matrix4x4 translationMatrix;
+	translationMatrix.setIdentity();
 	translationMatrix.setTranslation(position);
 	cbData.worldMatrix *= translationMatrix;
 
-	cbData.viewMatrix.setIdentity();
-	cbData.projMatrix.setOrthoLH(width / 300.0f, height / 300.0f, -4.0f, 4.0f);
+	Matrix4x4 temp = AppWindow::getInstance()->getWorldCam();
+	temp.inverse();
+	cbData.viewMatrix = temp;
+	cbData.projMatrix = AppWindow::getInstance()->getProjection();
 
 	this->constantBuffer->update(deviceContext, &cbData);
 	deviceContext->setConstantBuffer(vertexShader, this->constantBuffer);
