@@ -12,6 +12,8 @@
 #include "InputSystem.h"
 #include "SamplerState.h"
 
+#include "SceneCameraHandler.h"
+
 #include "Cube.h"
 #include <vector>
 
@@ -31,6 +33,8 @@ public:
 	void createGraphicsWindow();
 	Matrix4x4 getWorldCam();
 	Matrix4x4 getProjection();
+	float getWidth();
+	float getHeight();
 private:
 	void update();
 	void renderFullScreenQuad();
@@ -76,18 +80,18 @@ private:
 	int width;
 	int height;
 
-	SwapChain* m_swap_chain;
-	VertexBuffer* m_vb;
-	VertexShader* m_vs;
-	PixelShader* m_ps;
-	ConstantBuffer* m_cb;
-	IndexBuffer* m_ib;
+	SwapChainPtr m_swap_chain;
+	VertexBufferPtr m_vb;
+	VertexShaderPtr m_vs;
+	PixelShaderPtr m_ps;
+	ConstantBufferPtr m_cb;
+	IndexBufferPtr m_ib;
 
 	//fullscreen quad
-	VertexShader* fsquad_vs;
-	VertexBuffer* fsquad_vb;
-	IndexBuffer* fsquad_ib;
-	ConstantBuffer* fsquad_cb;
+	VertexShaderPtr fsquad_vs;
+	VertexBufferPtr fsquad_vb;
+	IndexBufferPtr fsquad_ib;
+	ConstantBufferPtr fsquad_cb;
 
 	ID3D11RenderTargetView* rtv_first;
 	ID3D11DepthStencilView* dsv_first;
@@ -97,8 +101,11 @@ private:
 	vector<ID3D11ShaderResourceView*> srvList;
 	int currentRenderTarget = 0;
 
-	vector<PixelShader*> ppList;
+	vector<PixelShaderPtr> ppList;
 
-	SamplerState* m_ss;
+	SamplerStatePtr m_ss;
+
+	//scene camera
+	SceneCameraHandler* scene_camera_handler = nullptr;
 };
 

@@ -23,8 +23,14 @@ Cube::Cube(string name, void* shaderByteCode, size_t sizeShader) : AGameObject(n
 		{ Vector3D(-0.5f,-0.5f,0.5f),    vec2(0,1) }
 	};
 
-	this->vertexBuffer = GraphicsEngine::getInstance()->createVertexBuffer();
-	this->vertexBuffer->load(quadList, sizeof(Vertex), ARRAYSIZE(quadList), shaderByteCode, sizeShader);
+	D3D11_BUFFER_DESC buff_desc = {};
+	buff_desc.Usage = D3D11_USAGE_DEFAULT;
+	buff_desc.ByteWidth = sizeof(Vertex) * ARRAYSIZE(quadList);
+	buff_desc.BindFlags = D3D11_BIND_VERTEX_BUFFER;
+	buff_desc.CPUAccessFlags = 0;
+	buff_desc.MiscFlags = 0;
+
+	this->vertexBuffer = GraphicsEngine::getInstance()->getRenderSystem()->createVertexBuffer(quadList, sizeof(Vertex), ARRAYSIZE(quadList), shaderByteCode, sizeShader, buff_desc);
 
 	unsigned int indexList[] =
 	{
@@ -48,21 +54,17 @@ Cube::Cube(string name, void* shaderByteCode, size_t sizeShader) : AGameObject(n
 		1,0,7
 	};
 
-	this->indexBuffer = GraphicsEngine::getInstance()->createIndexBuffer();
-	this->indexBuffer->load(indexList, ARRAYSIZE(indexList));
+	this->indexBuffer = GraphicsEngine::getInstance()->getRenderSystem()->createIndexBuffer(indexList, ARRAYSIZE(indexList));
 
 	CBData cbData = {};
 	cbData.time = 0;
-	this->constantBuffer = GraphicsEngine::getInstance()->createConstantBuffer();
-	this->constantBuffer->load(&cbData, sizeof(CBData));
+	this->constantBuffer = GraphicsEngine::getInstance()->getRenderSystem()->createConstantBuffer(&cbData, sizeof(CBData));
 
 	std::cout << "cube created "<<name<<"\n";
 }
 
 Cube::~Cube()
 {
-	this->vertexBuffer->release();
-	this->indexBuffer->release();
 	AGameObject::~AGameObject();
 }
 
@@ -76,10 +78,10 @@ void Cube::update(float deltaTime)
 	this->setRotation(rotSpeed, rotSpeed, rotSpeed);
 }
 
-void Cube::draw(int width, int height, VertexShader* vertexShader, PixelShader* pixelShader)
+void Cube::draw(int width, int height, VertexShaderPtr vertexShader, PixelShaderPtr pixelShader)
 {
 	GraphicsEngine* graphicsEngine = GraphicsEngine::getInstance();
-	DeviceContext* deviceContext = graphicsEngine->getImmediateDeviceContext();
+	DeviceContextPtr deviceContext = graphicsEngine->getRenderSystem()->getImmediateDeviceContext();
 
 	CBData cbData = {};
 
@@ -119,7 +121,8 @@ void Cube::draw(int width, int height, VertexShader* vertexShader, PixelShader* 
 	translationMatrix.setTranslation(position);
 	cbData.worldMatrix *= translationMatrix;
 
-	Matrix4x4 temp = AppWindow::getInstance()->getWorldCam();
+	//Matrix4x4 temp = AppWindow::getInstance()->getWorldCam();
+	Matrix4x4 temp = SceneCameraHandler::getInstance()->getSceneCameraViewMatrix();
 	temp.inverse();
 	cbData.viewMatrix = temp;
 	cbData.projMatrix = AppWindow::getInstance()->getProjection();
@@ -128,8 +131,8 @@ void Cube::draw(int width, int height, VertexShader* vertexShader, PixelShader* 
 	deviceContext->setConstantBuffer(vertexShader, this->constantBuffer);
 	deviceContext->setConstantBuffer(pixelShader, this->constantBuffer);
 
-	GraphicsEngine::getInstance()->getImmediateDeviceContext()->setVertexShader(vertexShader);
-	GraphicsEngine::getInstance()->getImmediateDeviceContext()->setPixelShader(pixelShader);
+	GraphicsEngine::getInstance()->getRenderSystem()->getImmediateDeviceContext()->setVertexShader(vertexShader);
+	GraphicsEngine::getInstance()->getRenderSystem()->getImmediateDeviceContext()->setPixelShader(pixelShader);
 
 	deviceContext->setIndexBuffer(this->indexBuffer);
 	deviceContext->setVertexBuffer(this->vertexBuffer);

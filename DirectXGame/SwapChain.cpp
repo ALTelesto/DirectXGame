@@ -1,15 +1,12 @@
 #include "SwapChain.h"
-#include "GraphicsEngine.h"
+#include "RenderSystem.h"
 
 #include <iostream>
+#include <exception>
 
-SwapChain::SwapChain()
+SwapChain::SwapChain(HWND hwnd, UINT width, UINT height, RenderSystem* system) : m_system(system)
 {
-}
-
-bool SwapChain::init(HWND hwnd, UINT width, UINT height)
-{
-	ID3D11Device* device = GraphicsEngine::getInstance()->m_d3d_device;
+	ID3D11Device* device = m_system->m_d3d_device;
 
 	DXGI_SWAP_CHAIN_DESC desc;
 	ZeroMemory(&desc, sizeof(desc));
@@ -24,25 +21,25 @@ bool SwapChain::init(HWND hwnd, UINT width, UINT height)
 	desc.SampleDesc.Quality = 0;
 	desc.Windowed = true;
 
-	HRESULT hr = GraphicsEngine::getInstance()->m_dxgi_factory->CreateSwapChain(device,&desc,&m_swap_chain);
+	HRESULT hr = m_system->m_dxgi_factory->CreateSwapChain(device, &desc, &m_swap_chain);
 
-	if(FAILED(hr))
+	if (FAILED(hr))
 	{
-		return false;
+		throw std::exception("SwapChain not created successfully");
 	}
 
 	ID3D11Texture2D* buffer = NULL;
 	hr = m_swap_chain->GetBuffer(0, _uuidof(ID3D11Texture2D), (void**)&buffer);
-	if(FAILED(hr))
+	if (FAILED(hr))
 	{
-		return false;
+		throw std::exception("SwapChain not created successfully: BackBuffer failed");
 	}
 
 	hr = device->CreateRenderTargetView(buffer, NULL, &m_backbufferRTV);
 	buffer->Release();
-	if(FAILED(hr))
+	if (FAILED(hr))
 	{
-		return false;
+		throw std::exception("SwapChain not created successfully: RenderTargetView failed");
 	}
 
 	D3D11_TEXTURE2D_DESC texDesc = {};
@@ -61,18 +58,15 @@ bool SwapChain::init(HWND hwnd, UINT width, UINT height)
 	hr = device->CreateTexture2D(&texDesc, NULL, &buffer);
 	if (FAILED(hr))
 	{
-		std::cout << "dsv failure 1 \n";
-		return false;
+		std::cout << "whoops\n";
+		throw std::exception("SwapChain not created successfully: DepthRenderView failed");
 	}
 
 	hr = device->CreateDepthStencilView(buffer, NULL, &this->depthView);
 	if (FAILED(hr))
 	{
-		std::cout << "dsv failure 2 \n";
-		return false;
+		throw std::exception("SwapChain not created successfully: DepthStencilView failed");
 	}
-
-	return true;
 }
 
 bool SwapChain::present(bool vsync)
@@ -81,15 +75,9 @@ bool SwapChain::present(bool vsync)
 	return true;
 }
 
-bool SwapChain::release()
-{
-	m_swap_chain->Release();
-	delete this;
-	return true;
-}
-
 SwapChain::~SwapChain()
 {
+	if(m_swap_chain)m_swap_chain->Release();
 }
 
 ID3D11RenderTargetView* SwapChain::getRenderTargetView()

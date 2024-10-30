@@ -1,5 +1,6 @@
 #include "InputSystem.h"
 #include <Windows.h>
+#include <exception>
 
 InputSystem* InputSystem::sharedInstance = nullptr;
 
@@ -112,6 +113,44 @@ void InputSystem::showCursor(bool show)
 	::ShowCursor(show);
 }
 
+bool InputSystem::isKeyDown(int key)
+{
+	return m_keys_state[key] & 0x80;
+}
+
+bool InputSystem::isKeyUp(int key)
+{
+	return m_keys_state[key] != m_old_keys_state[key];
+}
+
+void InputSystem::callOnKeyDown(int key)
+{
+}
+
+void InputSystem::callOnKeyUp(int key)
+{
+}
+
+void InputSystem::callOnMouseMove(Point deltaPt)
+{
+}
+
+void InputSystem::callOnLeftMouseDown(Point deltaPt)
+{
+}
+
+void InputSystem::callOnLeftMouseup(Point deltaPt)
+{
+}
+
+void InputSystem::callOnRightMouseDown(Point deltaPt)
+{
+}
+
+void InputSystem::callOnRightMouseup(Point deltaPt)
+{
+}
+
 InputSystem* InputSystem::getInstance()
 {
 	return sharedInstance;
@@ -119,7 +158,8 @@ InputSystem* InputSystem::getInstance()
 
 void InputSystem::initialize()
 {
-	if(sharedInstance == nullptr) sharedInstance = new InputSystem();
+	if (InputSystem::sharedInstance)throw std::exception("InputSystem already initialized");
+	sharedInstance = new InputSystem();
 }
 
 void InputSystem::destroy()

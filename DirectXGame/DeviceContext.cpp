@@ -8,13 +8,13 @@
 #include "VertexShader.h"
 #include "PixelShader.h"
 #include "SamplerState.h"
+#include <exception>
 
-DeviceContext::DeviceContext(ID3D11DeviceContext* device_context):m_device_context(device_context)
+DeviceContext::DeviceContext(ID3D11DeviceContext* device_context, RenderSystem* system):m_device_context(device_context), m_system(system)
 {
-	
 }
 
-void DeviceContext::clearRenderTargetColor(SwapChain* swap_chain,float red, float green, float blue, float alpha)
+void DeviceContext::clearRenderTargetColor(SwapChainPtr swap_chain,float red, float green, float blue, float alpha)
 {
 	FLOAT clear_color[] = { red,green,blue,alpha};
 	ID3D11RenderTargetView* renderView = swap_chain->getRenderTargetView();
@@ -32,7 +32,7 @@ void DeviceContext::clearRenderTargetColor(ID3D11RenderTargetView* render_target
 	m_device_context->OMSetRenderTargets(1, &render_target_view, depth_stencil_view);
 }
 
-void DeviceContext::clearRenderTargetView(SwapChain* swap_chain, ID3D11RenderTargetView* renderView, float red, float green, float blue, float alpha)
+void DeviceContext::clearRenderTargetView(SwapChainPtr swap_chain, ID3D11RenderTargetView* renderView, float red, float green, float blue, float alpha)
 {
 	FLOAT clear_color[] = { red,green,blue,alpha };
 	ID3D11DepthStencilView* depthView = swap_chain->getDepthStencilView();
@@ -43,7 +43,7 @@ void DeviceContext::clearRenderTargetView(SwapChain* swap_chain, ID3D11RenderTar
 	
 }
 
-void DeviceContext::setVertexBuffer(VertexBuffer* vertex_buffer)
+void DeviceContext::setVertexBuffer(VertexBufferPtr vertex_buffer)
 {
 	UINT strider = vertex_buffer->m_size_vertex;
 	UINT offset = 0;
@@ -51,7 +51,7 @@ void DeviceContext::setVertexBuffer(VertexBuffer* vertex_buffer)
 	m_device_context->IASetInputLayout(vertex_buffer->m_layout);
 }
 
-void DeviceContext::setIndexBuffer(IndexBuffer* index_buffer)
+void DeviceContext::setIndexBuffer(IndexBufferPtr index_buffer)
 {
 	m_device_context->IASetIndexBuffer(index_buffer->m_buffer,DXGI_FORMAT_R32_UINT,0);
 }
@@ -87,27 +87,27 @@ void DeviceContext::setViewportSize(UINT width, UINT height)
 	m_device_context->RSSetViewports(1, &vp);
 }
 
-void DeviceContext::setVertexShader(VertexShader* vertex_shader)
+void DeviceContext::setVertexShader(VertexShaderPtr vertex_shader)
 {
 	m_device_context->VSSetShader(vertex_shader->m_vs, nullptr, 0);
 }
 
-void DeviceContext::setPixelShader(PixelShader* pixel_shader)
+void DeviceContext::setPixelShader(PixelShaderPtr pixel_shader)
 {
 	m_device_context->PSSetShader(pixel_shader->m_ps, nullptr, 0);
 }
 
-void DeviceContext::setSamplerState(SamplerState* sampler_state)
+void DeviceContext::setSamplerState(SamplerStatePtr sampler_state)
 {
 	m_device_context->PSSetSamplers(0, 1, &sampler_state->m_sampler_state);
 }
 
-void DeviceContext::setConstantBuffer(VertexShader* vertex_shader, ConstantBuffer* buffer)
+void DeviceContext::setConstantBuffer(VertexShaderPtr vertex_shader, ConstantBufferPtr buffer)
 {
 	m_device_context->VSSetConstantBuffers(0,1,&buffer->m_buffer);
 }
 
-void DeviceContext::setConstantBuffer(PixelShader* pixel_shader, ConstantBuffer* buffer)
+void DeviceContext::setConstantBuffer(PixelShaderPtr pixel_shader, ConstantBufferPtr buffer)
 {
 	m_device_context->PSSetConstantBuffers(0, 1, &buffer->m_buffer);
 }
@@ -116,7 +116,7 @@ void DeviceContext::setRenderTargets(ID3D11RenderTargetView* render_target_view,
 {
 	m_device_context->OMSetRenderTargets(1, &render_target_view, depth_stencil_view);
 }
-void DeviceContext::setBackBufferRenderTargets(SwapChain* swap_chain)
+void DeviceContext::setBackBufferRenderTargets(SwapChainPtr swap_chain)
 {
 	ID3D11RenderTargetView* renderView = swap_chain->getRenderTargetView();
 	m_device_context->OMSetRenderTargets(1, &renderView, swap_chain->getDepthStencilView());
@@ -142,14 +142,7 @@ void DeviceContext::Dispatch(UINT thread_group_count_x, UINT thread_group_count_
 	m_device_context->Dispatch(thread_group_count_x, thread_group_count_y, thread_group_count_z);
 }
 
-bool DeviceContext::release()
-{
-	m_device_context->Release();
-	delete this;
-	return true;
-}
-
 DeviceContext::~DeviceContext()
 {
-
+	if(m_device_context)m_device_context->Release();
 }

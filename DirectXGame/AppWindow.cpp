@@ -62,46 +62,46 @@ AppWindow* AppWindow::getInstance()
 void AppWindow::initialize()
 {
 	sharedInstance = new AppWindow();
-	//sharedInstance->onCreate();
 }
 
 void AppWindow::destroy()
 {
 	if (sharedInstance != NULL)
 	{
-		sharedInstance->release();
 		delete sharedInstance;
 	}
 }
 
-AppWindow::AppWindow()
+AppWindow::AppWindow():Window()
 {
 }
 
 AppWindow::~AppWindow()
 {
+	SceneCameraHandler::destroy();
 }
 
 void AppWindow::createGraphicsWindow()
 {
-	GraphicsEngine::initialize();
-	GraphicsEngine* graphEngine = GraphicsEngine::getInstance();
-
 	InputSystem::getInstance()->addListener(this);
 	InputSystem::getInstance()->showCursor(false);
 
-	this->m_swap_chain = GraphicsEngine::getInstance()->createSwapChain();
+	EngineTime::initialize();
+
+	SceneCameraHandler::initialize();
+	this->scene_camera_handler = SceneCameraHandler::getInstance();
+
 	RECT windowRect = this->getClientWindowRect();
 	width = windowRect.right - windowRect.left;
 	height = windowRect.bottom - windowRect.top;
-
-	this->m_swap_chain->init(this->m_hwnd, width, height);
+	this->m_swap_chain = GraphicsEngine::getInstance()->getRenderSystem()->createSwapChain(this->m_hwnd, width, height);
+	
 
 	void* shader_byte_code = nullptr;
 	size_t size_shader = 0;
 
-	GraphicsEngine::getInstance()->compileVertexShader(L"VertexShader.hlsl", "vsmain", &shader_byte_code, &size_shader);
-	m_vs = GraphicsEngine::getInstance()->createVertexShader(shader_byte_code, size_shader);
+	GraphicsEngine::getInstance()->getRenderSystem()->compileVertexShader(L"VertexShader.hlsl", "vsmain", &shader_byte_code, &size_shader);
+	m_vs = GraphicsEngine::getInstance()->getRenderSystem()->createVertexShader(shader_byte_code, size_shader);
 
 	for (int i = 0; i < 1; ++i)
 	{
@@ -139,8 +139,16 @@ void AppWindow::createGraphicsWindow()
 
 	};
 
-	m_vb = GraphicsEngine::getInstance()->createVertexBuffer();
 	UINT size_list = ARRAYSIZE(vertex_list);
+
+	D3D11_BUFFER_DESC buff_desc = {};
+	buff_desc.Usage = D3D11_USAGE_DEFAULT;
+	buff_desc.ByteWidth = sizeof(vertex) * size_list;
+	buff_desc.BindFlags = D3D11_BIND_VERTEX_BUFFER;
+	buff_desc.CPUAccessFlags = 0;
+	buff_desc.MiscFlags = 0;
+
+	m_vb = GraphicsEngine::getInstance()->getRenderSystem()->createVertexBuffer(vertex_list, sizeof(vertex), size_list, shader_byte_code, size_shader, buff_desc);
 
 	unsigned int index_list[] =
 	{
@@ -164,21 +172,13 @@ void AppWindow::createGraphicsWindow()
 		1,0,7
 	};
 
-	m_ib = GraphicsEngine::getInstance()->createIndexBuffer();
 	UINT size_index_list = ARRAYSIZE(index_list);
+	m_ib = GraphicsEngine::getInstance()->getRenderSystem()->createIndexBuffer(index_list, size_index_list);
 
-	m_ib->load(index_list, size_index_list);
+	GraphicsEngine::getInstance()->getRenderSystem()->releaseCompiledShader();
 
-	m_vb->load(vertex_list, sizeof(vertex), size_list, shader_byte_code, size_shader);
-
-	
-	
-
-	GraphicsEngine::getInstance()->releaseCompiledShader();
-
-
-	GraphicsEngine::getInstance()->compileVertexShader(L"FSVertexShader.hlsl", "vsmain", &shader_byte_code, &size_shader);
-	fsquad_vs = GraphicsEngine::getInstance()->createVertexShader(shader_byte_code, size_shader);
+	GraphicsEngine::getInstance()->getRenderSystem()->compileVertexShader(L"FSVertexShader.hlsl", "vsmain", &shader_byte_code, &size_shader);
+	fsquad_vs = GraphicsEngine::getInstance()->getRenderSystem()->createVertexShader(shader_byte_code, size_shader);
 
 	fsquad_vertex fsquad_list[] =
 	{
@@ -188,17 +188,17 @@ void AppWindow::createGraphicsWindow()
 		{Vector3D(1.0f,-1.0f,0),Vector2D(1.0f,1.0f)}
 	};
 
-	fsquad_vb = GraphicsEngine::getInstance()->createVertexBuffer();
+	
 	UINT fsquad_size_list = ARRAYSIZE(fsquad_list);
 
-	D3D11_BUFFER_DESC buff_desc = {};
+	buff_desc = {};
 	buff_desc.Usage = D3D11_USAGE_DYNAMIC;
 	buff_desc.ByteWidth = sizeof(fsquad_vertex) * fsquad_size_list;
 	buff_desc.BindFlags = D3D11_BIND_VERTEX_BUFFER;
 	buff_desc.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
 	buff_desc.MiscFlags = 0;
 
-	fsquad_vb->load(fsquad_list, sizeof(fsquad_vertex), fsquad_size_list, shader_byte_code, size_shader, buff_desc);
+	fsquad_vb = GraphicsEngine::getInstance()->getRenderSystem()->createVertexBuffer(fsquad_list, sizeof(fsquad_vertex), fsquad_size_list, shader_byte_code, size_shader, buff_desc);
 
 	unsigned int fsquad_index_list[] =
 	{
@@ -207,54 +207,50 @@ void AppWindow::createGraphicsWindow()
 	};
 	UINT fsquad_size_index_list = ARRAYSIZE(fsquad_index_list);
 
-	fsquad_ib = GraphicsEngine::getInstance()->createIndexBuffer();
-	fsquad_ib->load(fsquad_index_list, fsquad_size_index_list);
-	
+	fsquad_ib = GraphicsEngine::getInstance()->getRenderSystem()->createIndexBuffer(fsquad_index_list, fsquad_size_index_list);
 
-	GraphicsEngine::getInstance()->releaseCompiledShader();
+	GraphicsEngine::getInstance()->getRenderSystem()->releaseCompiledShader();
 
-	GraphicsEngine::getInstance()->compilePixelShader(L"PixelShader.hlsl", "psmain", &shader_byte_code, &size_shader);
-	m_ps = GraphicsEngine::getInstance()->createPixelShader(shader_byte_code, size_shader);
-	GraphicsEngine::getInstance()->releaseCompiledShader();
+	GraphicsEngine::getInstance()->getRenderSystem()->compilePixelShader(L"PixelShader.hlsl", "psmain", &shader_byte_code, &size_shader);
+	m_ps = GraphicsEngine::getInstance()->getRenderSystem()->createPixelShader(shader_byte_code, size_shader);
+	GraphicsEngine::getInstance()->getRenderSystem()->releaseCompiledShader();
 
 	constant cc;
 	cc.m_time = 0;
 
-	m_cb = GraphicsEngine::getInstance()->createConstantBuffer();
-	m_cb->load(&cc, sizeof(constant));
+	m_cb = GraphicsEngine::getInstance()->getRenderSystem()->createConstantBuffer(&cc, sizeof(constant));
 
-	m_ss = GraphicsEngine::getInstance()->createSamplerState();
-	m_ss->load();
+	m_ss = GraphicsEngine::getInstance()->getRenderSystem()->createSamplerState();
 
 	//create sets of two SRV/RTV for ping pong rendering
 	for (int i = 0; i < 2; i++) {
 		ID3D11RenderTargetView* rtv;
 		ID3D11ShaderResourceView* srv;
-		GraphicsEngine::getInstance()->createRenderTexture(&srv, &rtv);
+		GraphicsEngine::getInstance()->getRenderSystem()->createRenderTexture(&srv, &rtv);
 		rtvList.push_back(rtv);
 		srvList.push_back(srv);
 	}
 
 	//chromatic abberation
 	{
-		GraphicsEngine::getInstance()->compilePixelShader(L"Chromaberration.hlsl", "psmain", &shader_byte_code, &size_shader);
-		ppList.push_back(GraphicsEngine::getInstance()->createPixelShader(shader_byte_code, size_shader));
-		GraphicsEngine::getInstance()->releaseCompiledShader();
+		GraphicsEngine::getInstance()->getRenderSystem()->compilePixelShader(L"Chromaberration.hlsl", "psmain", &shader_byte_code, &size_shader);
+		ppList.push_back(GraphicsEngine::getInstance()->getRenderSystem()->createPixelShader(shader_byte_code, size_shader));
+		GraphicsEngine::getInstance()->getRenderSystem()->releaseCompiledShader();
 	}
 	//vignette
 	{
-		GraphicsEngine::getInstance()->compilePixelShader(L"Vignette.hlsl", "psmain", &shader_byte_code, &size_shader);
-		ppList.push_back(GraphicsEngine::getInstance()->createPixelShader(shader_byte_code, size_shader));
-		GraphicsEngine::getInstance()->releaseCompiledShader();
+		GraphicsEngine::getInstance()->getRenderSystem()->compilePixelShader(L"Vignette.hlsl", "psmain", &shader_byte_code, &size_shader);
+		ppList.push_back(GraphicsEngine::getInstance()->getRenderSystem()->createPixelShader(shader_byte_code, size_shader));
+		GraphicsEngine::getInstance()->getRenderSystem()->releaseCompiledShader();
 	}
 
 	//set first pass rtv and dsv
 	{
 		rtv_first = rtvList[0];
-		GraphicsEngine::getInstance()->createDepthStencilView(&this->dsv_first);
+		GraphicsEngine::getInstance()->getRenderSystem()->createDepthStencilView(&this->dsv_first);
 	}
 
-	fsquad_cb = GraphicsEngine::getInstance()->createConstantBuffer();
+	fsquad_cb = GraphicsEngine::getInstance()->getRenderSystem()->createConstantBuffer(&cc, sizeof(constant));
 }
 
 Matrix4x4 AppWindow::getWorldCam()
@@ -265,6 +261,16 @@ Matrix4x4 AppWindow::getWorldCam()
 Matrix4x4 AppWindow::getProjection()
 {
 	return this->m_proj;
+}
+
+float AppWindow::getWidth()
+{
+	return this->width;
+}
+
+float AppWindow::getHeight()
+{
+	return this->height;
 }
 
 void AppWindow::update()
@@ -309,16 +315,24 @@ void AppWindow::update()
 
 	this->m_proj = cc.m_proj;
 
-	m_cb->update(GraphicsEngine::getInstance()->getImmediateDeviceContext(), &cc);
+	m_cb->update(GraphicsEngine::getInstance()->getRenderSystem()->getImmediateDeviceContext(), &cc);
 }
 
 void AppWindow::renderFullScreenQuad()
 {
-	GraphicsEngine::getInstance()->DisableDepthTest();
-	GraphicsEngine::getInstance()->getImmediateDeviceContext()->setVertexBuffer(fsquad_vb);
-	GraphicsEngine::getInstance()->getImmediateDeviceContext()->setIndexBuffer(fsquad_ib);
-	GraphicsEngine::getInstance()->getImmediateDeviceContext()->drawIndexedTriangleList(fsquad_ib->getSizeIndexList(), 0,0);
+	GraphicsEngine::getInstance()->getRenderSystem()->DisableDepthTest();
+	GraphicsEngine::getInstance()->getRenderSystem()->getImmediateDeviceContext()->setVertexBuffer(fsquad_vb);
+	GraphicsEngine::getInstance()->getRenderSystem()->getImmediateDeviceContext()->setIndexBuffer(fsquad_ib);
+	GraphicsEngine::getInstance()->getRenderSystem()->getImmediateDeviceContext()->drawIndexedTriangleList(fsquad_ib->getSizeIndexList(), 0,0);
 }
+
+//void AppWindow::onCreate()
+//{
+//	Window::onCreate();
+//
+//	InputSystem::initialize();
+//	this->createGraphicsWindow();
+//}
 
 void AppWindow::onUpdate()
 {
@@ -326,38 +340,40 @@ void AppWindow::onUpdate()
 
 	InputSystem::getInstance()->update();
 
-	GraphicsEngine::getInstance()->getImmediateDeviceContext()->clearRenderTargetColor(this->m_swap_chain,
+	GraphicsEngine::getInstance()->getRenderSystem()->getImmediateDeviceContext()->clearRenderTargetColor(this->m_swap_chain,
 		0, 0.5, 0.5, 1);
 
 	for(ID3D11RenderTargetView* rtv : this->rtvList)
 	{
-		GraphicsEngine::getInstance()->getImmediateDeviceContext()->clearRenderTargetColor(rtv, this->dsv_first,
+		GraphicsEngine::getInstance()->getRenderSystem()->getImmediateDeviceContext()->clearRenderTargetColor(rtv, this->dsv_first,
 			0, 0.5, 0.5, 1);
 	}
 
-	GraphicsEngine::getInstance()->EnableDepthTest();
+	GraphicsEngine::getInstance()->getRenderSystem()->EnableDepthTest();
 
 	RECT windowRect = this->getClientWindowRect();
-	GraphicsEngine::getInstance()->getImmediateDeviceContext()->setViewportSize(windowRect.right - windowRect.left, windowRect.bottom - windowRect.top);
+	GraphicsEngine::getInstance()->getRenderSystem()->getImmediateDeviceContext()->setViewportSize(windowRect.right - windowRect.left, windowRect.bottom - windowRect.top);
 
 	width = windowRect.right - windowRect.left;
 	height = windowRect.bottom - windowRect.top;
 
+	this->scene_camera_handler->update();
 	this->update();
 
 	//GraphicsEngine::getInstance()->setToRenderTexture();
-	GraphicsEngine::getInstance()->getImmediateDeviceContext()->setRenderTargets(this->rtv_first, this->dsv_first);
+	GraphicsEngine::getInstance()->getRenderSystem()->getImmediateDeviceContext()->setRenderTargets(m_swap_chain->getRenderTargetView(), m_swap_chain->getDepthStencilView());
+	//GraphicsEngine::getInstance()->getImmediateDeviceContext()->setRenderTargets(this->rtv_first, this->dsv_first);
 
-	GraphicsEngine::getInstance()->getImmediateDeviceContext()->setConstantBuffer(m_vs, m_cb);
-	GraphicsEngine::getInstance()->getImmediateDeviceContext()->setConstantBuffer(m_ps, m_cb);
+	GraphicsEngine::getInstance()->getRenderSystem()->getImmediateDeviceContext()->setConstantBuffer(m_vs, m_cb);
+	GraphicsEngine::getInstance()->getRenderSystem()->getImmediateDeviceContext()->setConstantBuffer(m_ps, m_cb);
 
-	GraphicsEngine::getInstance()->getImmediateDeviceContext()->setVertexShader(m_vs);
-	GraphicsEngine::getInstance()->getImmediateDeviceContext()->setPixelShader(m_ps);
+	GraphicsEngine::getInstance()->getRenderSystem()->getImmediateDeviceContext()->setVertexShader(m_vs);
+	GraphicsEngine::getInstance()->getRenderSystem()->getImmediateDeviceContext()->setPixelShader(m_ps);
 	
-	GraphicsEngine::getInstance()->getImmediateDeviceContext()->setVertexBuffer(m_vb);
-	GraphicsEngine::getInstance()->getImmediateDeviceContext()->setIndexBuffer(m_ib);
+	GraphicsEngine::getInstance()->getRenderSystem()->getImmediateDeviceContext()->setVertexBuffer(m_vb);
+	GraphicsEngine::getInstance()->getRenderSystem()->getImmediateDeviceContext()->setIndexBuffer(m_ib);
 
-	GraphicsEngine::getInstance()->getImmediateDeviceContext()->drawIndexedTriangleList(m_ib->getSizeIndexList(), 0, 0);
+	GraphicsEngine::getInstance()->getRenderSystem()->getImmediateDeviceContext()->drawIndexedTriangleList(m_ib->getSizeIndexList(), 0, 0);
 
 	for (AGameObject* gameObject : this->gameObjectList)
 	{
@@ -371,13 +387,13 @@ void AppWindow::onUpdate()
 	
 	//post-processing stage ----------------------------------------------------------------------
 
-	ID3D11RenderTargetView* NULL_RT = nullptr;
+	/*ID3D11RenderTargetView* NULL_RT = nullptr;
 	GraphicsEngine::getInstance()->getImmediateDeviceContext()->setRenderTargets(NULL_RT, nullptr);
 	GraphicsEngine::getInstance()->DisableDepthTest();
-	GraphicsEngine::getInstance()->getImmediateDeviceContext()->setSamplerState(m_ss);
+	GraphicsEngine::getInstance()->getImmediateDeviceContext()->setSamplerState(m_ss);*/
 
 	//chromatic abberation
-	{
+	/*{
 		GraphicsEngine::getInstance()->getImmediateDeviceContext()->setRenderTargets(rtvList[write], nullptr);
 
 		GraphicsEngine::getInstance()->getImmediateDeviceContext()->setVertexShader(fsquad_vs);
@@ -391,10 +407,10 @@ void AppWindow::onUpdate()
 		GraphicsEngine::getInstance()->getImmediateDeviceContext()->unbindShaderResources();
 	}
 
-	std::swap(read, write);
+	std::swap(read, write);*/
 
 	//vignette
-	{
+	/*{
 		GraphicsEngine::getInstance()->getImmediateDeviceContext()->setRenderTargets(m_swap_chain->getRenderTargetView(), m_swap_chain->getDepthStencilView());
 	
 		GraphicsEngine::getInstance()->getImmediateDeviceContext()->setVertexShader(fsquad_vs);
@@ -416,7 +432,7 @@ void AppWindow::onUpdate()
 
 		GraphicsEngine::getInstance()->getImmediateDeviceContext()->setRenderTargets(NULL_RT, nullptr);
 		GraphicsEngine::getInstance()->getImmediateDeviceContext()->unbindShaderResources();
-	}
+	}*/
 
 	//GraphicsEngine::getInstance()->getImmediateDeviceContext()->setRenderTargets(m_swap_chain->getRenderTargetView(), m_swap_chain->getDepthStencilView());
 
@@ -434,23 +450,22 @@ void AppWindow::onDestroy()
 	}
 	gameObjectList.clear();
 
-	if(m_vb)m_vb->release();
-	if(m_swap_chain)m_swap_chain->release();
-	if(m_vs)m_vs->release();
-	if(m_ps)m_ps->release();
-	if(m_ib)m_ib->release();
-	if(m_cb)m_cb->release();
-	GraphicsEngine::destroy();
+	SceneCameraHandler::destroy();
 }
 
 void AppWindow::onFocus()
 {
 	InputSystem::getInstance()->addListener(this);
+	std::cout << "scene on focus call\n";
+	if(scene_camera_handler != nullptr) scene_camera_handler->onFocus();
+	InputSystem::getInstance()->showCursor(false);
 }
 
 void AppWindow::onKillFocus()
 {
 	InputSystem::getInstance()->removeListener(this);
+	std::cout << "scene on kill focus call\n";
+	if (scene_camera_handler != nullptr) scene_camera_handler->onKillFocus();
 	InputSystem::getInstance()->showCursor(true);
 }
 
@@ -487,7 +502,11 @@ void AppWindow::onMouseMove(const Point& mouse_pos)
 	m_rot_x += (mouse_pos.m_y - (height / 2.0f)) * EngineTime::getDeltaTime() * 0.1f;
 	m_rot_y += (mouse_pos.m_x - (width / 2.0f)) * EngineTime::getDeltaTime() * 0.1f;
 
-	//std::cout << "rotation values: " << m_rot_x << " " << m_rot_y << "\n";
+	this->scene_camera_handler->setCamRotation(m_rot_x, m_rot_y);
+
+	std::cout << "rotation values: " << m_rot_x << " " << m_rot_y << "\n";
+
+	//std::cout << height << " app\n";
 
 	InputSystem::getInstance()->setCursorPosition(Point((int)(width / 2.0f), (int)(height / 2.0f)));
 }

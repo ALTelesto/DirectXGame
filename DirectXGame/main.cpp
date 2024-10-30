@@ -3,19 +3,30 @@
 
 int main()
 {
-	AppWindow::initialize();
-	InputSystem::initialize();
-	AppWindow* runningApp = (AppWindow*)AppWindow::getInstance();
-	runningApp->init();
-	runningApp->createGraphicsWindow();
-
-	while(runningApp->isRun())
+	try
 	{
-		runningApp->broadcast();
+		GraphicsEngine::initialize();
+		InputSystem::initialize();
+	}
+	catch (...) { return -1; }
+
+	{
+		AppWindow::initialize();
+		//InputSystem::initialize();
+		AppWindow* runningApp = (AppWindow*)AppWindow::getInstance();
+		runningApp->init();
+		runningApp->createGraphicsWindow();
+
+		while(runningApp->isRun())
+		{
+			runningApp->broadcast();
+		}
+
+		AppWindow::destroy();
 	}
 
-	AppWindow::destroy();
 	InputSystem::destroy();
+	GraphicsEngine::destroy();
 
 	return 0;
 }

@@ -20,28 +20,29 @@ Plane::Plane(string name, void* shaderByteCode, size_t sizeShader) : AGameObject
         { Vector3D(0.5f, -0.5f, 0.0f),   vec2(1,1) }    // br
     };
 
-    this->vertexBuffer = graphicsEngine->createVertexBuffer();
-    this->vertexBuffer->load(quadList, sizeof(Vertex), ARRAYSIZE(quadList), shaderByteCode, sizeShader);
+	D3D11_BUFFER_DESC buff_desc = {};
+	buff_desc.Usage = D3D11_USAGE_DEFAULT;
+	buff_desc.ByteWidth = sizeof(Vertex) * ARRAYSIZE(quadList);
+	buff_desc.BindFlags = D3D11_BIND_VERTEX_BUFFER;
+	buff_desc.CPUAccessFlags = 0;
+	buff_desc.MiscFlags = 0;
+
+    this->vertexBuffer = graphicsEngine->getRenderSystem()->createVertexBuffer(quadList, sizeof(Vertex), ARRAYSIZE(quadList), shaderByteCode, sizeShader, buff_desc);
 
     unsigned int index_list[] = {
 		0,1,2,
 		2,3,0,
     };
 
-    this->indexBuffer = graphicsEngine->createIndexBuffer();
-    this->indexBuffer->load(index_list, ARRAYSIZE(index_list));
+    this->indexBuffer = graphicsEngine->getRenderSystem()->createIndexBuffer(index_list, ARRAYSIZE(index_list));
 
-    this->constantBuffer = graphicsEngine->createConstantBuffer();
-    CBData cbData = {};
-    cbData.time = 0;
-    this->constantBuffer->load(&cbData, sizeof(CBData));
+	CBData cbData = {};
+	cbData.time = 0;
+    this->constantBuffer = graphicsEngine->getRenderSystem()->createConstantBuffer(&cbData, sizeof(CBData));
 }
 
 Plane::~Plane()
 {
-    this->vertexBuffer->release();
-    this->indexBuffer->release();
-    this->constantBuffer->release();
 }
 
 void Plane::update(float deltaTime)
@@ -54,10 +55,10 @@ void Plane::update(float deltaTime)
 	this->setRotation(rotSpeed, rotSpeed, rotSpeed);*/
 }
 
-void Plane::draw(int width, int height, VertexShader* vertexShader, PixelShader* pixelShader)
+void Plane::draw(int width, int height, VertexShaderPtr vertexShader, PixelShaderPtr pixelShader)
 {
 	GraphicsEngine* graphicsEngine = GraphicsEngine::getInstance();
-	DeviceContext* deviceContext = graphicsEngine->getImmediateDeviceContext();
+	DeviceContextPtr deviceContext = graphicsEngine->getRenderSystem()->getImmediateDeviceContext();
 
 	CBData cbData = {};
 	cbData.time = 0;
@@ -87,7 +88,8 @@ void Plane::draw(int width, int height, VertexShader* vertexShader, PixelShader*
 	translationMatrix.setTranslation(position);
 	cbData.worldMatrix *= translationMatrix;
 
-	Matrix4x4 temp = AppWindow::getInstance()->getWorldCam();
+	//Matrix4x4 temp = AppWindow::getInstance()->getWorldCam();
+	Matrix4x4 temp = SceneCameraHandler::getInstance()->getSceneCameraViewMatrix();
 	temp.inverse();
 	cbData.viewMatrix = temp;
 	cbData.projMatrix = AppWindow::getInstance()->getProjection();
@@ -96,8 +98,8 @@ void Plane::draw(int width, int height, VertexShader* vertexShader, PixelShader*
 	deviceContext->setConstantBuffer(vertexShader, this->constantBuffer);
 	deviceContext->setConstantBuffer(pixelShader, this->constantBuffer);
 
-	GraphicsEngine::getInstance()->getImmediateDeviceContext()->setVertexShader(vertexShader);
-	GraphicsEngine::getInstance()->getImmediateDeviceContext()->setPixelShader(pixelShader);
+	GraphicsEngine::getInstance()->getRenderSystem()->getImmediateDeviceContext()->setVertexShader(vertexShader);
+	GraphicsEngine::getInstance()->getRenderSystem()->getImmediateDeviceContext()->setPixelShader(pixelShader);
 
 	deviceContext->setIndexBuffer(this->indexBuffer);
 	deviceContext->setVertexBuffer(this->vertexBuffer);

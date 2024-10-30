@@ -1,6 +1,7 @@
 #pragma once
 #include "InputListener.h"
 #include <unordered_set>
+#include <vector>
 
 class InputSystem
 {
@@ -8,9 +9,6 @@ public:
 	static InputSystem* getInstance();
 	static void initialize();
 	static void destroy();
-public:
-	InputSystem();
-	~InputSystem();
 
 	void update();
 	void addListener(InputListener* listener);
@@ -19,7 +17,22 @@ public:
 	void setCursorPosition(const Point& pos);
 	void showCursor(bool show);
 
+	bool isKeyDown(int key);
+	bool isKeyUp(int key);
+
 private:
+	void callOnKeyDown(int key);
+	void callOnKeyUp(int key);
+
+	void callOnMouseMove(Point deltaPt);
+	void callOnLeftMouseDown(Point deltaPt);
+	void callOnLeftMouseup(Point deltaPt);
+	void callOnRightMouseDown(Point deltaPt);
+	void callOnRightMouseup(Point deltaPt);
+
+private:
+	InputSystem();
+	~InputSystem();
 	InputSystem(InputSystem const&) {};
 	InputSystem& operator = (InputSystem const&) {};
 	static InputSystem* sharedInstance;

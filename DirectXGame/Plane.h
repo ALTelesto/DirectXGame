@@ -12,12 +12,12 @@ public:
     ~Plane();
 
     void update(float deltaTime) override;
-    void draw(int width, int height, VertexShader* vertexShader, PixelShader* pixelShader) override;
+    void draw(int width, int height, VertexShaderPtr vertexShader, PixelShaderPtr pixelShader) override;
 
 private:
-    VertexBuffer* vertexBuffer;
-    IndexBuffer* indexBuffer;
-    ConstantBuffer* constantBuffer;
+    VertexBufferPtr vertexBuffer;
+    IndexBufferPtr indexBuffer;
+    ConstantBufferPtr constantBuffer;
     float deltaTime = 0.0f;
     float ticks = 0.0f;
     float speed = 10.0f;

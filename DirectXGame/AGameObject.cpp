@@ -6,6 +6,7 @@ AGameObject::AGameObject(string name)
 	this->localPosition = Vector3D::zeros();
 	this->localRotation = Vector3D::zeros();
 	this->localScale = Vector3D::zeros();
+	this->localMatrix.setIdentity();
 }
 
 AGameObject::~AGameObject()
