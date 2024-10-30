@@ -90,7 +90,7 @@ void Plane::draw(int width, int height, VertexShaderPtr vertexShader, PixelShade
 
 	//Matrix4x4 temp = AppWindow::getInstance()->getWorldCam();
 	Matrix4x4 temp = SceneCameraHandler::getInstance()->getSceneCameraViewMatrix();
-	temp.inverse();
+	//temp.inverse();
 	cbData.viewMatrix = temp;
 	cbData.projMatrix = AppWindow::getInstance()->getProjection();
 

@@ -332,14 +332,6 @@ void AppWindow::renderFullScreenQuad()
 	GraphicsEngine::getInstance()->getRenderSystem()->getImmediateDeviceContext()->drawIndexedTriangleList(fsquad_ib->getSizeIndexList(), 0,0);
 }
 
-//void AppWindow::onCreate()
-//{
-//	Window::onCreate();
-//
-//	InputSystem::initialize();
-//	this->createGraphicsWindow();
-//}
-
 void AppWindow::onUpdate()
 {
 	Window::onUpdate();
@@ -459,6 +451,8 @@ void AppWindow::onDestroy()
 	gameObjectList.clear();
 
 	SceneCameraHandler::destroy();
+
+	this->destroy();
 }
 
 void AppWindow::onFocus()

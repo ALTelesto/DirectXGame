@@ -33,8 +33,8 @@ void Camera::update(float deltaTime)
 	temp.setTranslation(this->getLocalPosition());
 	worldCam.setTranslation(this->getLocalPosition());*/
 
-	Vector3D new_pos = getLocalPosition() + this->localMatrix.getZDirection() * (forward * 0.1f);
-	new_pos = new_pos + this->localMatrix.getXDirection() * (rightward * 0.1f);
+	Vector3D new_pos = getLocalPosition() + worldCam.getZDirection() * (forward * 0.1f);
+	new_pos = new_pos + worldCam.getXDirection() * (rightward * 0.1f);
 	this->localPosition = new_pos;
 	worldCam.setTranslation(new_pos);
 

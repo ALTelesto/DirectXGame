@@ -123,7 +123,7 @@ void Cube::draw(int width, int height, VertexShaderPtr vertexShader, PixelShader
 
 	//Matrix4x4 temp = AppWindow::getInstance()->getWorldCam();
 	Matrix4x4 temp = SceneCameraHandler::getInstance()->getSceneCameraViewMatrix();
-	temp.inverse();
+	//temp.inverse();
 	cbData.viewMatrix = temp;
 	cbData.projMatrix = AppWindow::getInstance()->getProjection();
 
