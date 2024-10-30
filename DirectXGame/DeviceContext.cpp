@@ -142,6 +142,11 @@ void DeviceContext::Dispatch(UINT thread_group_count_x, UINT thread_group_count_
 	m_device_context->Dispatch(thread_group_count_x, thread_group_count_y, thread_group_count_z);
 }
 
+ID3D11DeviceContext* DeviceContext::getContext()
+{
+	return this->m_device_context;
+}
+
 DeviceContext::~DeviceContext()
 {
 	if(m_device_context)m_device_context->Release();

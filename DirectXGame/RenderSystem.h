@@ -20,6 +20,7 @@ public:
 	PixelShaderPtr createPixelShader(const void* shader_byte_code, size_t byte_code_size);
 	bool createRenderTexture(ID3D11ShaderResourceView** srv, ID3D11RenderTargetView** rtv);
 	bool createDepthStencilView(ID3D11DepthStencilView** dsv);
+	ID3D11Device* getDirectXDevice();
 public:
 	bool compileVertexShader(const wchar_t* file_name, const char* entry_point_name, void** shader_byte_code, size_t* byte_code_size);
 	bool compilePixelShader(const wchar_t* file_name, const char* entry_point_name, void** shader_byte_code, size_t* byte_code_size);

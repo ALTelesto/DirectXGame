@@ -12,6 +12,8 @@
 #include "InputSystem.h"
 #include "SamplerState.h"
 
+#include "UIManager.h"
+
 #include "SceneCameraHandler.h"
 
 #include "Cube.h"

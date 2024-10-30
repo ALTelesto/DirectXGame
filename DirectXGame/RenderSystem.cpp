@@ -16,6 +16,8 @@
 
 #include <exception>
 
+#include "AppWindow.h"
+
 RenderSystem::RenderSystem()
 {
 	D3D_DRIVER_TYPE driver_types[] =
@@ -174,8 +176,8 @@ bool RenderSystem::createRenderTexture(ID3D11ShaderResourceView** srv, ID3D11Ren
 {
 	//std::cout << "createRenderTexture srv edition\n";
 	D3D11_TEXTURE2D_DESC textureDesc = {};
-	textureDesc.Width = WIDTH;
-	textureDesc.Height = HEIGHT;
+	textureDesc.Width = AppWindow::getInstance()->getWidth();
+	textureDesc.Height = AppWindow::getInstance()->getHeight();
 	textureDesc.MipLevels = 1;
 	textureDesc.ArraySize = 1;
 	textureDesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM;
@@ -222,8 +224,8 @@ bool RenderSystem::createDepthStencilView(ID3D11DepthStencilView** dsv)
 	ID3D11Texture2D* texture = nullptr;
 
 	D3D11_TEXTURE2D_DESC texDesc = {};
-	texDesc.Width = WIDTH;
-	texDesc.Height = HEIGHT;
+	texDesc.Width = AppWindow::getInstance()->getWidth();
+	texDesc.Height = AppWindow::getInstance()->getHeight();
 	texDesc.Format = DXGI_FORMAT_D24_UNORM_S8_UINT;
 	texDesc.Usage = D3D11_USAGE_DEFAULT;
 	texDesc.BindFlags = D3D11_BIND_DEPTH_STENCIL;
@@ -247,6 +249,11 @@ bool RenderSystem::createDepthStencilView(ID3D11DepthStencilView** dsv)
 		std::cout << "dsv failure 2 \n";
 		return false;
 	}
+}
+
+ID3D11Device* RenderSystem::getDirectXDevice()
+{
+	return this->m_d3d_device;
 }
 
 bool RenderSystem::compileVertexShader(const wchar_t* file_name, const char* entry_point_name, void** shader_byte_code, size_t* byte_code_size)

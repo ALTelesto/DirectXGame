@@ -12,6 +12,8 @@
 #include <cstdlib>
 #include <ctime> 
 
+#include "imgui_impl_dx11.h"
+#include "imgui_impl_win32.h"
 #include "Plane.h"
 
 struct vec2
@@ -72,13 +74,14 @@ void AppWindow::destroy()
 	}
 }
 
-AppWindow::AppWindow():Window()
+AppWindow::AppWindow()
 {
 }
 
 AppWindow::~AppWindow()
 {
 	SceneCameraHandler::destroy();
+	UIManager::destroy();
 }
 
 void AppWindow::createGraphicsWindow()
@@ -87,6 +90,8 @@ void AppWindow::createGraphicsWindow()
 	InputSystem::getInstance()->showCursor(false);
 
 	EngineTime::initialize();
+
+	UIManager::initialize(this->m_hwnd);
 
 	SceneCameraHandler::initialize();
 	this->scene_camera_handler = SceneCameraHandler::getInstance();
@@ -273,6 +278,7 @@ float AppWindow::getHeight()
 	return this->height;
 }
 
+
 void AppWindow::update()
 {
 	constant cc;
@@ -361,8 +367,8 @@ void AppWindow::onUpdate()
 	this->update();
 
 	//GraphicsEngine::getInstance()->setToRenderTexture();
-	GraphicsEngine::getInstance()->getRenderSystem()->getImmediateDeviceContext()->setRenderTargets(m_swap_chain->getRenderTargetView(), m_swap_chain->getDepthStencilView());
-	//GraphicsEngine::getInstance()->getImmediateDeviceContext()->setRenderTargets(this->rtv_first, this->dsv_first);
+	//GraphicsEngine::getInstance()->getRenderSystem()->getImmediateDeviceContext()->setRenderTargets(m_swap_chain->getRenderTargetView(), m_swap_chain->getDepthStencilView());
+	GraphicsEngine::getInstance()->getRenderSystem()->getImmediateDeviceContext()->setRenderTargets(this->rtv_first, this->dsv_first);
 
 	GraphicsEngine::getInstance()->getRenderSystem()->getImmediateDeviceContext()->setConstantBuffer(m_vs, m_cb);
 	GraphicsEngine::getInstance()->getRenderSystem()->getImmediateDeviceContext()->setConstantBuffer(m_ps, m_cb);
@@ -387,36 +393,36 @@ void AppWindow::onUpdate()
 	
 	//post-processing stage ----------------------------------------------------------------------
 
-	/*ID3D11RenderTargetView* NULL_RT = nullptr;
-	GraphicsEngine::getInstance()->getImmediateDeviceContext()->setRenderTargets(NULL_RT, nullptr);
-	GraphicsEngine::getInstance()->DisableDepthTest();
-	GraphicsEngine::getInstance()->getImmediateDeviceContext()->setSamplerState(m_ss);*/
+	ID3D11RenderTargetView* NULL_RT = nullptr;
+	GraphicsEngine::getInstance()->getRenderSystem()->getImmediateDeviceContext()->setRenderTargets(NULL_RT, nullptr);
+	GraphicsEngine::getInstance()->getRenderSystem()->DisableDepthTest();
+	GraphicsEngine::getInstance()->getRenderSystem()->getImmediateDeviceContext()->setSamplerState(m_ss);
 
 	//chromatic abberation
-	/*{
-		GraphicsEngine::getInstance()->getImmediateDeviceContext()->setRenderTargets(rtvList[write], nullptr);
+	{
+		GraphicsEngine::getInstance()->getRenderSystem()->getImmediateDeviceContext()->setRenderTargets(rtvList[write], nullptr);
 
-		GraphicsEngine::getInstance()->getImmediateDeviceContext()->setVertexShader(fsquad_vs);
-		GraphicsEngine::getInstance()->getImmediateDeviceContext()->setPixelShader(ppList[0]);
+		GraphicsEngine::getInstance()->getRenderSystem()->getImmediateDeviceContext()->setVertexShader(fsquad_vs);
+		GraphicsEngine::getInstance()->getRenderSystem()->getImmediateDeviceContext()->setPixelShader(ppList[0]);
 
-		GraphicsEngine::getInstance()->getImmediateDeviceContext()->setShaderResources(0, 1, &srvList[read]);
+		GraphicsEngine::getInstance()->getRenderSystem()->getImmediateDeviceContext()->setShaderResources(0, 1, &srvList[read]);
 
 		renderFullScreenQuad();
 
-		GraphicsEngine::getInstance()->getImmediateDeviceContext()->setRenderTargets(NULL_RT, nullptr);
-		GraphicsEngine::getInstance()->getImmediateDeviceContext()->unbindShaderResources();
+		GraphicsEngine::getInstance()->getRenderSystem()->getImmediateDeviceContext()->setRenderTargets(NULL_RT, nullptr);
+		GraphicsEngine::getInstance()->getRenderSystem()->getImmediateDeviceContext()->unbindShaderResources();
 	}
 
-	std::swap(read, write);*/
+	std::swap(read, write);
 
 	//vignette
-	/*{
-		GraphicsEngine::getInstance()->getImmediateDeviceContext()->setRenderTargets(m_swap_chain->getRenderTargetView(), m_swap_chain->getDepthStencilView());
+	{
+		GraphicsEngine::getInstance()->getRenderSystem()->getImmediateDeviceContext()->setRenderTargets(m_swap_chain->getRenderTargetView(), m_swap_chain->getDepthStencilView());
 	
-		GraphicsEngine::getInstance()->getImmediateDeviceContext()->setVertexShader(fsquad_vs);
-		GraphicsEngine::getInstance()->getImmediateDeviceContext()->setPixelShader(ppList[1]);
+		GraphicsEngine::getInstance()->getRenderSystem()->getImmediateDeviceContext()->setVertexShader(fsquad_vs);
+		GraphicsEngine::getInstance()->getRenderSystem()->getImmediateDeviceContext()->setPixelShader(ppList[1]);
 
-		GraphicsEngine::getInstance()->getImmediateDeviceContext()->setShaderResources(0, 1, &srvList[read]);
+		GraphicsEngine::getInstance()->getRenderSystem()->getImmediateDeviceContext()->setShaderResources(0, 1, &srvList[read]);
 
 		constant_vignette cc;
 		cc.vignetteRadius = 0.9f;
@@ -424,17 +430,19 @@ void AppWindow::onUpdate()
 
 		fsquad_cb->load(&cc, sizeof(constant));
 
-		GraphicsEngine::getInstance()->getImmediateDeviceContext()->setConstantBuffer(fsquad_vs, fsquad_cb);
-		GraphicsEngine::getInstance()->getImmediateDeviceContext()->setConstantBuffer(ppList[0],fsquad_cb);
-		fsquad_cb->update(GraphicsEngine::getInstance()->getImmediateDeviceContext(),&cc);
+		GraphicsEngine::getInstance()->getRenderSystem()->getImmediateDeviceContext()->setConstantBuffer(fsquad_vs, fsquad_cb);
+		GraphicsEngine::getInstance()->getRenderSystem()->getImmediateDeviceContext()->setConstantBuffer(ppList[0],fsquad_cb);
+		fsquad_cb->update(GraphicsEngine::getInstance()->getRenderSystem()->getImmediateDeviceContext(),&cc);
 
 		renderFullScreenQuad();
 
-		GraphicsEngine::getInstance()->getImmediateDeviceContext()->setRenderTargets(NULL_RT, nullptr);
-		GraphicsEngine::getInstance()->getImmediateDeviceContext()->unbindShaderResources();
-	}*/
+		GraphicsEngine::getInstance()->getRenderSystem()->getImmediateDeviceContext()->setRenderTargets(NULL_RT, nullptr);
+		GraphicsEngine::getInstance()->getRenderSystem()->getImmediateDeviceContext()->unbindShaderResources();
+	}
 
-	//GraphicsEngine::getInstance()->getImmediateDeviceContext()->setRenderTargets(m_swap_chain->getRenderTargetView(), m_swap_chain->getDepthStencilView());
+	GraphicsEngine::getInstance()->getRenderSystem()->getImmediateDeviceContext()->setRenderTargets(m_swap_chain->getRenderTargetView(), m_swap_chain->getDepthStencilView());
+
+	UIManager::getInstance()->drawAllUI();
 
 	m_swap_chain->present(true);
 
