@@ -24,10 +24,7 @@ public:
 	void onFocus();
 	void onKillFocus();
 
-	void setCamRotation(float x, float y);
-
 private:
-	void updateViewMatrix();
 
 	float mouseDown = false;
 

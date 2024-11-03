@@ -504,8 +504,6 @@ void AppWindow::onMouseMove(const Point& mouse_pos)
 	m_rot_x += (mouse_pos.m_y - (height / 2.0f)) * EngineTime::getDeltaTime() * 0.1f;
 	m_rot_y += (mouse_pos.m_x - (width / 2.0f)) * EngineTime::getDeltaTime() * 0.1f;
 
-	this->scene_camera_handler->setCamRotation(m_rot_x, m_rot_y);
-
 	std::cout << "rotation values: " << m_rot_x << " " << m_rot_y << "\n";
 
 	//std::cout << height << " app\n";

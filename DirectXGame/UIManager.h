@@ -14,6 +14,9 @@ public:
 	static void destroy();
 
 	void drawAllUI();
+	void drawAboutUI();
+private:
+	bool about_active = false;
 private:
 	UIManager(HWND windowHandle);
 	~UIManager();

@@ -14,8 +14,6 @@ public:
 	void onFocus();
 	void onKillFocus();
 
-	void setCamRotation(float x, float y);
-
 	Matrix4x4 getSceneCameraViewMatrix();
 
 private:

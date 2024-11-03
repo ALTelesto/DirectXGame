@@ -40,11 +40,6 @@ void SceneCameraHandler::onKillFocus()
 	if (sceneCamera != nullptr) sceneCamera->onKillFocus();
 }
 
-void SceneCameraHandler::setCamRotation(float x, float y)
-{
-	sceneCamera->setCamRotation(x, y);
-}
-
 Matrix4x4 SceneCameraHandler::getSceneCameraViewMatrix()
 {
 	return this->sceneCamera->getViewMatrix();

@@ -28,10 +28,25 @@ void UIManager::drawAllUI()
 	ImGui_ImplWin32_NewFrame();
 	ImGui::NewFrame();
 
-	ImGui::ShowDemoWindow();
+	//ImGui::ShowDemoWindow();
+
+	this->drawAboutUI();
 
 	ImGui::Render();
 	ImGui_ImplDX11_RenderDrawData(ImGui::GetDrawData());
+}
+
+void UIManager::drawAboutUI()
+{
+	ImGui::Begin("About", &about_active, 0);
+	ImGui::SetWindowSize(ImVec2(350, 100));
+	ImGui::TextColored(ImVec4(1, 1, 0, 1), "JGRAEngine v.0.0.1");
+	ImGui::Text("Developer: Joachim Gabriel R. Arguelles");
+	/*ImGui::Text("Changelogs");
+	ImGui::Text("v.0.0.1 - Added About window");*/
+	ImGui::PushItemWidth(50);
+	ImGui::ButtonEx("Close", ImVec2(70, 20), 0);
+	ImGui::End();
 }
 
 UIManager::UIManager(HWND windowHandle)

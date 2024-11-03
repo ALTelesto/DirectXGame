@@ -115,15 +115,3 @@ void Camera::onKillFocus()
 {
 	InputSystem::getInstance()->removeListener(this);
 }
-
-void Camera::setCamRotation(float x, float y)
-{
-	/*this->localRotation.m_x = x;
-	this->localRotation.m_y = y;*/
-	//this->updateViewMatrix();
-}
-
-void Camera::updateViewMatrix()
-{
-	
-}

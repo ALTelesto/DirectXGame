@@ -55,6 +55,24 @@
     <Filter Include="IMGUI">
       <UniqueIdentifier>{0807ec41-8cac-4373-aac4-8a42101acd44}</UniqueIdentifier>
     </Filter>
+    <Filter Include="App\UIManager">
+      <UniqueIdentifier>{ad1547b6-2403-4eb2-b2b7-cdcbc2f26359}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="App\Shaders">
+      <UniqueIdentifier>{606e79a7-22f4-4dff-b9d4-0fb286af43d7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="App\Shaders\Post-Processing">
+      <UniqueIdentifier>{20ebd9a4-3eea-4ad0-8c38-f329cd3ef959}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="App\Shaders\Post-Processing\Vignette">
+      <UniqueIdentifier>{acc1f1dd-efba-4f66-8bd5-24c11491de20}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="App\Shaders\Post-Processing\LensDistortion">
+      <UniqueIdentifier>{6fe1ebea-c88b-4f5b-a221-0dd42a37c3bf}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="App\Shaders\Post-Processing\ChromaticAberration">
+      <UniqueIdentifier>{2eb4eb0c-6deb-45a0-a393-6d49a36447bb}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -138,7 +156,9 @@
     <ClCompile Include="imgui_widgets.cpp">
       <Filter>IMGUI</Filter>
     </ClCompile>
-    <ClCompile Include="UIManager.cpp" />
+    <ClCompile Include="UIManager.cpp">
+      <Filter>App\UIManager</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="AppWindow.h">
@@ -246,30 +266,34 @@
     <ClInclude Include="imstb_truetype.h">
       <Filter>IMGUI</Filter>
     </ClInclude>
-    <ClInclude Include="UIManager.h" />
+    <ClInclude Include="UIManager.h">
+      <Filter>App\UIManager</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <FxCompile Include="shader.fx" />
+    <FxCompile Include="Test.hlsl">
+      <Filter>App\Shaders</Filter>
+    </FxCompile>
     <FxCompile Include="VertexShader.hlsl">
-      <Filter>App</Filter>
+      <Filter>App\Shaders</Filter>
     </FxCompile>
     <FxCompile Include="PixelShader.hlsl">
-      <Filter>App</Filter>
-    </FxCompile>
-    <FxCompile Include="LensDistortion.hlsl">
-      <Filter>App</Filter>
-    </FxCompile>
-    <FxCompile Include="Chromaberration.hlsl">
-      <Filter>App</Filter>
-    </FxCompile>
-    <FxCompile Include="Vignette.hlsl">
-      <Filter>App</Filter>
+      <Filter>App\Shaders</Filter>
     </FxCompile>
     <FxCompile Include="FSVertexShader.hlsl">
-      <Filter>App</Filter>
+      <Filter>App\Shaders</Filter>
     </FxCompile>
-    <FxCompile Include="Test.hlsl">
-      <Filter>App</Filter>
+    <FxCompile Include="shader.fx">
+      <Filter>App\Shaders</Filter>
+    </FxCompile>
+    <FxCompile Include="LensDistortion.hlsl">
+      <Filter>App\Shaders\Post-Processing\LensDistortion</Filter>
+    </FxCompile>
+    <FxCompile Include="Vignette.hlsl">
+      <Filter>App\Shaders\Post-Processing\Vignette</Filter>
+    </FxCompile>
+    <FxCompile Include="Chromaberration.hlsl">
+      <Filter>App\Shaders\Post-Processing\ChromaticAberration</Filter>
     </FxCompile>
   </ItemGroup>
   <ItemGroup>
