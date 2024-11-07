@@ -59,8 +59,6 @@ Cube::Cube(string name, void* shaderByteCode, size_t sizeShader) : AGameObject(n
 	CBData cbData = {};
 	cbData.time = 0;
 	this->constantBuffer = GraphicsEngine::getInstance()->getRenderSystem()->createConstantBuffer(&cbData, sizeof(CBData));
-
-	std::cout << "cube created "<<name<<"\n";
 }
 
 Cube::~Cube()

@@ -3,14 +3,19 @@
 #include "EngineTime.h"
 #include "Settings.h"
 
-//Window* window = nullptr;
+#include "LogUtils.h"
+#include "imgui.h"
 
 Window::Window()
 {
 }
 
+extern LRESULT ImGui_ImplWin32_WndProcHandler(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam);
 LRESULT CALLBACK WndProc(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam)
 {
+	if (ImGui_ImplWin32_WndProcHandler(hwnd, msg, wparam, lparam))
+		return true;
+
 	switch(msg)
 	{
 	case WM_CREATE:
@@ -86,6 +91,7 @@ bool Window::init()
 
 bool Window::broadcast()
 {
+	if (!isRun()) return false;
 	EngineTime::LogFrameStart();
 	this->onUpdate();
 	MSG msg;

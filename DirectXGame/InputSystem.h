@@ -20,6 +20,8 @@ public:
 	bool isKeyDown(int key);
 	bool isKeyUp(int key);
 
+	void setActive(bool enabled);
+
 private:
 	void callOnKeyDown(int key);
 	void callOnKeyUp(int key);
@@ -42,4 +44,6 @@ private:
 	unsigned char m_old_keys_state[256] = {};
 	Point m_old_mouse_pos;
 	bool m_first_time = true;
+
+	bool isActive = false;
 };

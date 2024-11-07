@@ -146,6 +146,7 @@
     <ClCompile Include="IndexBuffer.cpp" />
     <ClCompile Include="InputSystem.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="MenuScreen.cpp" />
     <ClCompile Include="PixelShader.cpp" />
     <ClCompile Include="Plane.cpp" />
     <ClCompile Include="RenderSystem.cpp" />
@@ -177,7 +178,9 @@
     <ClInclude Include="IndexBuffer.h" />
     <ClInclude Include="InputListener.h" />
     <ClInclude Include="InputSystem.h" />
+    <ClInclude Include="LogUtils.h" />
     <ClInclude Include="Matrix4x4.h" />
+    <ClInclude Include="MenuScreen.h" />
     <ClInclude Include="PixelShader.h" />
     <ClInclude Include="Plane.h" />
     <ClInclude Include="Point.h" />
@@ -188,6 +191,7 @@
     <ClInclude Include="SamplerState.h" />
     <ClInclude Include="SwapChain.h" />
     <ClInclude Include="UIManager.h" />
+    <ClInclude Include="UIScreen.h" />
     <ClInclude Include="Vector2D.h" />
     <ClInclude Include="Vector3D.h" />
     <ClInclude Include="Vector4D.h" />

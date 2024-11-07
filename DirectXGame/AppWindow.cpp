@@ -87,7 +87,6 @@ AppWindow::~AppWindow()
 void AppWindow::createGraphicsWindow()
 {
 	InputSystem::getInstance()->addListener(this);
-	InputSystem::getInstance()->showCursor(false);
 
 	EngineTime::initialize();
 
@@ -307,7 +306,7 @@ void AppWindow::update()
 
 	world_cam.inverse();
 
-	cc.m_view = world_cam;
+	cc.m_view = scene_camera_handler->getSceneCameraViewMatrix();
 
 	/*cc.m_proj.setOrthoLH
 	(
@@ -334,7 +333,6 @@ void AppWindow::renderFullScreenQuad()
 
 void AppWindow::onUpdate()
 {
-	Window::onUpdate();
 
 	InputSystem::getInstance()->update();
 
@@ -434,7 +432,7 @@ void AppWindow::onUpdate()
 
 	GraphicsEngine::getInstance()->getRenderSystem()->getImmediateDeviceContext()->setRenderTargets(m_swap_chain->getRenderTargetView(), m_swap_chain->getDepthStencilView());
 
-	UIManager::getInstance()->drawAllUI();
+	UIManager::getInstance()->draw();
 
 	m_swap_chain->present(true);
 
@@ -442,6 +440,8 @@ void AppWindow::onUpdate()
 
 void AppWindow::onDestroy()
 {
+	this->m_is_run = false;
+
 	Window::onDestroy();
 
 	for (AGameObject* gameObject : gameObjectList)
@@ -457,63 +457,28 @@ void AppWindow::onDestroy()
 
 void AppWindow::onFocus()
 {
-	InputSystem::getInstance()->addListener(this);
-	std::cout << "scene on focus call\n";
-	if(scene_camera_handler != nullptr) scene_camera_handler->onFocus();
-	InputSystem::getInstance()->showCursor(false);
+	InputSystem::getInstance()->setActive(true);
 }
 
 void AppWindow::onKillFocus()
 {
-	InputSystem::getInstance()->removeListener(this);
-	std::cout << "scene on kill focus call\n";
-	if (scene_camera_handler != nullptr) scene_camera_handler->onKillFocus();
-	InputSystem::getInstance()->showCursor(true);
+	InputSystem::getInstance()->setActive(false);
 }
 
 void AppWindow::onKeyDown(int key)
 {
-	if (key == 'W')
-	{
-		m_forward = 1.0f;
-	}
-	else if (key == 'S')
-	{
-		m_forward = -1.0f;
-	}
-	else if (key == 'A')
-	{
-		m_rightward = -1.0f;
-	}
-	else if (key == 'D')
-	{
-		m_rightward = 1.0f;
-	}
 }
 
 void AppWindow::onKeyUp(int key)
 {
-	m_forward = 0.0f;
-	m_rightward = 0.0f;
 }
 
 void AppWindow::onMouseMove(const Point& mouse_pos)
 {
-	//std::cout <<"mouse_pos values: "<< mouse_pos.m_x << " " << mouse_pos.m_y << "\n";
-
-	m_rot_x += (mouse_pos.m_y - (height / 2.0f)) * EngineTime::getDeltaTime() * 0.1f;
-	m_rot_y += (mouse_pos.m_x - (width / 2.0f)) * EngineTime::getDeltaTime() * 0.1f;
-
-	std::cout << "rotation values: " << m_rot_x << " " << m_rot_y << "\n";
-
-	//std::cout << height << " app\n";
-
-	InputSystem::getInstance()->setCursorPosition(Point((int)(width / 2.0f), (int)(height / 2.0f)));
 }
 
 void AppWindow::onLeftMouseDown(const Point& mouse_pos)
 {
-	std::cout << "lmb \n";
 }
 
 void AppWindow::onLeftMouseUp(const Point& mouse_pos)
@@ -522,7 +487,6 @@ void AppWindow::onLeftMouseUp(const Point& mouse_pos)
 
 void AppWindow::onRightMouseDown(const Point& mouse_pos)
 {
-	std::cout << "rmb \n";
 }
 
 void AppWindow::onRightMouseUp(const Point& mouse_pos)

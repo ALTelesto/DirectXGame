@@ -15,6 +15,8 @@ InputSystem::~InputSystem()
 
 void InputSystem::update()
 {
+	if (!isActive)return;
+
 	POINT current_mouse_pos = {};
 	::GetCursorPos(&current_mouse_pos);
 
@@ -149,6 +151,11 @@ void InputSystem::callOnRightMouseDown(Point deltaPt)
 
 void InputSystem::callOnRightMouseup(Point deltaPt)
 {
+}
+
+void InputSystem::setActive(bool enabled)
+{
+	this->isActive = enabled;
 }
 
 InputSystem* InputSystem::getInstance()

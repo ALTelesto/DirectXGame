@@ -19,9 +19,9 @@ void SceneCameraHandler::initialize()
 
 void SceneCameraHandler::destroy()
 {
-	if (sharedInstance != NULL)
+	if (sharedInstance != nullptr)
 	{
-		delete sharedInstance;
+		//delete sharedInstance;
 	}
 }
 

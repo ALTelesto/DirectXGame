@@ -25,11 +25,14 @@ public:
 	void onKillFocus();
 
 private:
+	bool canMove = false;
 
+	float speed = 0.1f;
 	float mouseDown = false;
 
 	float forward = 0.0f;
 	float rightward = 0.0f;
+	float upward = 0.0f;
 
 	float rot_x = 0.0f;
 	float rot_y = 0.0f;

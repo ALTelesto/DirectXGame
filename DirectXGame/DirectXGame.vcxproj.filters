@@ -16,9 +16,6 @@
     <Filter Include="GameEngine\EngineTime">
       <UniqueIdentifier>{57db48f2-7c3e-43f4-8aea-b5aeea404c86}</UniqueIdentifier>
     </Filter>
-    <Filter Include="GameEngine\Math">
-      <UniqueIdentifier>{6a8edcbf-b0ed-420e-aa08-9ef0cc97caea}</UniqueIdentifier>
-    </Filter>
     <Filter Include="GameEngine\GameObjects">
       <UniqueIdentifier>{01118e7d-c1e2-4c67-abde-411042c8471f}</UniqueIdentifier>
     </Filter>
@@ -55,9 +52,6 @@
     <Filter Include="IMGUI">
       <UniqueIdentifier>{0807ec41-8cac-4373-aac4-8a42101acd44}</UniqueIdentifier>
     </Filter>
-    <Filter Include="App\UIManager">
-      <UniqueIdentifier>{ad1547b6-2403-4eb2-b2b7-cdcbc2f26359}</UniqueIdentifier>
-    </Filter>
     <Filter Include="App\Shaders">
       <UniqueIdentifier>{606e79a7-22f4-4dff-b9d4-0fb286af43d7}</UniqueIdentifier>
     </Filter>
@@ -72,6 +66,18 @@
     </Filter>
     <Filter Include="App\Shaders\Post-Processing\ChromaticAberration">
       <UniqueIdentifier>{2eb4eb0c-6deb-45a0-a393-6d49a36447bb}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="GameEngine\UIManager">
+      <UniqueIdentifier>{ad1547b6-2403-4eb2-b2b7-cdcbc2f26359}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="GameEngine\UIManager\Screens">
+      <UniqueIdentifier>{1e2c5a3a-6066-41e5-a2b2-467ee805193e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="GameEngine\Utilities">
+      <UniqueIdentifier>{52ba0908-6ef3-463d-8471-09585ebd0519}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="GameEngine\Utilities\Math">
+      <UniqueIdentifier>{6a8edcbf-b0ed-420e-aa08-9ef0cc97caea}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -157,7 +163,10 @@
       <Filter>IMGUI</Filter>
     </ClCompile>
     <ClCompile Include="UIManager.cpp">
-      <Filter>App\UIManager</Filter>
+      <Filter>GameEngine\UIManager</Filter>
+    </ClCompile>
+    <ClCompile Include="MenuScreen.cpp">
+      <Filter>GameEngine\UIManager\Screens</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -192,10 +201,10 @@
       <Filter>GameEngine\EngineTime</Filter>
     </ClInclude>
     <ClInclude Include="Vector3D.h">
-      <Filter>GameEngine\Math</Filter>
+      <Filter>GameEngine\Utilities\Math</Filter>
     </ClInclude>
     <ClInclude Include="Matrix4x4.h">
-      <Filter>GameEngine\Math</Filter>
+      <Filter>GameEngine\Utilities\Math</Filter>
     </ClInclude>
     <ClInclude Include="IndexBuffer.h">
       <Filter>GameEngine\GraphicsEngine\RenderSystem\IndexBuffer</Filter>
@@ -216,10 +225,10 @@
       <Filter>GameEngine\InputSystem</Filter>
     </ClInclude>
     <ClInclude Include="Point.h">
-      <Filter>GameEngine\Math</Filter>
+      <Filter>GameEngine\Utilities\Math</Filter>
     </ClInclude>
     <ClInclude Include="Vector4D.h">
-      <Filter>GameEngine\Math</Filter>
+      <Filter>GameEngine\Utilities\Math</Filter>
     </ClInclude>
     <ClInclude Include="Settings.h">
       <Filter>App</Filter>
@@ -240,7 +249,7 @@
       <Filter>GameEngine\GameObjects</Filter>
     </ClInclude>
     <ClInclude Include="Vector2D.h">
-      <Filter>GameEngine\Math</Filter>
+      <Filter>GameEngine\Utilities\Math</Filter>
     </ClInclude>
     <ClInclude Include="imconfig.h">
       <Filter>IMGUI</Filter>
@@ -267,7 +276,16 @@
       <Filter>IMGUI</Filter>
     </ClInclude>
     <ClInclude Include="UIManager.h">
-      <Filter>App\UIManager</Filter>
+      <Filter>GameEngine\UIManager</Filter>
+    </ClInclude>
+    <ClInclude Include="UIScreen.h">
+      <Filter>GameEngine\UIManager</Filter>
+    </ClInclude>
+    <ClInclude Include="MenuScreen.h">
+      <Filter>GameEngine\UIManager\Screens</Filter>
+    </ClInclude>
+    <ClInclude Include="LogUtils.h">
+      <Filter>GameEngine\Utilities</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
