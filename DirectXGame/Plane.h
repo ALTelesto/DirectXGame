@@ -13,6 +13,7 @@ public:
 
     void update(float deltaTime) override;
     void draw(int width, int height, VertexShaderPtr vertexShader, PixelShaderPtr pixelShader) override;
+    void draw(const RECT clientWindow) override;
 
 private:
     VertexBufferPtr vertexBuffer;

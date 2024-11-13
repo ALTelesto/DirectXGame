@@ -52,21 +52,6 @@
     <Filter Include="IMGUI">
       <UniqueIdentifier>{0807ec41-8cac-4373-aac4-8a42101acd44}</UniqueIdentifier>
     </Filter>
-    <Filter Include="App\Shaders">
-      <UniqueIdentifier>{606e79a7-22f4-4dff-b9d4-0fb286af43d7}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="App\Shaders\Post-Processing">
-      <UniqueIdentifier>{20ebd9a4-3eea-4ad0-8c38-f329cd3ef959}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="App\Shaders\Post-Processing\Vignette">
-      <UniqueIdentifier>{acc1f1dd-efba-4f66-8bd5-24c11491de20}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="App\Shaders\Post-Processing\LensDistortion">
-      <UniqueIdentifier>{6fe1ebea-c88b-4f5b-a221-0dd42a37c3bf}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="App\Shaders\Post-Processing\ChromaticAberration">
-      <UniqueIdentifier>{2eb4eb0c-6deb-45a0-a393-6d49a36447bb}</UniqueIdentifier>
-    </Filter>
     <Filter Include="GameEngine\UIManager">
       <UniqueIdentifier>{ad1547b6-2403-4eb2-b2b7-cdcbc2f26359}</UniqueIdentifier>
     </Filter>
@@ -78,6 +63,36 @@
     </Filter>
     <Filter Include="GameEngine\Utilities\Math">
       <UniqueIdentifier>{6a8edcbf-b0ed-420e-aa08-9ef0cc97caea}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="GameEngine\GameObjects\Primitives">
+      <UniqueIdentifier>{75341f0a-f250-4319-b28a-8486db91fcef}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="GameEngine\GameObjects\Camera">
+      <UniqueIdentifier>{6f7da734-7cc2-475e-bcb6-70da8a2e352a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="GameEngine\GraphicsEngine\RenderSystem\Material">
+      <UniqueIdentifier>{23a7b5b9-7a04-428d-a4bb-57134e67813d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="GameEngine\GraphicsEngine\RenderSystem\Shaders">
+      <UniqueIdentifier>{606e79a7-22f4-4dff-b9d4-0fb286af43d7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="GameEngine\GraphicsEngine\RenderSystem\Shaders\Post-Processing">
+      <UniqueIdentifier>{20ebd9a4-3eea-4ad0-8c38-f329cd3ef959}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="GameEngine\GraphicsEngine\RenderSystem\Shaders\Post-Processing\Vignette">
+      <UniqueIdentifier>{acc1f1dd-efba-4f66-8bd5-24c11491de20}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="GameEngine\GraphicsEngine\RenderSystem\Shaders\Post-Processing\LensDistortion">
+      <UniqueIdentifier>{6fe1ebea-c88b-4f5b-a221-0dd42a37c3bf}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="GameEngine\GraphicsEngine\RenderSystem\Shaders\Post-Processing\ChromaticAberration">
+      <UniqueIdentifier>{2eb4eb0c-6deb-45a0-a393-6d49a36447bb}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="GameEngine\GraphicsEngine\RenderSystem\Shaders\Vertex">
+      <UniqueIdentifier>{a6de53bd-2e5d-4965-97b0-ce4e3d13e663}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="GameEngine\GraphicsEngine\RenderSystem\Shaders\Pixel">
+      <UniqueIdentifier>{7316631d-42df-41b7-b145-f2a8b43a5f30}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -120,12 +135,6 @@
     <ClCompile Include="AGameObject.cpp">
       <Filter>GameEngine\GameObjects</Filter>
     </ClCompile>
-    <ClCompile Include="Cube.cpp">
-      <Filter>GameEngine\GameObjects</Filter>
-    </ClCompile>
-    <ClCompile Include="Plane.cpp">
-      <Filter>GameEngine\GameObjects</Filter>
-    </ClCompile>
     <ClCompile Include="InputSystem.cpp">
       <Filter>GameEngine\InputSystem</Filter>
     </ClCompile>
@@ -134,12 +143,6 @@
     </ClCompile>
     <ClCompile Include="SamplerState.cpp">
       <Filter>GameEngine\GraphicsEngine\RenderSystem\SamplerState</Filter>
-    </ClCompile>
-    <ClCompile Include="Camera.cpp">
-      <Filter>GameEngine\GameObjects</Filter>
-    </ClCompile>
-    <ClCompile Include="SceneCameraHandler.cpp">
-      <Filter>GameEngine\GameObjects</Filter>
     </ClCompile>
     <ClCompile Include="imgui.cpp">
       <Filter>IMGUI</Filter>
@@ -167,6 +170,27 @@
     </ClCompile>
     <ClCompile Include="MenuScreen.cpp">
       <Filter>GameEngine\UIManager\Screens</Filter>
+    </ClCompile>
+    <ClCompile Include="GameObjectManager.cpp">
+      <Filter>GameEngine\GameObjects</Filter>
+    </ClCompile>
+    <ClCompile Include="Plane.cpp">
+      <Filter>GameEngine\GameObjects\Primitives</Filter>
+    </ClCompile>
+    <ClCompile Include="Cube.cpp">
+      <Filter>GameEngine\GameObjects\Primitives</Filter>
+    </ClCompile>
+    <ClCompile Include="SceneCameraHandler.cpp">
+      <Filter>GameEngine\GameObjects\Camera</Filter>
+    </ClCompile>
+    <ClCompile Include="Camera.cpp">
+      <Filter>GameEngine\GameObjects\Camera</Filter>
+    </ClCompile>
+    <ClCompile Include="Material.cpp">
+      <Filter>GameEngine\GraphicsEngine\RenderSystem\Material</Filter>
+    </ClCompile>
+    <ClCompile Include="ShaderLibrary.cpp">
+      <Filter>GameEngine\GraphicsEngine\RenderSystem\Shaders</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -209,13 +233,7 @@
     <ClInclude Include="IndexBuffer.h">
       <Filter>GameEngine\GraphicsEngine\RenderSystem\IndexBuffer</Filter>
     </ClInclude>
-    <ClInclude Include="Plane.h">
-      <Filter>GameEngine\GameObjects</Filter>
-    </ClInclude>
     <ClInclude Include="AGameObject.h">
-      <Filter>GameEngine\GameObjects</Filter>
-    </ClInclude>
-    <ClInclude Include="Cube.h">
       <Filter>GameEngine\GameObjects</Filter>
     </ClInclude>
     <ClInclude Include="InputSystem.h">
@@ -241,12 +259,6 @@
     </ClInclude>
     <ClInclude Include="SamplerState.h">
       <Filter>GameEngine\GraphicsEngine\RenderSystem\SamplerState</Filter>
-    </ClInclude>
-    <ClInclude Include="Camera.h">
-      <Filter>GameEngine\GameObjects</Filter>
-    </ClInclude>
-    <ClInclude Include="SceneCameraHandler.h">
-      <Filter>GameEngine\GameObjects</Filter>
     </ClInclude>
     <ClInclude Include="Vector2D.h">
       <Filter>GameEngine\Utilities\Math</Filter>
@@ -287,31 +299,61 @@
     <ClInclude Include="LogUtils.h">
       <Filter>GameEngine\Utilities</Filter>
     </ClInclude>
+    <ClInclude Include="GameObjectManager.h">
+      <Filter>GameEngine\GameObjects</Filter>
+    </ClInclude>
+    <ClInclude Include="Plane.h">
+      <Filter>GameEngine\GameObjects\Primitives</Filter>
+    </ClInclude>
+    <ClInclude Include="Cube.h">
+      <Filter>GameEngine\GameObjects\Primitives</Filter>
+    </ClInclude>
+    <ClInclude Include="SceneCameraHandler.h">
+      <Filter>GameEngine\GameObjects\Camera</Filter>
+    </ClInclude>
+    <ClInclude Include="Camera.h">
+      <Filter>GameEngine\GameObjects\Camera</Filter>
+    </ClInclude>
+    <ClInclude Include="EPrimitive.h">
+      <Filter>GameEngine\GameObjects\Primitives</Filter>
+    </ClInclude>
+    <ClInclude Include="Material.h">
+      <Filter>GameEngine\GraphicsEngine\RenderSystem\Material</Filter>
+    </ClInclude>
+    <ClInclude Include="ShaderLibrary.h">
+      <Filter>GameEngine\GraphicsEngine\RenderSystem\Shaders</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <FxCompile Include="Test.hlsl">
-      <Filter>App\Shaders</Filter>
-    </FxCompile>
-    <FxCompile Include="VertexShader.hlsl">
-      <Filter>App\Shaders</Filter>
-    </FxCompile>
-    <FxCompile Include="PixelShader.hlsl">
-      <Filter>App\Shaders</Filter>
-    </FxCompile>
-    <FxCompile Include="FSVertexShader.hlsl">
-      <Filter>App\Shaders</Filter>
-    </FxCompile>
     <FxCompile Include="shader.fx">
-      <Filter>App\Shaders</Filter>
+      <Filter>GameEngine\GraphicsEngine\RenderSystem\Shaders</Filter>
     </FxCompile>
     <FxCompile Include="LensDistortion.hlsl">
-      <Filter>App\Shaders\Post-Processing\LensDistortion</Filter>
+      <Filter>GameEngine\GraphicsEngine\RenderSystem\Shaders\Post-Processing\LensDistortion</Filter>
     </FxCompile>
     <FxCompile Include="Vignette.hlsl">
-      <Filter>App\Shaders\Post-Processing\Vignette</Filter>
+      <Filter>GameEngine\GraphicsEngine\RenderSystem\Shaders\Post-Processing\Vignette</Filter>
     </FxCompile>
     <FxCompile Include="Chromaberration.hlsl">
-      <Filter>App\Shaders\Post-Processing\ChromaticAberration</Filter>
+      <Filter>GameEngine\GraphicsEngine\RenderSystem\Shaders\Post-Processing\ChromaticAberration</Filter>
+    </FxCompile>
+    <FxCompile Include="ShadedTextured.hlsl">
+      <Filter>GameEngine\GraphicsEngine\RenderSystem\Shaders\Pixel</Filter>
+    </FxCompile>
+    <FxCompile Include="PixelShader.hlsl">
+      <Filter>GameEngine\GraphicsEngine\RenderSystem\Shaders\Pixel</Filter>
+    </FxCompile>
+    <FxCompile Include="Test.hlsl">
+      <Filter>GameEngine\GraphicsEngine\RenderSystem\Shaders\Pixel</Filter>
+    </FxCompile>
+    <FxCompile Include="VertexShader.hlsl">
+      <Filter>GameEngine\GraphicsEngine\RenderSystem\Shaders\Vertex</Filter>
+    </FxCompile>
+    <FxCompile Include="ShadedVertex.hlsl">
+      <Filter>GameEngine\GraphicsEngine\RenderSystem\Shaders\Vertex</Filter>
+    </FxCompile>
+    <FxCompile Include="FSVertexShader.hlsl">
+      <Filter>GameEngine\GraphicsEngine\RenderSystem\Shaders\Vertex</Filter>
     </FxCompile>
   </ItemGroup>
   <ItemGroup>

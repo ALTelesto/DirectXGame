@@ -3,6 +3,7 @@
 class Vector2D {
 public:
     Vector2D() : m_x(0), m_y(0) {}
+    Vector2D(float value) : m_x(value), m_y(value) {}
     Vector2D(float x, float y) : m_x(x), m_y(y) {}
     Vector2D(const Vector2D& vector) : m_x(vector.m_x), m_y(vector.m_y) {}
 

@@ -141,6 +141,69 @@ void Cube::draw(int width, int height, VertexShaderPtr vertexShader, PixelShader
 	//std::cout << name <<" rot "<< rotation.m_x<<"  " << rotation.m_y << "  " << rotation.m_z << "  " << "\n";
 }
 
+void Cube::draw(const RECT clientWindow)
+{
+	int width = clientWindow.right - clientWindow.left;
+	int height = clientWindow.bottom - clientWindow.top;
+
+	GraphicsEngine* graphicsEngine = GraphicsEngine::getInstance();
+	DeviceContextPtr deviceContext = graphicsEngine->getRenderSystem()->getImmediateDeviceContext();
+
+	CBData cbData = {};
+
+	cbData.time = this->ticks;
+
+	if (this->deltaPos > 1.0f)
+	{
+		this->deltaPos = 0.0f;
+	}
+	else
+	{
+		this->deltaPos += this->deltaTime * 0.1f;
+	}
+
+	Vector3D rotation = this->getLocalRotation();
+	Vector3D position = this->getLocalPosition();
+
+	cbData.worldMatrix.setIdentity();
+	cbData.worldMatrix.setScale(this->getLocalScale());
+
+	Matrix4x4 rotMatrix;
+	rotMatrix.setIdentity();
+
+	rotMatrix.setRotationZ(rotation.m_z);
+	cbData.worldMatrix *= rotMatrix;
+
+	rotMatrix.setIdentity();
+	rotMatrix.setRotationY(rotation.m_y);
+	cbData.worldMatrix *= rotMatrix;
+
+	rotMatrix.setIdentity();
+	rotMatrix.setRotationX(rotation.m_x);
+	cbData.worldMatrix *= rotMatrix;
+
+	Matrix4x4 translationMatrix;
+	translationMatrix.setIdentity();
+	translationMatrix.setTranslation(position);
+	cbData.worldMatrix *= translationMatrix;
+
+	Matrix4x4 temp = SceneCameraHandler::getInstance()->getSceneCameraViewMatrix();
+	cbData.viewMatrix = temp;
+	cbData.projMatrix = AppWindow::getInstance()->getProjection();
+
+	this->constantBuffer->update(deviceContext, &cbData);
+	deviceContext->setConstantBuffer(material->vertexShader, this->constantBuffer);
+	deviceContext->setConstantBuffer(material->pixelShader, this->constantBuffer);
+
+	GraphicsEngine::getInstance()->getRenderSystem()->getImmediateDeviceContext()->setVertexShader(material->vertexShader);
+	GraphicsEngine::getInstance()->getRenderSystem()->getImmediateDeviceContext()->setPixelShader(material->pixelShader);
+
+	deviceContext->setIndexBuffer(this->indexBuffer);
+	deviceContext->setVertexBuffer(this->vertexBuffer);
+
+	deviceContext->drawIndexedTriangleList(this->indexBuffer->getSizeIndexList(), 0, 0);
+}
+
 void Cube::setAnimSpeed(float speed)
 {
 	this->speed = speed;

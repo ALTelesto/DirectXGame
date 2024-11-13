@@ -16,8 +16,9 @@
 
 #include "SceneCameraHandler.h"
 
+#include "GameObjectManager.h"
 #include "Cube.h"
-#include <vector>
+#include "Material.h"
 
 class AppWindow: public Window, public InputListener
 {

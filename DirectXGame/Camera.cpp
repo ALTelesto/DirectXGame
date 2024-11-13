@@ -48,6 +48,10 @@ void Camera::draw(int width, int height, VertexShaderPtr vertexShader, PixelShad
 {
 }
 
+void Camera::draw(const RECT clientWindow)
+{
+}
+
 void Camera::onKeyDown(int key)
 {
 	if (!canMove) return;

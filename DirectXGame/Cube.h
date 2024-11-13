@@ -5,7 +5,7 @@ class VertexBuffer;
 class IndexBuffer;
 class ConstantBuffer;
 
-class Cube :	public AGameObject
+class Cube : public AGameObject
 {
 public:
 	Cube(string name, void* shaderByteCode, size_t sizeShader);
@@ -13,6 +13,7 @@ public:
 
 	void update(float deltaTime) override;
 	void draw(int width, int height, VertexShaderPtr vertexShader, PixelShaderPtr pixelShader) override;
+	void draw(const RECT clientWindow) override;
 	void setAnimSpeed(float speed);
 
 private:

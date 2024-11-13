@@ -1,5 +1,7 @@
 #include "AGameObject.h"
 
+#include "LogUtils.h"
+
 AGameObject::AGameObject(string name)
 {
 	this->name = name;
@@ -11,6 +13,16 @@ AGameObject::AGameObject(string name)
 
 AGameObject::~AGameObject()
 {
+}
+
+void AGameObject::setActive(bool active)
+{
+	this->active = active;
+}
+
+bool AGameObject::isActive()
+{
+	return this->active;
 }
 
 void AGameObject::setPosition(float x, float y, float z)
@@ -61,4 +73,15 @@ Vector3D AGameObject::getLocalRotation()
 string AGameObject::getName()
 {
 	return this->name;
+}
+
+void AGameObject::setMaterial(MaterialPtr material)
+{
+	LogUtils::log(this,"set material");
+	this->material = material;
+}
+
+MaterialPtr AGameObject::getMaterial()
+{
+	return material;
 }

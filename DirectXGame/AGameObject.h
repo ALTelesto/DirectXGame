@@ -4,6 +4,8 @@
 #include "Matrix4x4.h"
 #include "Prerequisites.h"
 
+#include "Material.h"
+
 using namespace std;
 
 class AGameObject
@@ -14,6 +16,10 @@ public:
 
 	virtual void update(float deltaTime) = 0;
 	virtual void draw(int width, int height, VertexShaderPtr vertexShader, PixelShaderPtr pixelShader) = 0;
+	virtual void draw(const RECT clientWindow) = 0;
+
+	void setActive(bool active);
+	bool isActive();
 
 	void setPosition(float x, float y, float z);
 	void setPosition(Vector3D pos);
@@ -28,6 +34,9 @@ public:
 	Vector3D getLocalRotation();
 
 	string getName();
+
+	void setMaterial(MaterialPtr material);
+	MaterialPtr getMaterial();
 
 	struct vec2 {
 		vec2(float _x, float _y):x(_x), y(_y){}
@@ -51,10 +60,14 @@ public:
 	};
 
 protected:
+	bool active = true;
+
 	string name;
 	Vector3D localPosition;
 	Vector3D localScale;
 	Vector3D localRotation;
 	Matrix4x4 localMatrix;
+
+	MaterialPtr material;
 };
 
