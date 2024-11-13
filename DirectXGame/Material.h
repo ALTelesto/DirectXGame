@@ -46,5 +46,6 @@ private:
 	friend class AGameObject;
 	friend class Cube;
 	friend class Plane;
+	friend class AppWindow;
 };
 

@@ -44,10 +44,6 @@ Matrix4x4 Camera::getViewMatrix()
 	return this->localMatrix;
 }
 
-void Camera::draw(int width, int height, VertexShaderPtr vertexShader, PixelShaderPtr pixelShader)
-{
-}
-
 void Camera::draw(const RECT clientWindow)
 {
 }

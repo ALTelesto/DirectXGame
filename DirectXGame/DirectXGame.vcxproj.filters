@@ -192,6 +192,9 @@
     <ClCompile Include="ShaderLibrary.cpp">
       <Filter>GameEngine\GraphicsEngine\RenderSystem\Shaders</Filter>
     </ClCompile>
+    <ClCompile Include="ShaderNames.cpp">
+      <Filter>GameEngine\GraphicsEngine\RenderSystem\Shaders</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="AppWindow.h">
@@ -321,6 +324,12 @@
       <Filter>GameEngine\GraphicsEngine\RenderSystem\Material</Filter>
     </ClInclude>
     <ClInclude Include="ShaderLibrary.h">
+      <Filter>GameEngine\GraphicsEngine\RenderSystem\Shaders</Filter>
+    </ClInclude>
+    <ClInclude Include="ShaderNames.h">
+      <Filter>GameEngine\GraphicsEngine\RenderSystem\Shaders</Filter>
+    </ClInclude>
+    <ClInclude Include="ShaderLibraryDefines.h">
       <Filter>GameEngine\GraphicsEngine\RenderSystem\Shaders</Filter>
     </ClInclude>
   </ItemGroup>

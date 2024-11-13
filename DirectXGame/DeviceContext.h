@@ -36,6 +36,8 @@ public:
 	void setShaderResources(UINT start_slot, UINT num_views, ID3D11ShaderResourceView** shader_resource_views);
 	void unbindShaderResources();
 
+	void setTextures(MaterialPtr material);
+
 	void setDepthStencilState(ID3D11DepthStencilState* depth_stencil_state);
 
 	void Dispatch(UINT thread_group_count_x, UINT thread_group_count_y, UINT thread_group_count_z);

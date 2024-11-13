@@ -16,6 +16,8 @@ public:
 
 	Matrix4x4 getSceneCameraViewMatrix();
 
+	Camera* sceneCamera;
+
 private:
 	SceneCameraHandler();
 	~SceneCameraHandler();
@@ -23,6 +25,5 @@ private:
 	SceneCameraHandler& operator=(SceneCameraHandler const&) {};
 	static SceneCameraHandler* sharedInstance;
 
-	Camera* sceneCamera;
 };
 

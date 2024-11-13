@@ -16,6 +16,8 @@
 #include "imgui_impl_win32.h"
 #include "LogUtils.h"
 #include "Plane.h"
+#include "ShaderLibrary.h"
+#include "ShaderNames.h"
 
 struct vec2
 {
@@ -95,6 +97,8 @@ void AppWindow::createGraphicsWindow()
 	GameObjectManager::initialize();
 	UIManager::initialize(this->m_hwnd);
 
+	ShaderLibrary::initialize();
+
 	SceneCameraHandler::initialize();
 	this->scene_camera_handler = SceneCameraHandler::getInstance();
 
@@ -143,7 +147,6 @@ void AppWindow::createGraphicsWindow()
 		{Vector3D(1.0f,-1.0f,0),Vector2D(1.0f,1.0f)}
 	};
 
-	
 	UINT fsquad_size_list = ARRAYSIZE(fsquad_list);
 
 	D3D11_BUFFER_DESC buff_desc = {};
@@ -155,6 +158,8 @@ void AppWindow::createGraphicsWindow()
 
 	fsquad_vb = GraphicsEngine::getInstance()->getRenderSystem()->createVertexBuffer(fsquad_list, sizeof(fsquad_vertex), fsquad_size_list, shader_byte_code, size_shader, buff_desc);
 
+	GraphicsEngine::getInstance()->getRenderSystem()->releaseCompiledShader();
+
 	unsigned int fsquad_index_list[] =
 	{
 		0, 1, 2,
@@ -164,20 +169,29 @@ void AppWindow::createGraphicsWindow()
 
 	fsquad_ib = GraphicsEngine::getInstance()->getRenderSystem()->createIndexBuffer(fsquad_index_list, fsquad_size_index_list);
 
-	GraphicsEngine::getInstance()->getRenderSystem()->releaseCompiledShader();
+	LogUtils::log(this, "Retrieving pixel shader");
+	m_ps = ShaderLibrary::getInstance()->getPixelShader(ShaderNames::PixelShaderNames.find("ShadedTextured")->first);
 
-	GraphicsEngine::getInstance()->getRenderSystem()->compilePixelShader(L"PixelShader.hlsl", "psmain", &shader_byte_code, &size_shader);
-	m_ps = GraphicsEngine::getInstance()->getRenderSystem()->createPixelShader(shader_byte_code, size_shader);
+	if(m_ps == nullptr) LogUtils::error(this, "Failed to retrieve pixel shader");
 
+	LogUtils::log(this, "Creating material");
 	MaterialPtr material = std::make_shared<Material>(m_ps,m_vs);
+	material->samplerState = GraphicsEngine::getInstance()->getRenderSystem()->createSamplerState();
 
+	LogUtils::logHResult(
+		this,
+		DirectX::CreateWICTextureFromFile(
+			GraphicsEngine::getInstance()->getRenderSystem()->getDirectXDevice(),
+			L"images/cliff_side_diff_1k.png",
+			nullptr,
+			material->albedoTexture.ReleaseAndGetAddressOf()));
+
+	LogUtils::log(this, "Setting material");
 	for(GameObjectPtr gameObject : GameObjectManager::getInstance()->getAllObjects())
 	{
 		LogUtils::log(gameObject->getName());
 		gameObject->setMaterial(material);
 	}
-
-	GraphicsEngine::getInstance()->getRenderSystem()->releaseCompiledShader();
 
 	constant cc;
 	cc.m_time = 0;
@@ -217,6 +231,8 @@ void AppWindow::createGraphicsWindow()
 	}
 
 	fsquad_cb = GraphicsEngine::getInstance()->getRenderSystem()->createConstantBuffer(&cc, sizeof(constant));
+
+	LogUtils::log(this, "Initialization done");
 }
 
 Matrix4x4 AppWindow::getWorldCam()
@@ -323,12 +339,6 @@ void AppWindow::onUpdate()
 
 	GameObjectManager::getInstance()->updateAll(EngineTime::getDeltaTime());
 	GameObjectManager::getInstance()->drawAll(windowRect);
-
-	/*for (AGameObject* gameObject : this->gameObjectList)
-	{
-		gameObject->update(EngineTime::getDeltaTime());
-		gameObject->draw(width, height, this->m_vs, this->m_ps);
-	}*/
 
 	// Loop over the post-processing passes
 	int read = 0;  // Reading from first render texture initially

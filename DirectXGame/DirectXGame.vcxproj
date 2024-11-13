@@ -155,6 +155,7 @@
     <ClCompile Include="SamplerState.cpp" />
     <ClCompile Include="SceneCameraHandler.cpp" />
     <ClCompile Include="ShaderLibrary.cpp" />
+    <ClCompile Include="ShaderNames.cpp" />
     <ClCompile Include="SwapChain.cpp" />
     <ClCompile Include="UIManager.cpp" />
     <ClCompile Include="VertexBuffer.cpp" />
@@ -196,6 +197,8 @@
     <ClInclude Include="Settings.h" />
     <ClInclude Include="SamplerState.h" />
     <ClInclude Include="ShaderLibrary.h" />
+    <ClInclude Include="ShaderLibraryDefines.h" />
+    <ClInclude Include="ShaderNames.h" />
     <ClInclude Include="SwapChain.h" />
     <ClInclude Include="UIManager.h" />
     <ClInclude Include="UIScreen.h" />

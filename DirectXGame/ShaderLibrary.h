@@ -1,33 +1,19 @@
 #pragma once
+
 #include "Prerequisites.h"
-
-struct ShaderStruct
-{
-	void* shader_byte_code;
-	size_t size_shader;
-};
-
-struct PSStruct
-{
-	ShaderStruct shaderData;
-	PixelShaderPtr pixelShader;
-};
-
-struct VSStruct
-{
-	ShaderStruct shaderData;
-	VertexShaderPtr vertexShader;
-};
-
-typedef std::unordered_map<std::string, PSStruct> PixelShaderHashMap;
-typedef std::unordered_map<std::string, VSStruct> VertexShaderHashMap;
+#include "ShaderLibraryDefines.h"
 
 class ShaderLibrary
 {
 public:
-	ShaderLibrary* getInstance();
+	static ShaderLibrary* getInstance();
 	static void initialize();
 	static void destroy();
+
+	PixelShaderPtr getPixelShader(const std::string& pixelShaderName);
+	VertexShaderPtr getVertexShader(const std::string& vertexShaderName);
+	void requestVertexShaderData(std::wstring vertexShaderName, void** shaderByteCode, size_t* sizeShader);
+
 private:
 	ShaderLibrary();
 	~ShaderLibrary();

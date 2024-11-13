@@ -8,6 +8,7 @@
 #include "VertexShader.h"
 #include "PixelShader.h"
 #include "SamplerState.h"
+#include "Material.h"
 #include <exception>
 
 DeviceContext::DeviceContext(ID3D11DeviceContext* device_context, RenderSystem* system):m_device_context(device_context), m_system(system)
@@ -130,6 +131,21 @@ void DeviceContext::unbindShaderResources()
 {
 	constexpr ID3D11ShaderResourceView* nullSRV = nullptr;
 	m_device_context->PSSetShaderResources(0, 1, &nullSRV);
+}
+
+void DeviceContext::setTextures(MaterialPtr material)
+{
+	m_device_context->VSSetShaderResources(0, 1, material->albedoTexture.GetAddressOf());
+	m_device_context->VSSetShaderResources(1, 1, material->normalTexture.GetAddressOf());
+	m_device_context->VSSetShaderResources(2, 1, material->metallicTexture.GetAddressOf());
+	m_device_context->VSSetShaderResources(3, 1, material->smoothnessTexture.GetAddressOf());
+	m_device_context->VSSetSamplers(0, 1, &material->samplerState->m_sampler_state);
+
+	m_device_context->PSSetShaderResources(0, 1, material->albedoTexture.GetAddressOf());
+	m_device_context->PSSetShaderResources(1, 1, material->normalTexture.GetAddressOf());
+	m_device_context->PSSetShaderResources(2, 1, material->metallicTexture.GetAddressOf());
+	m_device_context->PSSetShaderResources(3, 1, material->smoothnessTexture.GetAddressOf());
+	m_device_context->PSSetSamplers(0, 1, &material->samplerState->m_sampler_state);
 }
 
 void DeviceContext::setDepthStencilState(ID3D11DepthStencilState* depth_stencil_state)

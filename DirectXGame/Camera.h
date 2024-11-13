@@ -11,7 +11,6 @@ public:
 	void update(float deltaTime) override;
 	Matrix4x4 getViewMatrix();
 
-	virtual void draw(int width, int height, VertexShaderPtr vertexShader, PixelShaderPtr pixelShader) override;
 	virtual void draw(const RECT clientWindow) override;
 
 	virtual void onKeyDown(int key) override;

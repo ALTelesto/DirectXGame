@@ -15,8 +15,7 @@ public:
 	~AGameObject();
 
 	virtual void update(float deltaTime) = 0;
-	virtual void draw(int width, int height, VertexShaderPtr vertexShader, PixelShaderPtr pixelShader) = 0;
-	virtual void draw(const RECT clientWindow) = 0;
+	virtual void draw(const RECT clientWindow);
 
 	void setActive(bool active);
 	bool isActive();
@@ -57,10 +56,33 @@ public:
 		Matrix4x4 viewMatrix;
 		Matrix4x4 projMatrix;
 		float time;
+
+		Vector3D cameraPos;
+
+		Vector3D color;
+		float metallic;
+		float smoothness;
+		float flatness;
+		Vector2D tiling;
+		Vector2D offset;
+
+		float hasAlbedoMap;
+		float hasNormalMap;
+		float hasMetallicMap;
+		float hasSmoothnessMap;
 	};
 
 protected:
 	bool active = true;
+
+	VertexBufferPtr vertexBuffer;
+	IndexBufferPtr indexBuffer;
+	ConstantBufferPtr constantBuffer;
+
+	float ticks = 0.0f;
+	float deltaPos = 0.0f;
+	float deltaTime = 0.0f;
+	float speed = 10.0f;
 
 	string name;
 	Vector3D localPosition;
