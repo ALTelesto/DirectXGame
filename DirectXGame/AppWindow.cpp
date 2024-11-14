@@ -90,6 +90,8 @@ AppWindow::~AppWindow()
 
 void AppWindow::createGraphicsWindow()
 {
+	if (!this->m_hwnd)LogUtils::error(this, "wtf");
+
 	InputSystem::getInstance()->addListener(this);
 
 	EngineTime::initialize();
@@ -133,6 +135,27 @@ void AppWindow::createGraphicsWindow()
 	plane->setRotation(-2, -2, -2);
 	plane->setScale(Vector3D(0.5, 0.5, 0.5));
 	GameObjectManager::getInstance()->addObject(plane);
+
+	LogUtils::log(this, "Teapot creation");
+	GameObjectPtr teapot = std::make_shared<MeshedObject>("Teapot", L"Meshes/teapot.obj");
+	teapot->setPosition(Vector3D(0, 0, -2));
+	teapot->setScale(0.2, 0.2, 0.2);
+	GameObjectManager::getInstance()->addObject(teapot);
+	LogUtils::log(this, "Teapot done");
+
+	LogUtils::log(this, "Rabbit creation");
+	GameObjectPtr rabbit = std::make_shared<MeshedObject>("Rabbit", L"Meshes/bunny.obj");
+	rabbit->setPosition(Vector3D(1, 0, -2));
+	rabbit->setScale(0.5, 0.5, 0.5);
+	GameObjectManager::getInstance()->addObject(rabbit);
+	LogUtils::log(this, "Rabbit done");
+
+	LogUtils::log(this, "Armdillo creation");
+	GameObjectPtr armadillo = std::make_shared<MeshedObject>("Armadillo", L"Meshes/armadillo.obj");
+	armadillo->setPosition(Vector3D(-1, 0, -2));
+	armadillo->setScale(0.05, 0,0);
+	GameObjectManager::getInstance()->addObject(armadillo);
+	LogUtils::log(this, "Armdillo done");
 
 	GraphicsEngine::getInstance()->getRenderSystem()->releaseCompiledShader();
 
@@ -178,20 +201,32 @@ void AppWindow::createGraphicsWindow()
 	MaterialPtr material = std::make_shared<Material>(m_ps,m_vs);
 	material->samplerState = GraphicsEngine::getInstance()->getRenderSystem()->createSamplerState();
 
-	LogUtils::logHResult(
+	/*LogUtils::logHResult(
 		this,
 		DirectX::CreateWICTextureFromFile(
 			GraphicsEngine::getInstance()->getRenderSystem()->getDirectXDevice(),
 			L"images/cliff_side_diff_1k.png",
 			nullptr,
-			material->albedoTexture.ReleaseAndGetAddressOf()));
+			material->albedoTexture.ReleaseAndGetAddressOf()));*/
 
-	LogUtils::log(this, "Setting material");
 	for(GameObjectPtr gameObject : GameObjectManager::getInstance()->getAllObjects())
 	{
-		LogUtils::log(gameObject->getName());
 		gameObject->setMaterial(material);
 	}
+
+	LogUtils::log(this, "Creating brick material");
+	MaterialPtr brick = std::make_shared<Material>(m_ps, m_vs);
+	brick->samplerState = GraphicsEngine::getInstance()->getRenderSystem()->createSamplerState();
+
+	LogUtils::logHResult(
+		this,
+		DirectX::CreateWICTextureFromFile(
+			GraphicsEngine::getInstance()->getRenderSystem()->getDirectXDevice(),
+			L"images/brick.png",
+			nullptr,
+			brick->albedoTexture.ReleaseAndGetAddressOf()));
+
+	teapot->setMaterial(brick);
 
 	constant cc;
 	cc.m_time = 0;

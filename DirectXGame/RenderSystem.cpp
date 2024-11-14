@@ -107,8 +107,20 @@ DeviceContextPtr RenderSystem::getImmediateDeviceContext()
 	return this->m_imm_device_context;
 }
 
+VertexBufferPtr RenderSystem::createVertexBuffer(void* list_vertices, UINT size_vertex, UINT size_list,
+	void* shader_byte_code, UINT size_byte_shader)
+{
+	VertexBufferPtr vb = nullptr;
+	try
+	{
+		vb = std::make_shared<VertexBuffer>(list_vertices, size_vertex, size_list, shader_byte_code, size_byte_shader, this);
+	}
+	catch (...) {}
+	return vb;
+}
+
 VertexBufferPtr RenderSystem::createVertexBuffer(void* list_vertices, UINT size_vertex, UINT size_list, void* shader_byte_code, UINT size_byte_shader, D3D11_BUFFER_DESC
-	buff_desc)
+                                                 buff_desc)
 {
 	VertexBufferPtr vb = nullptr;
 	try

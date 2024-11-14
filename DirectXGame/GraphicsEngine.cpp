@@ -2,6 +2,8 @@
 #include "EngineTime.h"
 #include <exception>
 
+#include "LogUtils.h"
+
 GraphicsEngine* GraphicsEngine::sharedInstance = nullptr;
 
 GraphicsEngine* GraphicsEngine::getInstance()
@@ -17,8 +19,15 @@ GraphicsEngine::GraphicsEngine()
 	}
 	catch (...)
 	{
-		throw std::exception("GraphicsEngine not created successfully");
+		throw std::exception("RenderSystem not created successfully");
 	}
+
+	try
+	{
+		m_mesh_manager = new MeshManager();
+	}
+	catch (...) { throw std::exception("MeshManager not created successfully"); }
+
 }
 
 GraphicsEngine::~GraphicsEngine()
@@ -42,7 +51,18 @@ void GraphicsEngine::destroy()
 
 RenderSystem* GraphicsEngine::getRenderSystem()
 {
-	return this->m_render_system;
+	return m_render_system;
+}
+
+MeshManager* GraphicsEngine::getMeshManager()
+{
+	return m_mesh_manager;
+}
+
+void GraphicsEngine::getVertexMeshLayoutShaderByteCodeAndSize(void** byte_code, size_t* size)
+{
+	*byte_code = m_mesh_layout_byte_code;
+	*size = m_mesh_layout_size;
 }
 
 

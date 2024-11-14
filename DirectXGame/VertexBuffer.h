@@ -6,6 +6,8 @@
 class VertexBuffer
 {
 public:
+	VertexBuffer(void* list_vertices, UINT size_vertex, UINT size_list, void* shader_byte_code, size_t size_byte_shader,
+		RenderSystem* system);
 	VertexBuffer(void* list_vertices, UINT size_vertex, UINT size_list, void* shader_byte_code, UINT size_byte_shader, D3D11_BUFFER_DESC
 		buff_desc,RenderSystem* system);
 	UINT getSizeVertex();

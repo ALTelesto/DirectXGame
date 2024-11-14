@@ -18,7 +18,11 @@ AGameObject::~AGameObject()
 
 void AGameObject::draw(const RECT clientWindow)
 {
-	if (!constantBuffer || !indexBuffer || !vertexBuffer || !material->pixelShader) return;
+	if (!constantBuffer || !indexBuffer || !vertexBuffer || !material->pixelShader)
+	{
+		LogUtils::log(this->name + " failed draw");
+		return;
+	}
 
 	int width = clientWindow.right - clientWindow.left;
 	int height = clientWindow.bottom - clientWindow.top;

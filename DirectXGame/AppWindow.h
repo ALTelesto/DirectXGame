@@ -18,6 +18,7 @@
 
 #include "GameObjectManager.h"
 #include "Cube.h"
+#include "MeshedObject.h"
 #include "Material.h"
 
 class AppWindow: public Window, public InputListener

@@ -78,7 +78,11 @@ bool Window::init()
 		NULL, NULL, NULL, this);
 
 	if (!m_hwnd)
+	{
+		LogUtils::error(this, "hwnd failure");
 		return false;
+	}
+		
 
 
 	::ShowWindow(m_hwnd, SW_SHOW);
@@ -91,6 +95,7 @@ bool Window::init()
 
 bool Window::broadcast()
 {
+	if (!this) return false;
 	if (!isRun()) return false;
 	EngineTime::LogFrameStart();
 	this->onUpdate();

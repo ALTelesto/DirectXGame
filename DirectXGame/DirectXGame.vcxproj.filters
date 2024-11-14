@@ -94,6 +94,18 @@
     <Filter Include="GameEngine\GraphicsEngine\RenderSystem\Shaders\Pixel">
       <UniqueIdentifier>{7316631d-42df-41b7-b145-f2a8b43a5f30}</UniqueIdentifier>
     </Filter>
+    <Filter Include="GameEngine\GraphicsEngine\RenderSystem\ResourceManager">
+      <UniqueIdentifier>{5bf5800e-821c-435d-8b8f-934ef2a188c0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="GameEngine\GraphicsEngine\RenderSystem\ResourceManager\Resource">
+      <UniqueIdentifier>{9f31c85a-842e-4975-8f6f-b0d3ce3ac21c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="GameEngine\GraphicsEngine\RenderSystem\MeshManager">
+      <UniqueIdentifier>{491f9ca3-f141-4ccd-bece-f51153b2482d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="GameEngine\GraphicsEngine\RenderSystem\MeshManager\Mesh">
+      <UniqueIdentifier>{542c927f-93be-489e-853a-f715ec6baeb8}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -195,6 +207,19 @@
     <ClCompile Include="ShaderNames.cpp">
       <Filter>GameEngine\GraphicsEngine\RenderSystem\Shaders</Filter>
     </ClCompile>
+    <ClCompile Include="ResourceManager.cpp">
+      <Filter>GameEngine\GraphicsEngine\RenderSystem\ResourceManager</Filter>
+    </ClCompile>
+    <ClCompile Include="Resource.cpp">
+      <Filter>GameEngine\GraphicsEngine\RenderSystem\ResourceManager\Resource</Filter>
+    </ClCompile>
+    <ClCompile Include="MeshManager.cpp">
+      <Filter>GameEngine\GraphicsEngine\RenderSystem\MeshManager</Filter>
+    </ClCompile>
+    <ClCompile Include="Mesh.cpp">
+      <Filter>GameEngine\GraphicsEngine\RenderSystem\MeshManager\Mesh</Filter>
+    </ClCompile>
+    <ClCompile Include="MeshedObject.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="AppWindow.h">
@@ -332,6 +357,22 @@
     <ClInclude Include="ShaderLibraryDefines.h">
       <Filter>GameEngine\GraphicsEngine\RenderSystem\Shaders</Filter>
     </ClInclude>
+    <ClInclude Include="ResourceManager.h">
+      <Filter>GameEngine\GraphicsEngine\RenderSystem\ResourceManager</Filter>
+    </ClInclude>
+    <ClInclude Include="Resource.h">
+      <Filter>GameEngine\GraphicsEngine\RenderSystem\ResourceManager\Resource</Filter>
+    </ClInclude>
+    <ClInclude Include="MeshManager.h">
+      <Filter>GameEngine\GraphicsEngine\RenderSystem\MeshManager</Filter>
+    </ClInclude>
+    <ClInclude Include="Mesh.h">
+      <Filter>GameEngine\GraphicsEngine\RenderSystem\MeshManager\Mesh</Filter>
+    </ClInclude>
+    <ClInclude Include="VertexMesh.h">
+      <Filter>GameEngine\GraphicsEngine\RenderSystem\MeshManager\Mesh</Filter>
+    </ClInclude>
+    <ClInclude Include="MeshedObject.h" />
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="shader.fx">
