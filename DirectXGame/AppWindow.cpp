@@ -15,7 +15,9 @@
 #include "imgui_impl_dx11.h"
 #include "imgui_impl_win32.h"
 #include "LogUtils.h"
+#include "PhysicsSystem.h"
 #include "Plane.h"
+#include "Settings.h"
 #include "ShaderLibrary.h"
 #include "ShaderNames.h"
 
@@ -99,6 +101,8 @@ void AppWindow::createGraphicsWindow()
 	GameObjectManager::initialize();
 	UIManager::initialize(this->m_hwnd);
 
+	BaseComponentSystem::initialize();
+
 	ShaderLibrary::initialize();
 
 	SceneCameraHandler::initialize();
@@ -115,35 +119,32 @@ void AppWindow::createGraphicsWindow()
 	GraphicsEngine::getInstance()->getRenderSystem()->compileVertexShader(L"VertexShader.hlsl", "vsmain", &shader_byte_code, &size_shader);
 	m_vs = GraphicsEngine::getInstance()->getRenderSystem()->createVertexShader(shader_byte_code, size_shader);
 
-	for (int i = 0; i < 1; ++i)
+	/*for (int i = 0; i < 1; ++i)
 	{
-		/*float x = -0.75f + static_cast<float>(rand()) / (static_cast<float>(RAND_MAX / (1.5f)));
-		float y = -0.75f + static_cast<float>(rand()) / (static_cast<float>(RAND_MAX / (1.5f)));*/
-
 		float x = 0;
 		float y = 0;
 
 		GameObjectPtr cube = std::make_shared<Cube>("Cube " + to_string(i + 1), shader_byte_code, size_shader);
-		static_cast<Cube*>(cube.get())->setAnimSpeed(-3.75f + static_cast<float>(rand()) / (static_cast<float>(RAND_MAX / (7.5f))));
+		static_cast<Cube*>(cube.get())->setAnimSpeed(100);
 		cube->setPosition(Vector3D(x, y, 2));
 		cube->setScale(Vector3D(0.15, 0.15, 0.15));
 		GameObjectManager::getInstance()->addObject(cube);
-	}
+	}*/
 
-	GameObjectPtr plane = std::make_shared<Plane>("Plane " + to_string(1), shader_byte_code, size_shader);
+	/*GameObjectPtr plane = std::make_shared<Plane>("Plane " + to_string(1), shader_byte_code, size_shader);
 	plane->setPosition(Vector3D(0, 0, 2));
 	plane->setRotation(-2, -2, -2);
 	plane->setScale(Vector3D(0.5, 0.5, 0.5));
-	GameObjectManager::getInstance()->addObject(plane);
+	GameObjectManager::getInstance()->addObject(plane);*/
 
-	LogUtils::log(this, "Teapot creation");
+	/*LogUtils::log(this, "Teapot creation");
 	GameObjectPtr teapot = std::make_shared<MeshedObject>("Teapot", L"Meshes/teapot.obj");
 	teapot->setPosition(Vector3D(0, 0, -2));
 	teapot->setScale(0.2, 0.2, 0.2);
 	GameObjectManager::getInstance()->addObject(teapot);
-	LogUtils::log(this, "Teapot done");
+	LogUtils::log(this, "Teapot done");*/
 
-	LogUtils::log(this, "Rabbit creation");
+	/*LogUtils::log(this, "Rabbit creation");
 	GameObjectPtr rabbit = std::make_shared<MeshedObject>("Rabbit", L"Meshes/bunny.obj");
 	rabbit->setPosition(Vector3D(1, 0, -2));
 	rabbit->setScale(0.5, 0.5, 0.5);
@@ -155,7 +156,7 @@ void AppWindow::createGraphicsWindow()
 	armadillo->setPosition(Vector3D(-1, 0, -2));
 	armadillo->setScale(0.05, 0,0);
 	GameObjectManager::getInstance()->addObject(armadillo);
-	LogUtils::log(this, "Armdillo done");
+	LogUtils::log(this, "Armdillo done");*/
 
 	GraphicsEngine::getInstance()->getRenderSystem()->releaseCompiledShader();
 
@@ -198,8 +199,9 @@ void AppWindow::createGraphicsWindow()
 	if(m_ps == nullptr) LogUtils::error(this, "Failed to retrieve pixel shader");
 
 	LogUtils::log(this, "Creating material");
-	MaterialPtr material = std::make_shared<Material>(m_ps,m_vs);
+	MaterialPtr material = std::make_shared<MaterialResource>(m_ps,m_vs);
 	material->samplerState = GraphicsEngine::getInstance()->getRenderSystem()->createSamplerState();
+	material->smoothness = 1;
 
 	/*LogUtils::logHResult(
 		this,
@@ -214,8 +216,8 @@ void AppWindow::createGraphicsWindow()
 		gameObject->setMaterial(material);
 	}
 
-	LogUtils::log(this, "Creating brick material");
-	MaterialPtr brick = std::make_shared<Material>(m_ps, m_vs);
+	/*LogUtils::log(this, "Creating brick material");
+	MaterialPtr brick = std::make_shared<MaterialResource>(m_ps, m_vs);
 	brick->samplerState = GraphicsEngine::getInstance()->getRenderSystem()->createSamplerState();
 
 	LogUtils::logHResult(
@@ -226,7 +228,7 @@ void AppWindow::createGraphicsWindow()
 			nullptr,
 			brick->albedoTexture.ReleaseAndGetAddressOf()));
 
-	teapot->setMaterial(brick);
+	teapot->setMaterial(brick);*/
 
 	constant cc;
 	cc.m_time = 0;
@@ -293,6 +295,7 @@ float AppWindow::getHeight()
 
 void AppWindow::update()
 {
+	LogUtils::log("im not supposed to be running this function");
 	constant cc;
 	cc.m_time = ::GetTickCount();
 
@@ -349,6 +352,8 @@ void AppWindow::onUpdate()
 
 	InputSystem::getInstance()->update();
 
+	BaseComponentSystem::getInstance()->getPhysicsSystem()->updateAllComponents();
+
 	GraphicsEngine::getInstance()->getRenderSystem()->getImmediateDeviceContext()->clearRenderTargetColor(this->m_swap_chain,
 		0, 0.5, 0.5, 1);
 
@@ -369,66 +374,71 @@ void AppWindow::onUpdate()
 	this->scene_camera_handler->update();
 
 	//GraphicsEngine::getInstance()->setToRenderTexture();
-	//GraphicsEngine::getInstance()->getRenderSystem()->getImmediateDeviceContext()->setRenderTargets(m_swap_chain->getRenderTargetView(), m_swap_chain->getDepthStencilView());
-	GraphicsEngine::getInstance()->getRenderSystem()->getImmediateDeviceContext()->setRenderTargets(this->rtv_first, this->dsv_first);
+	if(POST_PROCESSING_ON) GraphicsEngine::getInstance()->getRenderSystem()->getImmediateDeviceContext()->setRenderTargets(this->rtv_first, this->dsv_first);
+	else
+	{
+		GraphicsEngine::getInstance()->getRenderSystem()->getImmediateDeviceContext()->setRenderTargets(m_swap_chain->getRenderTargetView(), m_swap_chain->getDepthStencilView());
+	}
 
 	GameObjectManager::getInstance()->updateAll(EngineTime::getDeltaTime());
 	GameObjectManager::getInstance()->drawAll(windowRect);
 
-	// Loop over the post-processing passes
-	int read = 0;  // Reading from first render texture initially
-	int write = 1; // Writing to second render texture
+	if(POST_PROCESSING_ON){
+		// Loop over the post-processing passes
+		int read = 0;  // Reading from first render texture initially
+		int write = 1; // Writing to second render texture
 	
-	//post-processing stage ----------------------------------------------------------------------
+		//post-processing stage ----------------------------------------------------------------------
 
-	ID3D11RenderTargetView* NULL_RT = nullptr;
-	GraphicsEngine::getInstance()->getRenderSystem()->getImmediateDeviceContext()->setRenderTargets(NULL_RT, nullptr);
-	GraphicsEngine::getInstance()->getRenderSystem()->DisableDepthTest();
-	GraphicsEngine::getInstance()->getRenderSystem()->getImmediateDeviceContext()->setSamplerState(m_ss);
-
-	//chromatic abberation
-	{
-		GraphicsEngine::getInstance()->getRenderSystem()->getImmediateDeviceContext()->setRenderTargets(rtvList[write], nullptr);
-
-		GraphicsEngine::getInstance()->getRenderSystem()->getImmediateDeviceContext()->setVertexShader(fsquad_vs);
-		GraphicsEngine::getInstance()->getRenderSystem()->getImmediateDeviceContext()->setPixelShader(ppList[0]);
-
-		GraphicsEngine::getInstance()->getRenderSystem()->getImmediateDeviceContext()->setShaderResources(0, 1, &srvList[read]);
-
-		renderFullScreenQuad();
-
+		ID3D11RenderTargetView* NULL_RT = nullptr;
 		GraphicsEngine::getInstance()->getRenderSystem()->getImmediateDeviceContext()->setRenderTargets(NULL_RT, nullptr);
-		GraphicsEngine::getInstance()->getRenderSystem()->getImmediateDeviceContext()->unbindShaderResources();
-	}
+		GraphicsEngine::getInstance()->getRenderSystem()->DisableDepthTest();
+		GraphicsEngine::getInstance()->getRenderSystem()->getImmediateDeviceContext()->setSamplerState(m_ss);
 
-	std::swap(read, write);
+		//chromatic abberation
+		{
+			GraphicsEngine::getInstance()->getRenderSystem()->getImmediateDeviceContext()->setRenderTargets(rtvList[write], nullptr);
 
-	//vignette
-	{
+			GraphicsEngine::getInstance()->getRenderSystem()->getImmediateDeviceContext()->setVertexShader(fsquad_vs);
+			GraphicsEngine::getInstance()->getRenderSystem()->getImmediateDeviceContext()->setPixelShader(ppList[0]);
+
+			GraphicsEngine::getInstance()->getRenderSystem()->getImmediateDeviceContext()->setShaderResources(0, 1, &srvList[read]);
+
+			renderFullScreenQuad();
+
+			GraphicsEngine::getInstance()->getRenderSystem()->getImmediateDeviceContext()->setRenderTargets(NULL_RT, nullptr);
+			GraphicsEngine::getInstance()->getRenderSystem()->getImmediateDeviceContext()->unbindShaderResources();
+		}
+
+		std::swap(read, write);
+
+		//vignette
+		{
+			GraphicsEngine::getInstance()->getRenderSystem()->getImmediateDeviceContext()->setRenderTargets(m_swap_chain->getRenderTargetView(), m_swap_chain->getDepthStencilView());
+	
+			GraphicsEngine::getInstance()->getRenderSystem()->getImmediateDeviceContext()->setVertexShader(fsquad_vs);
+			GraphicsEngine::getInstance()->getRenderSystem()->getImmediateDeviceContext()->setPixelShader(ppList[1]);
+
+			GraphicsEngine::getInstance()->getRenderSystem()->getImmediateDeviceContext()->setShaderResources(0, 1, &srvList[read]);
+
+			constant_vignette cc;
+			cc.vignetteRadius = 0.9f;
+			cc.vignetteStrength = 0.5f;
+
+			fsquad_cb->load(&cc, sizeof(constant));
+
+			GraphicsEngine::getInstance()->getRenderSystem()->getImmediateDeviceContext()->setConstantBuffer(fsquad_vs, fsquad_cb);
+			GraphicsEngine::getInstance()->getRenderSystem()->getImmediateDeviceContext()->setConstantBuffer(ppList[0],fsquad_cb);
+			fsquad_cb->update(GraphicsEngine::getInstance()->getRenderSystem()->getImmediateDeviceContext(),&cc);
+
+			renderFullScreenQuad();
+
+			GraphicsEngine::getInstance()->getRenderSystem()->getImmediateDeviceContext()->setRenderTargets(NULL_RT, nullptr);
+			GraphicsEngine::getInstance()->getRenderSystem()->getImmediateDeviceContext()->unbindShaderResources();
+		}
+
 		GraphicsEngine::getInstance()->getRenderSystem()->getImmediateDeviceContext()->setRenderTargets(m_swap_chain->getRenderTargetView(), m_swap_chain->getDepthStencilView());
-	
-		GraphicsEngine::getInstance()->getRenderSystem()->getImmediateDeviceContext()->setVertexShader(fsquad_vs);
-		GraphicsEngine::getInstance()->getRenderSystem()->getImmediateDeviceContext()->setPixelShader(ppList[1]);
-
-		GraphicsEngine::getInstance()->getRenderSystem()->getImmediateDeviceContext()->setShaderResources(0, 1, &srvList[read]);
-
-		constant_vignette cc;
-		cc.vignetteRadius = 0.9f;
-		cc.vignetteStrength = 0.5f;
-
-		fsquad_cb->load(&cc, sizeof(constant));
-
-		GraphicsEngine::getInstance()->getRenderSystem()->getImmediateDeviceContext()->setConstantBuffer(fsquad_vs, fsquad_cb);
-		GraphicsEngine::getInstance()->getRenderSystem()->getImmediateDeviceContext()->setConstantBuffer(ppList[0],fsquad_cb);
-		fsquad_cb->update(GraphicsEngine::getInstance()->getRenderSystem()->getImmediateDeviceContext(),&cc);
-
-		renderFullScreenQuad();
-
-		GraphicsEngine::getInstance()->getRenderSystem()->getImmediateDeviceContext()->setRenderTargets(NULL_RT, nullptr);
-		GraphicsEngine::getInstance()->getRenderSystem()->getImmediateDeviceContext()->unbindShaderResources();
 	}
-
-	GraphicsEngine::getInstance()->getRenderSystem()->getImmediateDeviceContext()->setRenderTargets(m_swap_chain->getRenderTargetView(), m_swap_chain->getDepthStencilView());
 
 	UIManager::getInstance()->draw();
 

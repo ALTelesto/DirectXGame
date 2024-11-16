@@ -1,24 +1,24 @@
-#include "Material.h"
+#include "MaterialResource.h"
 
 #include "GraphicsEngine.h"
 #include "LogUtils.h"
 
-Material::Material(PixelShaderPtr pixelShader, VertexShaderPtr vertexShader) :
+MaterialResource::MaterialResource(PixelShaderPtr pixelShader, VertexShaderPtr vertexShader) :
 pixelShader(pixelShader), vertexShader(vertexShader)
 {
 }
 
-void Material::setPixelShader(PixelShaderPtr pixelShader)
+void MaterialResource::setPixelShader(PixelShaderPtr pixelShader)
 {
 	this->pixelShader = pixelShader;
 }
 
-void Material::setVertexShader(VertexShaderPtr vertexShader)
+void MaterialResource::setVertexShader(VertexShaderPtr vertexShader)
 {
 	this->vertexShader = vertexShader;
 }
 
-void Material::setPixelShader(const std::string& pixelShaderName)
+void MaterialResource::setPixelShader(const std::string& pixelShaderName)
 {
 	void* shaderByteCode = nullptr;
 	size_t byteCodeSize = 0;
@@ -32,7 +32,7 @@ void Material::setPixelShader(const std::string& pixelShaderName)
 	GraphicsEngine::getInstance()->getRenderSystem()->releaseCompiledShader();
 }
 
-void Material::setVertexShader(const std::string& vertexShaderName)
+void MaterialResource::setVertexShader(const std::string& vertexShaderName)
 {
 	void* shaderByteCode = nullptr;
 	size_t byteCodeSize = 0;

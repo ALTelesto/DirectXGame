@@ -96,10 +96,10 @@ void Cube::update(float deltaTime)
 	this->setRotation(rotSpeed, rotSpeed, rotSpeed);
 }
 
-void Cube::draw(const RECT clientWindow)
-{
-	AGameObject::draw(clientWindow);
-}
+//void Cube::draw(const RECT clientWindow)
+//{
+//	AGameObject::draw(clientWindow);
+//}
 
 void Cube::setAnimSpeed(float speed)
 {

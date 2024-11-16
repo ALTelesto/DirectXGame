@@ -8,7 +8,7 @@
 #include "VertexShader.h"
 #include "PixelShader.h"
 #include "SamplerState.h"
-#include "Material.h"
+#include "MaterialResource.h"
 #include <exception>
 
 DeviceContext::DeviceContext(ID3D11DeviceContext* device_context, RenderSystem* system):m_device_context(device_context), m_system(system)

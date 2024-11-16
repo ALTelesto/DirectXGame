@@ -8,12 +8,12 @@
 #include "Vector3D.h"
 #include "Vector4D.h"
 
-class Material
+class MaterialResource
 {
 	typedef Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> TexturePtr;
 
 public:
-	Material(PixelShaderPtr pixelShader, VertexShaderPtr vertexShader);
+	MaterialResource(PixelShaderPtr pixelShader, VertexShaderPtr vertexShader);
 
 	void setPixelShader(PixelShaderPtr pixelShader);
 	void setPixelShader(const std::string& pixelShaderName);
@@ -21,7 +21,6 @@ public:
 	void setVertexShader(VertexShaderPtr vertexShader);
 	void setVertexShader(const std::string& vertexShaderName);
 
-private:
 	PixelShaderPtr pixelShader = nullptr;
 	VertexShaderPtr vertexShader = nullptr;
 
@@ -40,12 +39,5 @@ private:
 
 	Vector2D tiling = 0;
 	Vector2D offset = 0;
-
-	friend class MaterialEditor;
-	friend class DeviceContext;
-	friend class AGameObject;
-	friend class Cube;
-	friend class Plane;
-	friend class AppWindow;
 };
 

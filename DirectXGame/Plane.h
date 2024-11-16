@@ -12,7 +12,7 @@ public:
     ~Plane();
 
     void update(float deltaTime) override;
-    void draw(const RECT clientWindow) override;
+    //void draw(const RECT clientWindow) override;
 
 private:
     float deltaTime = 0.0f;

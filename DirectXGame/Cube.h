@@ -12,7 +12,7 @@ public:
 	~Cube();
 
 	void update(float deltaTime) override;
-	void draw(const RECT clientWindow) override;
+	//void draw(const RECT clientWindow) override;
 	void setAnimSpeed(float speed);
 
 private:

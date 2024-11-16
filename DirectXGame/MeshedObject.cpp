@@ -34,7 +34,7 @@ void MeshedObject::update(float deltaTime)
 {
 	if (!hasSetBaseScale)
 	{
-		this->baseScale = this->getLocalScale().m_x;
+		this->baseScale = this->getLocalScale().x;
 		hasSetBaseScale = true;
 	}
 

@@ -1,10 +1,15 @@
 #pragma once
 #include <string>
+#include <reactphysics3d/mathematics/Transform.h>
+
 #include "Vector3D.h"
 #include "Matrix4x4.h"
 #include "Prerequisites.h"
 
-#include "Material.h"
+#include "MaterialResource.h"
+
+#include "AComponent.h"
+#include "PhysicsSystem.h"
 
 using namespace std;
 
@@ -32,10 +37,22 @@ public:
 	void setRotation(Vector3D rot);
 	Vector3D getLocalRotation();
 
+	void updateLocalMatrix();
+
 	string getName();
 
 	void setMaterial(MaterialPtr material);
 	MaterialPtr getMaterial();
+
+	void setPhysicsLocalMatrix(float physicsLocalMatrix[16]);
+	float* getPhysicsLocalMatrix();
+
+	void attachComponent(AComponent* component);
+	void detachComponent(AComponent* component);
+
+	AComponent* findComponentByName(std::string name);
+	AComponent* findComponentOfType(AComponent::ComponentType type);
+	ComponentList getComponentsOfType(AComponent::ComponentType type);
 
 	struct vec2 {
 		vec2(float _x, float _y):x(_x), y(_y){}
@@ -91,5 +108,9 @@ protected:
 	Matrix4x4 localMatrix;
 
 	MaterialPtr material;
+
+	ComponentList componentList;
+
+	virtual void awake();
 };
 

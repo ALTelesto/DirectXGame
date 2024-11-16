@@ -57,7 +57,7 @@ void Plane::update(float deltaTime)
 	this->setRotation(rotSpeed, rotSpeed, rotSpeed);*/
 }
 
-void Plane::draw(const RECT clientWindow)
-{
-	AGameObject::draw(clientWindow);
-}
+//void Plane::draw(const RECT clientWindow)
+//{
+//	AGameObject::draw(clientWindow);
+//}

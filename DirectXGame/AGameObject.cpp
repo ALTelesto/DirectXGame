@@ -1,7 +1,13 @@
 #include "AGameObject.h"
 
+#include <cmath>
+
 #include "AppWindow.h"
 #include "LogUtils.h"
+
+#ifndef M_PI
+#define M_PI 3.14159265358979323846 // Define pi if not defined
+#endif
 
 AGameObject::AGameObject(string name)
 {
@@ -46,27 +52,7 @@ void AGameObject::draw(const RECT clientWindow)
 	Vector3D rotation = this->getLocalRotation();
 	Vector3D position = this->getLocalPosition();
 
-	cbData.worldMatrix.setIdentity();
-	cbData.worldMatrix.setScale(this->getLocalScale());
-
-	Matrix4x4 rotMatrix;
-	rotMatrix.setIdentity();
-
-	rotMatrix.setRotationZ(rotation.m_z);
-	cbData.worldMatrix *= rotMatrix;
-
-	rotMatrix.setIdentity();
-	rotMatrix.setRotationY(rotation.m_y);
-	cbData.worldMatrix *= rotMatrix;
-
-	rotMatrix.setIdentity();
-	rotMatrix.setRotationX(rotation.m_x);
-	cbData.worldMatrix *= rotMatrix;
-
-	Matrix4x4 translationMatrix;
-	translationMatrix.setIdentity();
-	translationMatrix.setTranslation(position);
-	cbData.worldMatrix *= translationMatrix;
+	cbData.worldMatrix = this->localMatrix;
 
 	Matrix4x4 temp = SceneCameraHandler::getInstance()->getSceneCameraViewMatrix();
 	cbData.viewMatrix = temp;
@@ -114,11 +100,13 @@ bool AGameObject::isActive()
 void AGameObject::setPosition(float x, float y, float z)
 {
 	this->localPosition = Vector3D(x, y, z);
+	updateLocalMatrix();
 }
 
 void AGameObject::setPosition(Vector3D pos)
 {
 	this->localPosition = pos;
+	updateLocalMatrix();
 }
 
 Vector3D AGameObject::getLocalPosition()
@@ -129,11 +117,13 @@ Vector3D AGameObject::getLocalPosition()
 void AGameObject::setScale(float x, float y, float z)
 {
 	this->localScale = Vector3D(x, y, z);
+	updateLocalMatrix();
 }
 
 void AGameObject::setScale(Vector3D scale)
 {
 	this->localScale = scale;
+	updateLocalMatrix();
 }
 
 Vector3D AGameObject::getLocalScale()
@@ -143,17 +133,50 @@ Vector3D AGameObject::getLocalScale()
 
 void AGameObject::setRotation(float x, float y, float z)
 {
-	this->localRotation = Vector3D(x, y, z);
+	float radX = x * static_cast<float>(M_PI) / 180.0f;
+	float radY = y * static_cast<float>(M_PI) / 180.0f;
+	float radZ = z * static_cast<float>(M_PI) / 180.0f;
+	this->localRotation = Vector3D(radX, radY, radZ);
+	updateLocalMatrix();
 }
 
 void AGameObject::setRotation(Vector3D rot)
 {
-	this->localPosition = rot;
+	Vector3D radRot(rot.x * static_cast<float>(M_PI) / 180.0f,
+		rot.y * static_cast<float>(M_PI) / 180.0f,
+		rot.z * static_cast<float>(M_PI) / 180.0f);
+	this->localPosition = radRot;
+	updateLocalMatrix();
 }
 
 Vector3D AGameObject::getLocalRotation()
 {
 	return this->localRotation;
+}
+
+void AGameObject::updateLocalMatrix()
+{
+	this->localMatrix.setIdentity();
+	this->localMatrix.setScale(this->getLocalScale());
+
+	Matrix4x4 rotationMatrix;
+	rotationMatrix.setIdentity();
+
+	rotationMatrix.setRotationZ(this->getLocalRotation().z);
+	this->localMatrix *= rotationMatrix;
+
+	rotationMatrix.setIdentity();
+	rotationMatrix.setRotationY(this->getLocalRotation().y);
+	this->localMatrix *= rotationMatrix;
+
+	rotationMatrix.setIdentity();
+	rotationMatrix.setRotationX(this->getLocalRotation().x);
+	this->localMatrix *= rotationMatrix;
+
+	Matrix4x4 translationMatrix;
+	translationMatrix.setIdentity();
+	translationMatrix.setTranslation(this->getLocalPosition());
+	this->localMatrix *= translationMatrix;
 }
 
 string AGameObject::getName()
@@ -170,4 +193,110 @@ void AGameObject::setMaterial(MaterialPtr material)
 MaterialPtr AGameObject::getMaterial()
 {
 	return material;
+}
+
+void AGameObject::setPhysicsLocalMatrix(float physicsLocalMatrix[16])
+{
+	float transposedMatrix[16];
+	for (int row = 0; row < 4; ++row) {
+		for (int col = 0; col < 4; ++col) {
+			transposedMatrix[row * 4 + col] = physicsLocalMatrix[col * 4 + row];
+		}
+	}
+	this->localMatrix.fromFloatArray(transposedMatrix);
+}
+
+float* AGameObject::getPhysicsLocalMatrix()
+{
+	float rowMajorArray[16];
+	this->localMatrix.toFloatArray(rowMajorArray);
+
+	static float columnMajorArray[16];
+	for (int row = 0; row < 4; ++row) {
+		for (int col = 0; col < 4; ++col) {
+			columnMajorArray[col * 4 + row] = rowMajorArray[row * 4 + col];
+		}
+	}
+
+	LogUtils::log("column");
+	for(float x : columnMajorArray)
+	{
+		LogUtils::log(std::to_string(x));
+	}
+
+	LogUtils::log("row");
+	for (float x : rowMajorArray)
+	{
+		LogUtils::log(std::to_string(x));
+	}
+
+	return columnMajorArray;
+}
+
+void AGameObject::attachComponent(AComponent* component)
+{
+	this->componentList.push_back(component);
+}
+
+void AGameObject::detachComponent(AComponent* component)
+{
+	int index = -1;
+	for (int i = 0; i < this->componentList.size(); i++)
+	{
+		if (this->componentList[i] == component)
+		{
+			index = i;
+			break;
+		}
+	}
+
+	if (index != -1)
+	{
+		this->componentList.erase(this->componentList.begin() + index);
+	}
+	else
+	{
+		LogUtils::log(this, "No component detached: component not found");
+	}
+}
+
+AComponent* AGameObject::findComponentByName(std::string name)
+{
+	for (AComponent* component : componentList)
+	{
+		if (component->getName() == name)
+		{
+			return component;
+		}
+	}
+	return nullptr;
+}
+
+AComponent* AGameObject::findComponentOfType(AComponent::ComponentType type)
+{
+	for (AComponent* component : componentList)
+	{
+		if (component->getType() == type)
+		{
+			return component;
+		}
+	}
+	return nullptr;
+}
+
+ComponentList AGameObject::getComponentsOfType(AComponent::ComponentType type)
+{
+	ComponentList foundComponentsList;
+	for(AComponent* component : componentList)
+	{
+		if(component->getType() == type)
+		{
+			foundComponentsList.push_back(component);
+		}
+	}
+	return foundComponentsList;
+}
+
+void AGameObject::awake()
+{
 }

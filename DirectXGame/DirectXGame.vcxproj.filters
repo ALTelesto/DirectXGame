@@ -106,6 +106,24 @@
     <Filter Include="GameEngine\GraphicsEngine\RenderSystem\MeshManager\Mesh">
       <UniqueIdentifier>{542c927f-93be-489e-853a-f715ec6baeb8}</UniqueIdentifier>
     </Filter>
+    <Filter Include="GameEngine\GameObjects\GameObjectManager">
+      <UniqueIdentifier>{07f8ef42-b65d-4e47-95ed-d139d8fe92f8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="GameEngine\GameObjects\RigidBody">
+      <UniqueIdentifier>{81ff690d-11ba-49bf-9020-5ace912f9394}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="GameEngine\ComponentSystem">
+      <UniqueIdentifier>{fca0ce79-6bf7-4b3c-9297-e5412c86b4e0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="GameEngine\ComponentSystem\Components">
+      <UniqueIdentifier>{c517781b-c710-4c0d-b20e-bd087b70b855}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="GameEngine\ComponentSystem\Components\Physics">
+      <UniqueIdentifier>{1d6952cf-ae38-451f-b7ed-fe737b97e454}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="GameEngine\ComponentSystem\PhysicsSystem">
+      <UniqueIdentifier>{6f3fbc30-43b2-403f-a290-49200d27af1f}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -183,9 +201,6 @@
     <ClCompile Include="MenuScreen.cpp">
       <Filter>GameEngine\UIManager\Screens</Filter>
     </ClCompile>
-    <ClCompile Include="GameObjectManager.cpp">
-      <Filter>GameEngine\GameObjects</Filter>
-    </ClCompile>
     <ClCompile Include="Plane.cpp">
       <Filter>GameEngine\GameObjects\Primitives</Filter>
     </ClCompile>
@@ -198,7 +213,7 @@
     <ClCompile Include="Camera.cpp">
       <Filter>GameEngine\GameObjects\Camera</Filter>
     </ClCompile>
-    <ClCompile Include="Material.cpp">
+    <ClCompile Include="MaterialResource.cpp">
       <Filter>GameEngine\GraphicsEngine\RenderSystem\Material</Filter>
     </ClCompile>
     <ClCompile Include="ShaderLibrary.cpp">
@@ -219,7 +234,31 @@
     <ClCompile Include="Mesh.cpp">
       <Filter>GameEngine\GraphicsEngine\RenderSystem\MeshManager\Mesh</Filter>
     </ClCompile>
-    <ClCompile Include="MeshedObject.cpp" />
+    <ClCompile Include="MeshedObject.cpp">
+      <Filter>GameEngine\GameObjects\Primitives</Filter>
+    </ClCompile>
+    <ClCompile Include="GameObjectManager.cpp">
+      <Filter>GameEngine\GameObjects\GameObjectManager</Filter>
+    </ClCompile>
+    <ClCompile Include="PhysicsSystem.cpp">
+      <Filter>GameEngine\ComponentSystem\PhysicsSystem</Filter>
+    </ClCompile>
+    <ClCompile Include="AComponent.cpp">
+      <Filter>GameEngine\ComponentSystem\Components</Filter>
+    </ClCompile>
+    <ClCompile Include="BaseComponentSystem.cpp">
+      <Filter>GameEngine\ComponentSystem</Filter>
+    </ClCompile>
+    <ClCompile Include="BaseSystem.cpp">
+      <Filter>GameEngine\ComponentSystem</Filter>
+    </ClCompile>
+    <ClCompile Include="PhysicsComponent.cpp">
+      <Filter>GameEngine\ComponentSystem\Components\Physics</Filter>
+    </ClCompile>
+    <ClCompile Include="RigidBodyPlane.cpp">
+      <Filter>GameEngine\GameObjects\RigidBody</Filter>
+    </ClCompile>
+    <ClCompile Include="RigidBodyCube.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="AppWindow.h">
@@ -327,9 +366,6 @@
     <ClInclude Include="LogUtils.h">
       <Filter>GameEngine\Utilities</Filter>
     </ClInclude>
-    <ClInclude Include="GameObjectManager.h">
-      <Filter>GameEngine\GameObjects</Filter>
-    </ClInclude>
     <ClInclude Include="Plane.h">
       <Filter>GameEngine\GameObjects\Primitives</Filter>
     </ClInclude>
@@ -345,7 +381,7 @@
     <ClInclude Include="EPrimitive.h">
       <Filter>GameEngine\GameObjects\Primitives</Filter>
     </ClInclude>
-    <ClInclude Include="Material.h">
+    <ClInclude Include="MaterialResource.h">
       <Filter>GameEngine\GraphicsEngine\RenderSystem\Material</Filter>
     </ClInclude>
     <ClInclude Include="ShaderLibrary.h">
@@ -372,7 +408,31 @@
     <ClInclude Include="VertexMesh.h">
       <Filter>GameEngine\GraphicsEngine\RenderSystem\MeshManager\Mesh</Filter>
     </ClInclude>
-    <ClInclude Include="MeshedObject.h" />
+    <ClInclude Include="MeshedObject.h">
+      <Filter>GameEngine\GameObjects\Primitives</Filter>
+    </ClInclude>
+    <ClInclude Include="GameObjectManager.h">
+      <Filter>GameEngine\GameObjects\GameObjectManager</Filter>
+    </ClInclude>
+    <ClInclude Include="PhysicsSystem.h">
+      <Filter>GameEngine\ComponentSystem\PhysicsSystem</Filter>
+    </ClInclude>
+    <ClInclude Include="AComponent.h">
+      <Filter>GameEngine\ComponentSystem\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="BaseSystem.h">
+      <Filter>GameEngine\ComponentSystem</Filter>
+    </ClInclude>
+    <ClInclude Include="BaseComponentSystem.h">
+      <Filter>GameEngine\ComponentSystem</Filter>
+    </ClInclude>
+    <ClInclude Include="PhysicsComponent.h">
+      <Filter>GameEngine\ComponentSystem\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="RigidBodyPlane.h">
+      <Filter>GameEngine\GameObjects\RigidBody</Filter>
+    </ClInclude>
+    <ClInclude Include="RigidBodyCube.h" />
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="shader.fx">

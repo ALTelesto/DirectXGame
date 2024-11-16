@@ -21,16 +21,16 @@ public:
 
 	void setTranslation(const Vector3D& translation)
 	{
-		m_mat[3][0] = translation.m_x;
-		m_mat[3][1] = translation.m_y;
-		m_mat[3][2] = translation.m_z;
+		m_mat[3][0] = translation.x;
+		m_mat[3][1] = translation.y;
+		m_mat[3][2] = translation.z;
 	}
 
 	void setScale(const Vector3D& scale)
 	{
-		m_mat[0][0] = scale.m_x;
-		m_mat[1][1] = scale.m_y;
-		m_mat[2][2] = scale.m_z;
+		m_mat[0][0] = scale.x;
+		m_mat[1][1] = scale.y;
+		m_mat[2][2] = scale.z;
 	}
 
 	void setRotationX(float x)
@@ -160,6 +160,28 @@ public:
 		m_mat[1][1] = 2.0f / height;
 		m_mat[2][2] = 1.0f / (far_plane - near_plane);
 		m_mat[3][2] = -(near_plane / (far_plane - near_plane));
+	}
+
+	void toFloatArray(float* outArray) const
+	{
+		for (int col = 0; col < 4; ++col)
+		{
+			for (int row = 0; row < 4; ++row)
+			{
+				outArray[col * 4 + row] = m_mat[row][col];
+			}
+		}
+	}
+
+	void fromFloatArray(const float* inArray)
+	{
+		for (int col = 0; col < 4; ++col)
+		{
+			for (int row = 0; row < 4; ++row)
+			{
+				m_mat[row][col] = inArray[col * 4 + row];
+			}
+		}
 	}
 
 	~Matrix4x4()

@@ -22,16 +22,16 @@ void Camera::update(float deltaTime)
 	Vector3D localRot = this->getLocalRotation();
 
 	temp.setIdentity();
-	temp.setRotationX(localRot.m_x);
+	temp.setRotationX(localRot.x);
 	worldCam *= temp;
 
 	temp.setIdentity();
-	temp.setRotationY(localRot.m_y);
+	temp.setRotationY(localRot.y);
 	worldCam *= temp;
 
 	Vector3D new_pos = getLocalPosition() + worldCam.getZDirection() * (forward * speed);
 	new_pos = new_pos + worldCam.getXDirection() * (rightward * speed);
-	new_pos.m_y += (upward * speed);
+	new_pos.y += (upward * speed);
 	this->localPosition = new_pos;
 	worldCam.setTranslation(new_pos);
 
@@ -95,8 +95,8 @@ void Camera::onMouseMove(const Point& delta_mouse_pos)
 	rot_x += (delta_mouse_pos.m_y - (AppWindow::getInstance()->getHeight() / 2.0f)) * EngineTime::getDeltaTime() * 0.1f;
 	rot_y += (delta_mouse_pos.m_x - (AppWindow::getInstance()->getWidth() / 2.0f)) * EngineTime::getDeltaTime() * 0.1f;
 
-	this->localRotation.m_x = this->rot_x;
-	this->localRotation.m_y = this->rot_y;
+	this->localRotation.x = this->rot_x;
+	this->localRotation.y = this->rot_y;
 }
 
 void Camera::onLeftMouseDown(const Point& mouse_pos)
