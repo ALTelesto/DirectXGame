@@ -36,3 +36,6 @@ typedef std::shared_ptr<MaterialResource> MaterialPtr;
 typedef std::shared_ptr<Resource> ResourcePtr;
 typedef std::shared_ptr<Mesh> MeshPtr;
 typedef std::shared_ptr<MeshedObject> MeshedObjectPtr;
+
+typedef std::vector<GameObjectPtr> GameObjectList;
+typedef std::unordered_map<std::string, GameObjectPtr> GameObjectHashMap;

@@ -145,7 +145,7 @@ void AGameObject::setRotation(Vector3D rot)
 	Vector3D radRot(rot.x * static_cast<float>(M_PI) / 180.0f,
 		rot.y * static_cast<float>(M_PI) / 180.0f,
 		rot.z * static_cast<float>(M_PI) / 180.0f);
-	this->localPosition = radRot;
+	this->localRotation = radRot;
 	updateLocalMatrix();
 }
 

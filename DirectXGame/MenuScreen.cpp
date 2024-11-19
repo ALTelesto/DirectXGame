@@ -1,6 +1,7 @@
 #include "MenuScreen.h"
 
 #include "BaseComponentSystem.h"
+#include "Cube.h"
 #include "GraphicsEngine.h"
 
 #include "LogUtils.h"
@@ -41,6 +42,10 @@ void MenuScreen::draw()
 	}
 
 	if (ImGui::BeginMenu("Game Object")) {
+		if (ImGui::MenuItem("Create Cube"))
+		{
+			onCreateCubeClicked();
+		}
 		if (ImGui::MenuItem("Create Plane"))
 		{
 			onCreatePlaneClicked();
@@ -58,6 +63,8 @@ void MenuScreen::draw()
 
 	if (ImGui::BeginMenu("Windows"))
 	{
+		if (ImGui::MenuItem("Object List", nullptr, isObjectListOpen)) isObjectListOpen = !isObjectListOpen;
+		if (ImGui::MenuItem("Inspector", nullptr, isInspectorOpen)) isInspectorOpen = !isInspectorOpen;
 		if (ImGui::MenuItem("Color Picker", nullptr, isColorPickerOpen)) isColorPickerOpen = !isColorPickerOpen;
 		ImGui::EndMenu();
 	}
@@ -73,6 +80,27 @@ void MenuScreen::draw()
 		showCreditsWindow();
 	if (isColorPickerOpen)
 		showColorPickerWindow();
+	if (isObjectListOpen)
+		showObjectList();
+	if (isInspectorOpen)
+		showInspector();
+}
+
+void MenuScreen::onCreateCubeClicked()
+{
+	if (!isMaterialInitialized) initializeMaterial();
+
+	void* shader_byte_code = nullptr;
+	size_t size_shader = 0;
+
+	ShaderLibrary::getInstance()->requestVertexShaderData(L"ShadedVertex.hlsl", &shader_byte_code, &size_shader);
+	GameObjectPtr cube = std::make_shared<Cube>("Cube", shader_byte_code, size_shader);
+	cube->setMaterial(defaultMaterial);
+	cube->setScale(0.2, 0.2, 0.2);
+	cube->setRotation(0, 0, 0);
+	static_cast<Cube*>(cube.get())->setAnimSpeed(0);
+
+	GameObjectManager::getInstance()->addObject(cube);
 }
 
 void MenuScreen::onCreatePlaneClicked()
@@ -136,7 +164,7 @@ void MenuScreen::onCreateRigidBodyPlaneClicked()
 
 	PhysicsComponent* physicsComponent = new PhysicsComponent(name + "Physics component", rigidBodyPlane.get());
 	physicsComponent->attachOwner(rigidBodyPlane.get());
-	physicsComponent->getRigidBody()->setType(BodyType::KINEMATIC);
+	physicsComponent->getRigidBody()->setType(BodyType::STATIC);
 	BaseComponentSystem::getInstance()->getPhysicsSystem()->registerComponent(physicsComponent);
 	
 
@@ -176,6 +204,51 @@ void MenuScreen::showColorPickerWindow()
 	{
 		static ImVec4 color(1.0f, 0.0f, 1.0f, 0.5f);
 		ImGui::ColorPicker4("Color##4", reinterpret_cast<float*>(&color), 0);
+	}
+	ImGui::End();
+}
+
+void MenuScreen::showObjectList()
+{
+	gameObjectMap = GameObjectManager::getInstance()->getObjectHashMap();
+	if (ImGui::Begin("Object List", &isObjectListOpen))
+	{
+		for(std::pair<std::string, GameObjectPtr> pair : gameObjectMap)
+		{
+			if(ImGui::Button(pair.first.data()))
+			{
+				selectedGameObject = pair.second;
+				position = selectedGameObject->getLocalPosition();
+				rotation = selectedGameObject->getLocalRotation();
+				scale = selectedGameObject->getLocalScale();
+			}
+		}
+	}
+	ImGui::End();
+}
+void MenuScreen::showInspector()
+{
+	if (ImGui::Begin("Inspector", &isObjectListOpen))
+	{
+		if(selectedGameObject != nullptr)
+		{
+			float pos[3] = { position.x,position.y,position.z };
+			float rot[3] = { rotation.x,rotation.y,rotation.z };
+			float sca[3] = { scale.x,scale.y,scale.z };
+
+			ImGui::Text(selectedGameObject->getName().data());
+			ImGui::SliderFloat3("Position", pos,-10,10);
+			ImGui::SliderFloat3("Rotation", rot, -360, 360);
+			ImGui::SliderFloat3("Scale", sca, -5, 5);
+
+			position.x = pos[0]; position.y = pos[1]; position.z = pos[2];
+			rotation.x = rot[0]; rotation.y = rot[1]; rotation.z = rot[2];
+			scale.x = sca[0]; scale.y = sca[1]; scale.z = sca[2];
+
+			selectedGameObject->setPosition(position);
+			selectedGameObject->setRotation(rotation);
+			selectedGameObject->setScale(scale);
+		}
 	}
 	ImGui::End();
 }

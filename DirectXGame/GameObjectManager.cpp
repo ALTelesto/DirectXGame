@@ -33,6 +33,11 @@ GameObjectList GameObjectManager::getAllObjects()
 	return gameObjectList;
 }
 
+GameObjectHashMap GameObjectManager::getObjectHashMap()
+{
+	return gameObjectMap;
+}
+
 int GameObjectManager::activeObjects() const
 {
 	return static_cast<int>(gameObjectList.size());

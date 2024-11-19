@@ -4,9 +4,6 @@
 #include "AGameObject.h"
 #include "EPrimitive.h"
 
-typedef std::vector<GameObjectPtr> GameObjectList;
-typedef std::unordered_map<std::string, GameObjectPtr> GameObjectHashMap;
-
 class GameObjectManager
 {
 public:
@@ -17,6 +14,7 @@ public:
 public:
 	GameObjectPtr findObjectByName(const std::string& name);
 	GameObjectList getAllObjects();
+	GameObjectHashMap getObjectHashMap();
 	int activeObjects() const;
 
 	void updateAll(float deltaTime);
