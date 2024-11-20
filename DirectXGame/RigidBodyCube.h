@@ -9,5 +9,7 @@ public:
 
 	void update(float deltaTime) override;
 	void draw(const RECT clientWindow) override;
+
+	void updateLocalMatrix() override;
 };
 

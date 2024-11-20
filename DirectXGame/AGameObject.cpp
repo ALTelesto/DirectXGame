@@ -5,6 +5,8 @@
 #include "AppWindow.h"
 #include "LogUtils.h"
 
+#include "EditorAction.h"
+
 #ifndef M_PI
 #define M_PI 3.14159265358979323846 // Define pi if not defined
 #endif
@@ -179,6 +181,21 @@ void AGameObject::updateLocalMatrix()
 	this->localMatrix *= translationMatrix;
 }
 
+void AGameObject::setLocalMatrix(Matrix4x4 matrix)
+{
+	this->localMatrix = matrix;
+}
+
+Matrix4x4 AGameObject::getLocalMatrix()
+{
+	return this->localMatrix;
+}
+
+void AGameObject::setName(string name)
+{
+	this->name = name;
+}
+
 string AGameObject::getName()
 {
 	return this->name;
@@ -295,6 +312,14 @@ ComponentList AGameObject::getComponentsOfType(AComponent::ComponentType type)
 		}
 	}
 	return foundComponentsList;
+}
+
+void AGameObject::setState(EditorAction* action)
+{
+	this->setPosition(action->getStoredPos());
+	this->setRotation(action->getStoredRotation());
+	this->setScale(action->getStoredScale());
+	this->setLocalMatrix(action->getStoredMatrix());
 }
 
 void AGameObject::awake()

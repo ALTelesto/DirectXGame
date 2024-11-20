@@ -28,6 +28,9 @@ public:
 	void setSelectedObject(GameObjectPtr gameObject);
 	GameObjectPtr getSelectedObject();
 
+	void saveEditStates();
+	void restoreEditStates();
+
 private:
 	GameObjectManager();
 	~GameObjectManager();
@@ -37,6 +40,8 @@ private:
 
 	GameObjectHashMap gameObjectMap;
 	GameObjectList gameObjectList;
+
+	ActionStack editStates;
 
 	GameObjectPtr selectedObject = nullptr;
 };

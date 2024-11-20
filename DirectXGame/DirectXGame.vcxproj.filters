@@ -124,6 +124,9 @@
     <Filter Include="GameEngine\ComponentSystem\PhysicsSystem">
       <UniqueIdentifier>{6f3fbc30-43b2-403f-a290-49200d27af1f}</UniqueIdentifier>
     </Filter>
+    <Filter Include="GameEngine\EngineBackend">
+      <UniqueIdentifier>{4f50b6e6-d4c2-4e24-a193-733eb9362507}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -258,7 +261,14 @@
     <ClCompile Include="RigidBodyPlane.cpp">
       <Filter>GameEngine\GameObjects\RigidBody</Filter>
     </ClCompile>
-    <ClCompile Include="RigidBodyCube.cpp" />
+    <ClCompile Include="RigidBodyCube.cpp">
+      <Filter>GameEngine\GameObjects\RigidBody</Filter>
+    </ClCompile>
+    <ClCompile Include="EngineBackend.cpp">
+      <Filter>GameEngine\EngineBackend</Filter>
+    </ClCompile>
+    <ClCompile Include="EditorAction.cpp" />
+    <ClCompile Include="ActionHistory.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="AppWindow.h">
@@ -432,7 +442,14 @@
     <ClInclude Include="RigidBodyPlane.h">
       <Filter>GameEngine\GameObjects\RigidBody</Filter>
     </ClInclude>
-    <ClInclude Include="RigidBodyCube.h" />
+    <ClInclude Include="RigidBodyCube.h">
+      <Filter>GameEngine\GameObjects\RigidBody</Filter>
+    </ClInclude>
+    <ClInclude Include="EngineBackend.h">
+      <Filter>GameEngine\EngineBackend</Filter>
+    </ClInclude>
+    <ClInclude Include="EditorAction.h" />
+    <ClInclude Include="ActionHistory.h" />
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="shader.fx">

@@ -53,3 +53,11 @@ RigidBodyPlane::~RigidBodyPlane()
 void RigidBodyPlane::update(float deltaTime)
 {
 }
+
+void RigidBodyPlane::updateLocalMatrix()
+{
+	AGameObject::updateLocalMatrix();
+
+	PhysicsComponent* component = dynamic_cast<PhysicsComponent*>(this->findComponentOfType(AComponent::Physics));
+	if (component != nullptr) component->setTransform();
+}

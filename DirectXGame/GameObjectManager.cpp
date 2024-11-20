@@ -1,5 +1,7 @@
 #include "GameObjectManager.h"
 
+#include "EditorAction.h"
+
 #include "LogUtils.h"
 
 GameObjectManager* GameObjectManager::sharedInstance = nullptr;
@@ -67,10 +69,16 @@ void GameObjectManager::addObject(GameObjectPtr gameObject)
 {
 	int	duplicates = 0;
 	std::string name = gameObject->getName();
+	std::string finalName;
 	while (!gameObjectMap.insert(std::make_pair(name, gameObject)).second)
 	{
 		name = gameObject->getName() + " (" + std::to_string(duplicates) + ")";
 		duplicates++;
+	}
+	if(duplicates != 0)
+	{
+		finalName = gameObject->getName() + " (" + std::to_string(duplicates-1) + ")";
+		gameObject->setName(finalName);
 	}
 	this->gameObjectList.push_back(gameObject);
 }
@@ -107,6 +115,38 @@ void GameObjectManager::setSelectedObject(GameObjectPtr gameObject)
 GameObjectPtr GameObjectManager::getSelectedObject()
 {
 	return selectedObject;
+}
+
+void GameObjectManager::saveEditStates()
+{
+	while(!editStates.empty())
+	{
+		editStates.pop();
+	}
+	for(GameObjectPtr gameObject : gameObjectList)
+	{
+		EditorAction* action = new EditorAction(gameObject);
+		editStates.push(action);
+	}
+}
+
+void GameObjectManager::restoreEditStates()
+{
+	while (!editStates.empty())
+	{
+		EditorAction* action = editStates.top();
+		editStates.pop();
+
+		GameObjectPtr gameObject = this->findObjectByName(action->getOwnerName());
+		if(gameObject != nullptr)
+		{
+			gameObject->setState(action);
+		}
+		else
+		{
+			LogUtils::log(this, "Failed to restore " + action->getOwnerName());
+		}
+	}
 }
 
 GameObjectManager::GameObjectManager() = default;

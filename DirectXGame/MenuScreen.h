@@ -24,6 +24,7 @@ private:
 
     void showCreditsWindow();
     void showColorPickerWindow();
+
     void showObjectList();
     void showInspector();
 
@@ -38,10 +39,22 @@ private:
     GameObjectPtr selectedGameObject;
 
     Vector3D position, rotation, scale;
+    float pos[3] = { 0,0,0 };
+    float rot[3] = { 0,0,0 };
+    float sca[3] = { 0,0,0 };
+    void onTransformUpdate();
 
     bool isMaterialInitialized = false;
 
     void initializeMaterial();
+
+    bool isPlaybackOpen = false;
+
+    void showPlayback();
+
+    bool isActionHistoryOpen = false;
+
+    void showActionHistory();
 
     MaterialPtr defaultMaterial;
     MaterialPtr defaultMaterial2;

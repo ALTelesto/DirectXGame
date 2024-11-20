@@ -1,6 +1,7 @@
 #pragma once
 #include <map>
 #include <memory>
+#include <stack>
 #include <string>
 #include <vector>
 #include <unordered_map>
@@ -22,6 +23,7 @@ class Resource;
 class ResourceManager;
 class Mesh;
 class MeshManager;
+class EditorAction;
 
 typedef std::shared_ptr<SwapChain> SwapChainPtr;
 typedef std::shared_ptr<DeviceContext> DeviceContextPtr;
@@ -39,3 +41,5 @@ typedef std::shared_ptr<MeshedObject> MeshedObjectPtr;
 
 typedef std::vector<GameObjectPtr> GameObjectList;
 typedef std::unordered_map<std::string, GameObjectPtr> GameObjectHashMap;
+
+typedef std::stack<EditorAction*> ActionStack;

@@ -138,3 +138,11 @@ void RigidBodyCube::draw(const RECT clientWindow)
 
 	deviceContext->drawIndexedTriangleList(this->indexBuffer->getSizeIndexList(), 0, 0);
 }
+
+void RigidBodyCube::updateLocalMatrix()
+{
+	AGameObject::updateLocalMatrix();
+
+	PhysicsComponent* component = dynamic_cast<PhysicsComponent*>(this->findComponentOfType(AComponent::Physics));
+	if (component != nullptr) component->setTransform();
+}

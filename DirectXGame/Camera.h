@@ -9,7 +9,6 @@ public:
 	~Camera();
 
 	void update(float deltaTime) override;
-	Matrix4x4 getViewMatrix();
 
 	virtual void draw(const RECT clientWindow) override;
 

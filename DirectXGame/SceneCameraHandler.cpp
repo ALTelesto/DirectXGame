@@ -42,7 +42,7 @@ void SceneCameraHandler::onKillFocus()
 
 Matrix4x4 SceneCameraHandler::getSceneCameraViewMatrix()
 {
-	return this->sceneCamera->getViewMatrix();
+	return this->sceneCamera->getLocalMatrix();
 }
 
 SceneCameraHandler::SceneCameraHandler()

@@ -22,6 +22,8 @@
 #include "MaterialResource.h"
 
 #include "BaseComponentSystem.h"
+#include "EngineBackend.h"
+#include "ActionHistory.h"
 
 class AppWindow: public Window, public InputListener
 {

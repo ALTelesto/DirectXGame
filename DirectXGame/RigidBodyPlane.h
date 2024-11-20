@@ -8,5 +8,7 @@ public:
     ~RigidBodyPlane();
 
     void update(float deltaTime) override;
+
+    void updateLocalMatrix() override;
 };
 

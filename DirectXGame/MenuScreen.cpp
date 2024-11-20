@@ -1,7 +1,10 @@
 #include "MenuScreen.h"
 
+#include "ActionHistory.h"
 #include "BaseComponentSystem.h"
 #include "Cube.h"
+#include "EditorAction.h"
+#include "EngineBackend.h"
 #include "GraphicsEngine.h"
 
 #include "LogUtils.h"
@@ -15,6 +18,10 @@
 #include "Plane.h"
 #include "ShaderLibrary.h"
 #include "ShaderNames.h"
+
+#ifndef M_PI
+#define M_PI 3.14159265358979323846 // Define pi if not defined
+#endif
 
 MenuScreen::MenuScreen() : UIScreen("Menu Screen")
 {
@@ -42,19 +49,19 @@ void MenuScreen::draw()
 	}
 
 	if (ImGui::BeginMenu("Game Object")) {
-		if (ImGui::MenuItem("Create Cube"))
+		if (ImGui::MenuItem("Create Cube") && EngineBackend::getInstance()->getMode() == EngineBackend::EDITOR)
 		{
 			onCreateCubeClicked();
 		}
-		if (ImGui::MenuItem("Create Plane"))
+		if (ImGui::MenuItem("Create Plane") && EngineBackend::getInstance()->getMode() == EngineBackend::EDITOR)
 		{
 			onCreatePlaneClicked();
 		}
-		if (ImGui::MenuItem("Create Rigid Body Cube"))
+		if (ImGui::MenuItem("Create Rigid Body Cube") && EngineBackend::getInstance()->getMode() == EngineBackend::EDITOR)
 		{
 			onCreateRigidBodyCubeClicked();
 		}
-		if (ImGui::MenuItem("Create Rigid Body Plane"))
+		if (ImGui::MenuItem("Create Rigid Body Plane") && EngineBackend::getInstance()->getMode() == EngineBackend::EDITOR)
 		{
 			onCreateRigidBodyPlaneClicked();
 		}
@@ -63,6 +70,8 @@ void MenuScreen::draw()
 
 	if (ImGui::BeginMenu("Windows"))
 	{
+		if (ImGui::MenuItem("Playback", nullptr, isPlaybackOpen)) isPlaybackOpen = !isPlaybackOpen;
+		if (ImGui::MenuItem("Action History", nullptr, isActionHistoryOpen)) isActionHistoryOpen = !isActionHistoryOpen;
 		if (ImGui::MenuItem("Object List", nullptr, isObjectListOpen)) isObjectListOpen = !isObjectListOpen;
 		if (ImGui::MenuItem("Inspector", nullptr, isInspectorOpen)) isInspectorOpen = !isInspectorOpen;
 		if (ImGui::MenuItem("Color Picker", nullptr, isColorPickerOpen)) isColorPickerOpen = !isColorPickerOpen;
@@ -84,6 +93,10 @@ void MenuScreen::draw()
 		showObjectList();
 	if (isInspectorOpen)
 		showInspector();
+	if (isPlaybackOpen)
+		showPlayback();
+	if (isActionHistoryOpen)
+		showActionHistory();
 }
 
 void MenuScreen::onCreateCubeClicked()
@@ -221,6 +234,15 @@ void MenuScreen::showObjectList()
 				position = selectedGameObject->getLocalPosition();
 				rotation = selectedGameObject->getLocalRotation();
 				scale = selectedGameObject->getLocalScale();
+
+				pos[0] = position.x; pos[1] = position.y; pos[2] = position.z;
+				rot[0] = rotation.x; rot[1] = rotation.y; rot[2] = rotation.z;
+				sca[0] = scale.x; sca[1] = scale.y; sca[2] = scale.z;
+
+				const float degreesPerRadian = 180.0 / M_PI;
+				for (int i = 0; i < 3; ++i) {
+					rot[i] *= degreesPerRadian;
+				}
 			}
 		}
 	}
@@ -232,25 +254,27 @@ void MenuScreen::showInspector()
 	{
 		if(selectedGameObject != nullptr)
 		{
-			float pos[3] = { position.x,position.y,position.z };
-			float rot[3] = { rotation.x,rotation.y,rotation.z };
-			float sca[3] = { scale.x,scale.y,scale.z };
-
 			ImGui::Text(selectedGameObject->getName().data());
-			ImGui::SliderFloat3("Position", pos,-10,10);
-			ImGui::SliderFloat3("Rotation", rot, -360, 360);
-			ImGui::SliderFloat3("Scale", sca, -5, 5);
-
-			position.x = pos[0]; position.y = pos[1]; position.z = pos[2];
-			rotation.x = rot[0]; rotation.y = rot[1]; rotation.z = rot[2];
-			scale.x = sca[0]; scale.y = sca[1]; scale.z = sca[2];
-
-			selectedGameObject->setPosition(position);
-			selectedGameObject->setRotation(rotation);
-			selectedGameObject->setScale(scale);
+			if (ImGui::InputFloat3("Position", pos)) this->onTransformUpdate();
+			if (ImGui::InputFloat3("Rotation", rot)) this->onTransformUpdate();
+			if (ImGui::InputFloat3("Scale", sca)) this->onTransformUpdate();
 		}
 	}
 	ImGui::End();
+}
+
+void MenuScreen::onTransformUpdate()
+{
+	if (selectedGameObject == nullptr) return;
+	ActionHistory::getInstance()->recordAction(this->selectedGameObject);
+
+	position.x = pos[0]; position.y = pos[1]; position.z = pos[2];
+	rotation.x = rot[0]; rotation.y = rot[1]; rotation.z = rot[2];
+	scale.x = sca[0]; scale.y = sca[1]; scale.z = sca[2];
+
+	selectedGameObject->setPosition(position);
+	selectedGameObject->setRotation(rotation);
+	selectedGameObject->setScale(scale);
 }
 
 void MenuScreen::initializeMaterial()
@@ -267,4 +291,62 @@ void MenuScreen::initializeMaterial()
 	defaultMaterial2->samplerState = GraphicsEngine::getInstance()->getRenderSystem()->createSamplerState();
 
 	this->isMaterialInitialized = true;
+}
+
+void MenuScreen::showPlayback()
+{
+	EngineBackend* backend = EngineBackend::getInstance();
+
+	if (ImGui::Begin("Playback", &isPlaybackOpen))
+	{
+		ImGui::SetWindowSize(ImVec2(205, 75));
+		ImGui::SameLine();
+
+		if(backend->getMode() == EngineBackend::EDITOR)
+		{
+			if (ImGui::Button("Play")) backend->setMode(EngineBackend::PLAY);
+		}
+
+		else if (backend->getMode() != EngineBackend::EDITOR)
+		{
+			if (ImGui::Button("Stop")) backend->setMode(EngineBackend::EDITOR);
+		}
+
+		ImGui::SameLine();
+
+		if (backend->getMode() == EngineBackend::PLAY)
+		{
+			if (ImGui::Button("Pause")) backend->setMode(EngineBackend::PAUSED);
+		}
+		else if (backend->getMode() == EngineBackend::PAUSED)
+		{
+			if (ImGui::Button("Resume")) backend->setMode(EngineBackend::PLAY);
+		}
+
+		ImGui::SameLine();
+		if (backend->getMode() == EngineBackend::PAUSED && ImGui::Button("Frame Step")) backend->startFrameStep();
+	}
+	ImGui::End();
+}
+
+void MenuScreen::showActionHistory()
+{
+	if (ImGui::Begin("Actions", &isColorPickerOpen))
+	{
+		EditorAction* action = nullptr;
+		if (ImGui::Button("Undo") && action == nullptr)
+		{
+			action = ActionHistory::getInstance()->undoAction();
+		}
+		if (ImGui::Button("Redo") && action == nullptr)
+		{
+			action = ActionHistory::getInstance()->redoAction();
+		}
+		if (action != nullptr)
+		{
+			GameObjectPtr gameObject = GameObjectManager::getInstance()->findObjectByName(action->getOwnerName());
+			if (gameObject != nullptr) gameObject->setState(action);
+		}
+	}
+	ImGui::End();
 }

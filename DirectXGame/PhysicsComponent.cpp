@@ -45,6 +45,20 @@ PhysicsComponent::~PhysicsComponent()
 	BaseComponentSystem::getInstance()->getPhysicsSystem()->unregisterComponent(this);
 }
 
+void PhysicsComponent::setTransform()
+{
+	if (rigidBody == nullptr) return;
+
+	Transform transform; //transform.setFromOpenGL(this->getOwner()->getPhysicsLocalMatrix());
+	Vector3D position = this->getOwner()->getLocalPosition();
+	transform.setPosition(Vector3(position.x, position.y, position.z));
+	Quaternion quat; quat.setToIdentity();
+	transform.setOrientation(quat);
+
+	rigidBody->setTransform(transform);
+}
+
+
 void PhysicsComponent::perform(float deltaTime)
 {
 	const Transform transform = this->rigidBody->getTransform();

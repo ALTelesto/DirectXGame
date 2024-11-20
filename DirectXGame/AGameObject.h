@@ -37,8 +37,11 @@ public:
 	void setRotation(Vector3D rot);
 	Vector3D getLocalRotation();
 
-	void updateLocalMatrix();
+	virtual void updateLocalMatrix();
+	void setLocalMatrix(Matrix4x4 matrix);
+	Matrix4x4 getLocalMatrix();
 
+	void setName(string name);
 	string getName();
 
 	void setMaterial(MaterialPtr material);
@@ -88,6 +91,8 @@ public:
 		float hasMetallicMap;
 		float hasSmoothnessMap;
 	};
+
+	void setState(EditorAction* action);
 
 protected:
 	bool active = true;

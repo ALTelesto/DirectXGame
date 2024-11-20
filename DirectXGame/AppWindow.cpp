@@ -97,6 +97,7 @@ void AppWindow::createGraphicsWindow()
 	InputSystem::getInstance()->addListener(this);
 
 	EngineTime::initialize();
+	EngineBackend::initialize();
 
 	GameObjectManager::initialize();
 	UIManager::initialize(this->m_hwnd);
@@ -107,6 +108,8 @@ void AppWindow::createGraphicsWindow()
 
 	SceneCameraHandler::initialize();
 	this->scene_camera_handler = SceneCameraHandler::getInstance();
+		
+	ActionHistory::initialize();
 
 	RECT windowRect = this->getClientWindowRect();
 	width = windowRect.right - windowRect.left;
@@ -349,10 +352,7 @@ void AppWindow::renderFullScreenQuad()
 
 void AppWindow::onUpdate()
 {
-
 	InputSystem::getInstance()->update();
-
-	BaseComponentSystem::getInstance()->getPhysicsSystem()->updateAllComponents();
 
 	GraphicsEngine::getInstance()->getRenderSystem()->getImmediateDeviceContext()->clearRenderTargetColor(this->m_swap_chain,
 		0, 0.5, 0.5, 1);
@@ -373,6 +373,26 @@ void AppWindow::onUpdate()
 
 	this->scene_camera_handler->update();
 
+	EngineBackend* backend = EngineBackend::getInstance();
+	if(backend->getMode() == EngineBackend::PLAY)
+	{
+		BaseComponentSystem::getInstance()->getPhysicsSystem()->updateAllComponents();
+		GameObjectManager::getInstance()->updateAll(EngineTime::getDeltaTime());
+	}
+	else if (backend->getMode() == EngineBackend::EDITOR)
+	{
+		GameObjectManager::getInstance()->updateAll(EngineTime::getDeltaTime());
+	}
+	else if (backend->getMode() == EngineBackend::PAUSED)
+	{
+		if(backend->insideFrameStep())
+		{
+			BaseComponentSystem::getInstance()->getPhysicsSystem()->updateAllComponents();
+			GameObjectManager::getInstance()->updateAll(EngineTime::getDeltaTime());
+			backend->endFrameStep();
+		}
+	}
+
 	//GraphicsEngine::getInstance()->setToRenderTexture();
 	if(POST_PROCESSING_ON) GraphicsEngine::getInstance()->getRenderSystem()->getImmediateDeviceContext()->setRenderTargets(this->rtv_first, this->dsv_first);
 	else
@@ -380,7 +400,6 @@ void AppWindow::onUpdate()
 		GraphicsEngine::getInstance()->getRenderSystem()->getImmediateDeviceContext()->setRenderTargets(m_swap_chain->getRenderTargetView(), m_swap_chain->getDepthStencilView());
 	}
 
-	GameObjectManager::getInstance()->updateAll(EngineTime::getDeltaTime());
 	GameObjectManager::getInstance()->drawAll(windowRect);
 
 	if(POST_PROCESSING_ON){

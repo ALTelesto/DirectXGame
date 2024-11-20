@@ -39,11 +39,6 @@ void Camera::update(float deltaTime)
 	this->localMatrix = worldCam;
 }
 
-Matrix4x4 Camera::getViewMatrix()
-{
-	return this->localMatrix;
-}
-
 void Camera::draw(const RECT clientWindow)
 {
 }
