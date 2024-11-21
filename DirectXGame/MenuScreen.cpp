@@ -143,18 +143,18 @@ void MenuScreen::onCreateRigidBodyCubeClicked()
 
 	GameObjectPtr rigidBodyCube = std::make_shared<RigidBodyCube>("RigidBodyCube", shader_byte_code, size_shader);
 	rigidBodyCube->setMaterial(defaultMaterial2);
-
+	rigidBodyCube->setRotation(90, 90, 90);
 	rigidBodyCube->setPosition(0, 5, 0);
 	rigidBodyCube->setScale(0.1, 0.1, 0.1);
 
 	PhysicsComponent* physicsComponent = new PhysicsComponent(name + "Physics component", rigidBodyCube.get());
 	physicsComponent->attachOwner(rigidBodyCube.get());
-	if(physicsComponent->getRigidBody() != nullptr)
+	/*if(physicsComponent->getRigidBody() != nullptr)
 	{
 		Quaternion quat;
 		quat.setToIdentity();
 		physicsComponent->getRigidBody()->setTransform(Transform(Vector3(0, 5, 0), quat));
-	}
+	}*/
 	BaseComponentSystem::getInstance()->getPhysicsSystem()->registerComponent(physicsComponent);
 
 	GameObjectManager::getInstance()->addObject(rigidBodyCube);

@@ -49,6 +49,8 @@ void PhysicsComponent::setTransform()
 {
 	if (rigidBody == nullptr) return;
 
+	rigidBody->setIsActive(false);
+
 	Transform transform; //transform.setFromOpenGL(this->getOwner()->getPhysicsLocalMatrix());
 	Vector3D position = this->getOwner()->getLocalPosition();
 	transform.setPosition(Vector3(position.x, position.y, position.z));
@@ -56,6 +58,10 @@ void PhysicsComponent::setTransform()
 	transform.setOrientation(quat);
 
 	rigidBody->setTransform(transform);
+	rigidBody->resetForce();
+	rigidBody->resetTorque();
+	rigidBody->setIsActive(true);
+	rigidBody->setIsSleeping(false);
 }
 
 

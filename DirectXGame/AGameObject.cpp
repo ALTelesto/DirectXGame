@@ -225,7 +225,8 @@ void AGameObject::setPhysicsLocalMatrix(float physicsLocalMatrix[16])
 
 float* AGameObject::getPhysicsLocalMatrix()
 {
-	float rowMajorArray[16];
+	return *this->localMatrix.m_mat;
+	/*float rowMajorArray[16];
 	this->localMatrix.toFloatArray(rowMajorArray);
 
 	static float columnMajorArray[16];
@@ -247,7 +248,7 @@ float* AGameObject::getPhysicsLocalMatrix()
 		LogUtils::log(std::to_string(x));
 	}
 
-	return columnMajorArray;
+	return columnMajorArray;*/
 }
 
 void AGameObject::attachComponent(AComponent* component)
